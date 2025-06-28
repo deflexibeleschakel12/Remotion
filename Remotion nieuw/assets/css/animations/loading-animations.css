@@ -1,0 +1,411 @@
+/* =================================
+   LOADING-ANIMATIONS.CSS - Loading & Spinner Animations
+   Schoolbeheersysteem v1.0.0
+   
+   Animaties voor loading states
+   ================================= */
+
+/* =================================
+   BASIC SPINNERS
+   ================================= */
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes spinReverse {
+    from {
+        transform: rotate(360deg);
+    }
+    to {
+        transform: rotate(0deg);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes bounce {
+    0%, 80%, 100% {
+        transform: scale(0);
+    }
+    40% {
+        transform: scale(1);
+    }
+}
+
+/* =================================
+   LOADING DOTS
+   ================================= */
+
+@keyframes loadingDots {
+    0%, 80%, 100% {
+        transform: scale(0);
+        opacity: 0.5;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes loadingWave {
+    0%, 60%, 100% {
+        transform: initial;
+    }
+    30% {
+        transform: translateY(-15px);
+    }
+}
+
+@keyframes loadingBars {
+    0%, 40%, 100% {
+        transform: scaleY(0.4);
+    }
+    20% {
+        transform: scaleY(1);
+    }
+}
+
+/* =================================
+   SKELETON LOADING
+   ================================= */
+
+@keyframes shimmer {
+    0% {
+        background-position: -468px 0;
+    }
+    100% {
+        background-position: 468px 0;
+    }
+}
+
+@keyframes skeletonPulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.4;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* =================================
+   PROGRESS ANIMATIONS
+   ================================= */
+
+@keyframes progressIndeterminate {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes progressBuffer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* =================================
+   LOADING COMPONENTS
+   ================================= */
+
+/* Basic Spinner */
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--color-border-light);
+    border-top: 4px solid var(--color-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.loading-spinner.small {
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+}
+
+.loading-spinner.large {
+    width: 60px;
+    height: 60px;
+    border-width: 6px;
+}
+
+/* Pulsing Spinner */
+.loading-pulse {
+    width: 40px;
+    height: 40px;
+    background-color: var(--color-primary);
+    border-radius: 50%;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Loading Dots */
+.loading-dots {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.loading-dots div {
+    position: absolute;
+    top: 33px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+
+.loading-dots div:nth-child(1) {
+    left: 8px;
+    animation: loadingDots 0.6s infinite;
+}
+
+.loading-dots div:nth-child(2) {
+    left: 8px;
+    animation: loadingDots 0.6s infinite;
+    animation-delay: -0.2s;
+}
+
+.loading-dots div:nth-child(3) {
+    left: 32px;
+    animation: loadingDots 0.6s infinite;
+    animation-delay: -0.1s;
+}
+
+.loading-dots div:nth-child(4) {
+    left: 56px;
+    animation: loadingDots 0.6s infinite;
+}
+
+/* Loading Wave */
+.loading-wave {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.loading-wave div {
+    display: inline-block;
+    position: absolute;
+    left: 8px;
+    width: 16px;
+    background: var(--color-primary);
+    animation: loadingWave 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+}
+
+.loading-wave div:nth-child(1) {
+    left: 8px;
+    animation-delay: -0.24s;
+}
+
+.loading-wave div:nth-child(2) {
+    left: 32px;
+    animation-delay: -0.12s;
+}
+
+.loading-wave div:nth-child(3) {
+    left: 56px;
+    animation-delay: 0;
+}
+
+/* Loading Bars */
+.loading-bars {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.loading-bars div {
+    display: inline-block;
+    position: absolute;
+    left: 8px;
+    width: 16px;
+    background: var(--color-primary);
+    animation: loadingBars 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+}
+
+.loading-bars div:nth-child(1) {
+    left: 8px;
+    animation-delay: -0.24s;
+}
+
+.loading-bars div:nth-child(2) {
+    left: 32px;
+    animation-delay: -0.12s;
+}
+
+.loading-bars div:nth-child(3) {
+    left: 56px;
+    animation-delay: 0;
+}
+
+/* Skeleton Loading */
+.skeleton {
+    background: linear-gradient(90deg, 
+        var(--color-surface-secondary) 0%, 
+        var(--color-surface-tertiary) 50%, 
+        var(--color-surface-secondary) 100%
+    );
+    background-size: 200px 100%;
+    animation: shimmer 2s infinite linear;
+}
+
+.skeleton-text {
+    height: 16px;
+    margin: 8px 0;
+    border-radius: 4px;
+}
+
+.skeleton-title {
+    height: 24px;
+    margin: 12px 0;
+    border-radius: 4px;
+}
+
+.skeleton-circle {
+    border-radius: 50%;
+}
+
+.skeleton-pulse {
+    animation: skeletonPulse 2s infinite ease-in-out;
+}
+
+/* Progress Bar */
+.progress-bar {
+    width: 100%;
+    height: 4px;
+    background-color: var(--color-surface-secondary);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background-color: var(--color-primary);
+    transition: width var(--transition-normal);
+}
+
+.progress-bar-indeterminate .progress-bar-fill {
+    width: 30%;
+    animation: progressIndeterminate 2s infinite linear;
+}
+
+/* =================================
+   LOADING STATES
+   ================================= */
+
+.is-loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.is-loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.is-loading.spinner::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath fill='%234F46E5' d='M20 2a18 18 0 1 1 0 36c-1.1 0-2-.9-2-2s.9-2 2-2a14 14 0 1 0 0-28c-1.1 0-2-.9-2-2s.9-2 2-2z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    animation: spin 1s linear infinite;
+}
+
+/* =================================
+   OVERLAY LOADING
+   ================================= */
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(4px);
+}
+
+.loading-overlay.transparent {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.loading-overlay .loading-text {
+    margin-top: 20px;
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* =================================
+   BUTTON LOADING STATES
+   ================================= */
+
+.btn-loading {
+    position: relative;
+    color: transparent !important;
+    pointer-events: none;
+}
+
+.btn-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 0.8s linear infinite;
+}
+
+.btn-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 0.8s linear infinite;
+}

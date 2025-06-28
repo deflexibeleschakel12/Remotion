@@ -1,0 +1,84 @@
+/* =================================
+   ANIMATIONS.CSS - Modulair animatie systeem
+   Schoolbeheersysteem v1.0.0
+   
+   Import van alle animatie modules
+   ================================= */
+
+/* =================================
+   ANIMATIE MODULES IMPORT
+   ================================= */
+
+/* Basis animatie variabelen en classes */
+@import './animations/base-animations.css';
+
+/* Entrance animaties (fade, slide, scale, bounce, flip) */
+@import './animations/entrance-animations.css';
+
+/* Loading animaties (spinners, dots, skeleton, progress) */
+@import './animations/loading-animations.css';
+
+/* Interactie animaties (hover, click, focus, ripple) */
+@import './animations/interaction-animations.css';
+
+/* =================================
+   LEGACY SUPPORT & COMPATIBILITY
+   ================================= */
+
+/* Data attribute support voor backwards compatibility */
+[data-animate] {
+    animation-fill-mode: both;
+    animation-duration: var(--duration-normal);
+    animation-timing-function: var(--ease-smooth);
+}
+
+/* Delay support */
+[data-delay="100"] { animation-delay: 100ms; }
+[data-delay="200"] { animation-delay: 200ms; }
+[data-delay="300"] { animation-delay: 300ms; }
+[data-delay="400"] { animation-delay: 400ms; }
+[data-delay="500"] { animation-delay: 500ms; }
+
+/* Duration overrides */
+[data-duration="fast"] { animation-duration: var(--duration-fast); }
+[data-duration="slow"] { animation-duration: var(--duration-slow); }
+
+/* Easing overrides */
+[data-easing="bounce"] { animation-timing-function: var(--ease-bounce); }
+[data-easing="spring"] { animation-timing-function: var(--ease-spring); }
+[data-easing="elastic"] { animation-timing-function: var(--ease-elastic); }
+
+/* =================================
+   ANIMATION CONTROLLER INTEGRATION
+   ================================= */
+
+/* Classes voor Animation Controller module */
+.ac-fade-in { animation: fadeIn var(--duration-normal) var(--ease-smooth); }
+.ac-fade-out { animation: fadeOut var(--duration-normal) var(--ease-smooth); }
+.ac-slide-in-left { animation: slideInLeft var(--duration-normal) var(--ease-smooth); }
+.ac-slide-in-right { animation: slideInRight var(--duration-normal) var(--ease-smooth); }
+.ac-scale-in { animation: scaleIn var(--duration-normal) var(--ease-smooth); }
+.ac-bounce-in { animation: bounceIn var(--duration-slow) var(--ease-bounce); }
+
+/* Performance optimizations voor Animation Controller */
+.ac-animate {
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    will-change: transform, opacity;
+}
+
+.ac-animate.finished {
+    will-change: auto;
+}
+
+/* =================================
+   IMPORT ANIMATIE MODULES
+   ================================= */
+
+@import url('./animations/keyframes.css');
+@import url('./animations/presets.css');
+@import url('./animations/utilities.css');
+@import url('./animations/loading-states.css');
+@import url('./animations/micro-interactions.css');
+@import url('./animations/scroll-animations.css');
+@import url('./animations/performance.css');

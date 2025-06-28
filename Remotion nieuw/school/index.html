@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="nl" data-theme="default">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Dashboard - Schoolbeheersysteem</title>
+    
+    <!-- Modulaire CSS Imports -->
+    <link rel="stylesheet" href="/assets/css/shared.css">
+    <link rel="stylesheet" href="/assets/css/components.css">
+    <link rel="stylesheet" href="/assets/css/animations-modular.css">
+    <link rel="stylesheet" href="/assets/css/themes.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%233B82F6' width='100' height='100' rx='20'/><text x='50' y='65' font-size='60' text-anchor='middle' fill='white'>🏫</text></svg>">
+    
+    <style>
+        :root {
+            --school-primary: #3B82F6;
+            --school-secondary: #1D4ED8;
+            --school-gradient: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            margin: 0;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .dashboard-header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .management-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .management-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .management-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--school-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.3);
+        }
+
+        /* Management Sections */
+        .management-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            margin: 0;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--school-gradient);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .card-actions button {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            background: rgba(0, 0, 0, 0.7) !important;
+            backdrop-filter: blur(10px) !important;
+            display: none !important;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 99999 !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .modal-overlay.show {
+            display: flex !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        .modal {
+            background: rgba(255, 255, 255, 0.98) !important;
+            backdrop-filter: blur(20px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            border-radius: 20px !important;
+            padding: 2rem !important;
+            max-width: 600px !important;
+            width: 90% !important;
+            max-height: 90vh !important;
+            overflow-y: auto !important;
+            transform: scale(0.9) translateY(20px) !important;
+            transition: all 0.3s ease !important;
+            color: #1a1a1a !important;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .modal-overlay.show .modal {
+            transform: scale(1) translateY(0) !important;
+        }
+
+        .modal-header {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            margin-bottom: 1.5rem !important;
+            padding-bottom: 1rem !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .modal-header h2 {
+            margin: 0 !important;
+            font-size: 1.5rem !important;
+            font-weight: 600 !important;
+            color: #1a1a1a !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.5rem !important;
+        }
+
+        .modal-close {
+            background: rgba(0, 0, 0, 0.1) !important;
+            border: none !important;
+            font-size: 1.5rem !important;
+            cursor: pointer !important;
+            color: #333 !important;
+            width: 32px !important;
+            height: 32px !important;
+            border-radius: 50% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .modal-close:hover {
+            background: rgba(0, 0, 0, 0.2) !important;
+            color: #000 !important;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.2rem !important;
+        }
+
+        .form-group label {
+            display: block !important;
+            margin-bottom: 0.6rem !important;
+            font-weight: 600 !important;
+            color: #1a1a1a !important;
+            font-size: 0.95rem !important;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100% !important;
+            padding: 0.8rem !important;
+            border: 2px solid #e0e0e0 !important;
+            border-radius: 8px !important;
+            font-size: 1rem !important;
+            background: #ffffff !important;
+            color: #1a1a1a !important;
+            transition: border-color 0.2s ease !important;
+            box-sizing: border-box !important;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none !important;
+            border-color: var(--school-primary) !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+        }
+
+        .form-row {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 1rem !important;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .empty-state h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.2rem;
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <button class="logout-btn" onclick="handleLogout()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M16 17v-3H9v-4h7V7l5 5-5 5M14 2a2 2 0 012 2v2h-2V4H4v16h10v-2h2v2a2 2 0 01-2 2H4a2 2 0 01-2-2V4a2 2 0 012-2h10z"/>
+        </svg>
+        Uitloggen
+    </button>
+
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>
+                <span>🏫</span>
+                School Dashboard
+            </h1>
+            <p>Beheer je school, klassen en gebruikers</p>
+        </header>
+
+        <!-- Quick Stats -->
+        <section class="quick-stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalClasses">0</div>
+                <div class="stat-label">Klassen</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalTeachers">0</div>
+                <div class="stat-label">Leerkrachten</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalStudents">0</div>
+                <div class="stat-label">Leerlingen</div>
+            </div>
+        </section>
+
+        <!-- Classes Management -->
+        <section class="management-section">
+            <div class="section-header">
+                <h2>📚 Klassen</h2>
+                <button class="btn-primary" onclick="openAddClassModal()">
+                    ➕ Nieuwe Klas
+                </button>
+            </div>
+            <div id="classesList" class="cards-grid">
+                <!-- Classes will be rendered here -->
+            </div>
+        </section>
+
+        <!-- Teachers Management -->
+        <section class="management-section">
+            <div class="section-header">
+                <h2>👨‍🏫 Leerkrachten</h2>
+                <button class="btn-primary" onclick="openAddTeacherModal()">
+                    ➕ Nieuwe Leerkracht
+                </button>
+            </div>
+            <div id="teachersList" class="cards-grid">
+                <!-- Teachers will be rendered here -->
+            </div>
+        </section>
+
+        <!-- Students Management -->
+        <section class="management-section">
+            <div class="section-header">
+                <h2>👨‍🎓 Leerlingen</h2>
+                <button class="btn-primary" onclick="openAddStudentModal()">
+                    ➕ Nieuwe Leerling
+                </button>
+            </div>
+            <div id="studentsList" class="cards-grid">
+                <!-- Students will be rendered here -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Add Class Modal -->
+    <div id="addClassModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>
+                    <span>📚</span>
+                    Nieuwe Klas Toevoegen
+                </h2>
+                <button class="modal-close" onclick="closeAddClassModal()">
+                    ✕
+                </button>
+            </div>
+            
+            <form id="addClassForm" onsubmit="handleAddClass(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="className">Klasnaam *</label>
+                        <input 
+                            type="text" 
+                            id="className" 
+                            name="className" 
+                            placeholder="Bijv. 1A, 2B, Groep 8"
+                            required
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="classLevel">Leerjaar *</label>
+                        <select id="classLevel" name="classLevel" required>
+                            <option value="">Selecteer leerjaar...</option>
+                            <option value="1">Leerjaar 1</option>
+                            <option value="2">Leerjaar 2</option>
+                            <option value="3">Leerjaar 3</option>
+                            <option value="4">Leerjaar 4</option>
+                            <option value="5">Leerjaar 5</option>
+                            <option value="6">Leerjaar 6</option>
+                            <option value="7">Leerjaar 7</option>
+                            <option value="8">Leerjaar 8</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="maxStudents">Max. Leerlingen</label>
+                        <input 
+                            type="number" 
+                            id="maxStudents" 
+                            name="maxStudents" 
+                            placeholder="25"
+                            min="1"
+                            max="50"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="classroom">Lokaal</label>
+                        <input 
+                            type="text" 
+                            id="classroom" 
+                            name="classroom" 
+                            placeholder="Bijv. A101, Lokaal 12"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="classNotes">Opmerkingen</label>
+                    <textarea 
+                        id="classNotes" 
+                        name="classNotes" 
+                        rows="3"
+                        placeholder="Extra informatie over de klas..."
+                    ></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    📚 Klas Toevoegen
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Teacher Modal -->
+    <div id="addTeacherModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>
+                    <span>👨‍🏫</span>
+                    Nieuwe Leerkracht Toevoegen
+                </h2>
+                <button class="modal-close" onclick="closeAddTeacherModal()">
+                    ✕
+                </button>
+            </div>
+            
+            <form id="addTeacherForm" onsubmit="handleAddTeacher(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="teacherFirstName">Voornaam *</label>
+                        <input 
+                            type="text" 
+                            id="teacherFirstName" 
+                            name="teacherFirstName" 
+                            placeholder="Jan"
+                            required
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="teacherLastName">Achternaam *</label>
+                        <input 
+                            type="text" 
+                            id="teacherLastName" 
+                            name="teacherLastName" 
+                            placeholder="de Vries"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="teacherEmail">Email *</label>
+                        <input 
+                            type="email" 
+                            id="teacherEmail" 
+                            name="teacherEmail" 
+                            placeholder="j.devries@school.nl"
+                            required
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="teacherPhone">Telefoon</label>
+                        <input 
+                            type="tel" 
+                            id="teacherPhone" 
+                            name="teacherPhone" 
+                            placeholder="06-12345678"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="teacherSubjects">Vakken</label>
+                    <input 
+                        type="text" 
+                        id="teacherSubjects" 
+                        name="teacherSubjects" 
+                        placeholder="Bijv. Nederlands, Rekenen, Geschiedenis"
+                    >
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    👨‍🏫 Leerkracht Toevoegen
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Student Modal -->
+    <div id="addStudentModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>
+                    <span>👨‍🎓</span>
+                    Nieuwe Leerling Toevoegen
+                </h2>
+                <button class="modal-close" onclick="closeAddStudentModal()">
+                    ✕
+                </button>
+            </div>
+            
+            <form id="addStudentForm" onsubmit="handleAddStudent(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="studentFirstName">Voornaam *</label>
+                        <input 
+                            type="text" 
+                            id="studentFirstName" 
+                            name="studentFirstName" 
+                            placeholder="Emma"
+                            required
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="studentLastName">Achternaam *</label>
+                        <input 
+                            type="text" 
+                            id="studentLastName" 
+                            name="studentLastName" 
+                            placeholder="van der Berg"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="studentBirthDate">Geboortedatum *</label>
+                        <input 
+                            type="date" 
+                            id="studentBirthDate" 
+                            name="studentBirthDate" 
+                            required
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="studentClass">Klas *</label>
+                        <select id="studentClass" name="studentClass" required>
+                            <option value="">Selecteer klas...</option>
+                            <!-- Classes will be populated by JavaScript -->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="parentName">Naam Ouder/Verzorger *</label>
+                        <input 
+                            type="text" 
+                            id="parentName" 
+                            name="parentName" 
+                            placeholder="Mevr. van der Berg"
+                            required
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="parentPhone">Telefoon Ouder</label>
+                        <input 
+                            type="tel" 
+                            id="parentPhone" 
+                            name="parentPhone" 
+                            placeholder="06-12345678"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="parentEmail">Email Ouder</label>
+                    <input 
+                        type="email" 
+                        id="parentEmail" 
+                        name="parentEmail" 
+                        placeholder="ouder@email.nl"
+                    >
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    👨‍🎓 Leerling Toevoegen
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Assign Teacher Modal -->
+    <div id="assignTeacherModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>
+                    <span>🎯</span>
+                    Leerkracht Toewijzen
+                </h2>
+                <button class="modal-close" onclick="closeAssignTeacherModal()">
+                    ✕
+                </button>
+            </div>
+            
+            <form id="assignTeacherForm" onsubmit="handleAssignTeacher(event)">
+                <div class="form-group">
+                    <label for="assignClass">Klas</label>
+                    <select id="assignClass" name="assignClass" required>
+                        <option value="">Selecteer klas...</option>
+                        <!-- Classes will be populated by JavaScript -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="assignTeacher">Leerkracht</label>
+                    <select id="assignTeacher" name="assignTeacher" required>
+                        <option value="">Selecteer leerkracht...</option>
+                        <!-- Teachers will be populated by JavaScript -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="assignRole">Rol</label>
+                    <select id="assignRole" name="assignRole" required>
+                        <option value="">Selecteer rol...</option>
+                        <option value="hoofdleerkracht">Hoofdleerkracht</option>
+                        <option value="vakleerkracht">Vakleerkracht</option>
+                        <option value="ondersteuning">Ondersteuning</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    🎯 Toewijzen
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // School Management System
+        class SchoolClassManager {
+            constructor(schoolId) {
+                this.schoolId = schoolId;
+                this.classes = this.loadClasses();
+                this.teachers = this.loadTeachers();
+                this.students = this.loadStudents();
+                this.assignments = this.loadAssignments();
+                this.init();
+            }
+
+            init() {
+                console.log('🚀 Initializing SchoolClassManager for school:', this.schoolId);
+                this.migrateExistingTeachers(); // Add credentials to existing teachers
+                this.migrateExistingStudents(); // Add credentials to existing students
+                this.renderClasses();
+                this.renderTeachers();
+                this.renderStudents();
+                this.updateStats();
+                this.populateDropdowns();
+                console.log('✅ SchoolClassManager initialized');
+            }
+
+            // Migration function for existing teachers without credentials
+            migrateExistingTeachers() {
+                let updated = false;
+                this.teachers.forEach(teacher => {
+                    if (!teacher.credentials && teacher.teacherFirstName && teacher.teacherLastName) {
+                        teacher.credentials = this.generateTeacherCredentials(teacher.teacherFirstName, teacher.teacherLastName);
+                        updated = true;
+                        console.log('🔄 Added credentials to existing teacher:', teacher.fullName);
+                    }
+                });
+                
+                if (updated) {
+                    this.saveTeachers();
+                    console.log('✅ Migration completed - credentials added to existing teachers');
+                }
+            }
+
+            // Migration function for existing students without credentials
+            migrateExistingStudents() {
+                let updated = false;
+                this.students.forEach(student => {
+                    if (!student.credentials && student.studentFirstName && student.studentLastName) {
+                        student.credentials = this.generateStudentCredentials(student.studentFirstName, student.studentLastName);
+                        updated = true;
+                        console.log('🔄 Added credentials to existing student:', student.fullName);
+                    }
+                });
+                
+                if (updated) {
+                    this.saveStudents();
+                    console.log('✅ Migration completed - credentials added to existing students');
+                }
+            }
+
+            // Data Loading and Saving
+            loadClasses() {
+                const stored = localStorage.getItem(`school_classes_${this.schoolId}`);
+                return stored ? JSON.parse(stored) : [];
+            }
+
+            saveClasses() {
+                localStorage.setItem(`school_classes_${this.schoolId}`, JSON.stringify(this.classes));
+            }
+
+            loadTeachers() {
+                const stored = localStorage.getItem(`school_teachers_${this.schoolId}`);
+                return stored ? JSON.parse(stored) : [];
+            }
+
+            saveTeachers() {
+                localStorage.setItem(`school_teachers_${this.schoolId}`, JSON.stringify(this.teachers));
+            }
+
+            loadStudents() {
+                const stored = localStorage.getItem(`school_students_${this.schoolId}`);
+                return stored ? JSON.parse(stored) : [];
+            }
+
+            saveStudents() {
+                localStorage.setItem(`school_students_${this.schoolId}`, JSON.stringify(this.students));
+            }
+
+            loadAssignments() {
+                const stored = localStorage.getItem(`school_assignments_${this.schoolId}`);
+                return stored ? JSON.parse(stored) : [];
+            }
+
+            saveAssignments() {
+                localStorage.setItem(`school_assignments_${this.schoolId}`, JSON.stringify(this.assignments));
+            }
+
+            // Class Management
+            addClass(classData) {
+                console.log('➕ Adding class:', classData);
+                
+                const newClass = {
+                    id: `class_${Date.now()}`,
+                    ...classData,
+                    studentCount: 0,
+                    createdAt: new Date().toISOString()
+                };
+
+                this.classes.push(newClass);
+                this.saveClasses();
+                this.renderClasses();
+                this.updateStats();
+                this.populateDropdowns();
+
+                console.log('✅ Class added successfully:', newClass);
+                return newClass;
+            }
+
+            removeClass(classId) {
+                // Remove students from this class first
+                this.students = this.students.filter(student => student.classId !== classId);
+                this.saveStudents();
+                
+                // Remove teacher assignments for this class
+                this.assignments = this.assignments.filter(assignment => assignment.classId !== classId);
+                this.saveAssignments();
+                
+                // Remove the class
+                this.classes = this.classes.filter(cls => cls.id !== classId);
+                this.saveClasses();
+                this.renderClasses();
+                this.renderStudents();
+                this.updateStats();
+                this.populateDropdowns();
+            }
+
+            // Teacher Management
+            addTeacher(teacherData) {
+                console.log('➕ Adding teacher:', teacherData);
+                
+                const newTeacher = {
+                    id: `teacher_${Date.now()}`,
+                    ...teacherData,
+                    fullName: `${teacherData.teacherFirstName} ${teacherData.teacherLastName}`,
+                    credentials: this.generateTeacherCredentials(teacherData.teacherFirstName, teacherData.teacherLastName),
+                    createdAt: new Date().toISOString()
+                };
+
+                this.teachers.push(newTeacher);
+                this.saveTeachers();
+                this.renderTeachers();
+                this.updateStats();
+                this.populateDropdowns();
+
+                console.log('✅ Teacher added successfully:', newTeacher);
+                return newTeacher;
+            }
+
+            generateTeacherCredentials(firstName, lastName) {
+                // Create username from first letter of first name + last name
+                const cleanFirstName = firstName.toLowerCase().replace(/[^a-z]/g, '').charAt(0);
+                const cleanLastName = lastName.toLowerCase().replace(/[^a-z]/g, '').substring(0, 10);
+                const username = `${cleanFirstName}.${cleanLastName}`;
+                
+                // Generate secure password
+                const password = this.generateSecurePassword();
+                
+                return { username, password };
+            }
+
+            generateSecurePassword() {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%';
+                let password = '';
+                
+                // Ensure at least one of each type
+                password += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[Math.floor(Math.random() * 26)];
+                password += 'abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random() * 26)];
+                password += '0123456789'[Math.floor(Math.random() * 10)];
+                password += '!@#$%'[Math.floor(Math.random() * 5)];
+                
+                // Fill the rest
+                for (let i = 4; i < 10; i++) {
+                    password += chars[Math.floor(Math.random() * chars.length)];
+                }
+                
+                // Shuffle the password
+                return password.split('').sort(() => Math.random() - 0.5).join('');
+            }
+
+            removeTeacher(teacherId) {
+                // Remove teacher assignments first
+                this.assignments = this.assignments.filter(assignment => assignment.teacherId !== teacherId);
+                this.saveAssignments();
+                
+                // Remove the teacher
+                this.teachers = this.teachers.filter(teacher => teacher.id !== teacherId);
+                this.saveTeachers();
+                this.renderTeachers();
+                this.renderClasses(); // Update class cards to show updated teacher info
+                this.updateStats();
+                this.populateDropdowns();
+            }
+
+            // Student Management
+            addStudent(studentData) {
+                console.log('➕ Adding student:', studentData);
+                
+                const newStudent = {
+                    id: `student_${Date.now()}`,
+                    ...studentData,
+                    fullName: `${studentData.studentFirstName} ${studentData.studentLastName}`,
+                    credentials: this.generateStudentCredentials(studentData.studentFirstName, studentData.studentLastName),
+                    createdAt: new Date().toISOString()
+                };
+
+                this.students.push(newStudent);
+                this.saveStudents();
+                
+                // Update class student count
+                const classObj = this.classes.find(cls => cls.id === studentData.studentClass);
+                if (classObj) {
+                    classObj.studentCount = this.students.filter(s => s.studentClass === studentData.studentClass).length;
+                    this.saveClasses();
+                }
+                
+                this.renderStudents();
+                this.renderClasses();
+                this.updateStats();
+
+                console.log('✅ Student added successfully:', newStudent);
+                return newStudent;
+            }
+
+            generateStudentCredentials(firstName, lastName) {
+                // Create username from first name + first letter last name + random number
+                const cleanFirstName = firstName.toLowerCase().replace(/[^a-z]/g, '').substring(0, 8);
+                const cleanLastName = lastName.toLowerCase().replace(/[^a-z]/g, '').charAt(0);
+                const randomNum = Math.floor(Math.random() * 999) + 1;
+                const username = `${cleanFirstName}.${cleanLastName}${randomNum}`;
+                
+                // Generate simple but secure password for students
+                const password = this.generateStudentPassword();
+                
+                return { username, password };
+            }
+
+            generateStudentPassword() {
+                // Simpler password for students (8 chars, but still secure)
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                let password = '';
+                
+                // Ensure at least one of each type
+                password += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[Math.floor(Math.random() * 26)];
+                password += 'abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random() * 26)];
+                password += '0123456789'[Math.floor(Math.random() * 10)];
+                
+                // Fill the rest (5 more chars)
+                for (let i = 3; i < 8; i++) {
+                    password += chars[Math.floor(Math.random() * chars.length)];
+                }
+                
+                // Shuffle the password
+                return password.split('').sort(() => Math.random() - 0.5).join('');
+            }
+
+            removeStudent(studentId) {
+                const student = this.students.find(s => s.id === studentId);
+                if (student) {
+                    // Update class student count
+                    const classObj = this.classes.find(cls => cls.id === student.studentClass);
+                    if (classObj) {
+                        classObj.studentCount = this.students.filter(s => s.studentClass === student.studentClass && s.id !== studentId).length;
+                        this.saveClasses();
+                    }
+                }
+                
+                this.students = this.students.filter(student => student.id !== studentId);
+                this.saveStudents();
+                this.renderStudents();
+                this.renderClasses();
+                this.updateStats();
+            }
+
+            // Teacher Assignment
+            assignTeacher(assignmentData) {
+                console.log('🎯 Assigning teacher:', assignmentData);
+                
+                const newAssignment = {
+                    id: `assignment_${Date.now()}`,
+                    ...assignmentData,
+                    createdAt: new Date().toISOString()
+                };
+
+                this.assignments.push(newAssignment);
+                this.saveAssignments();
+                this.renderClasses();
+
+                console.log('✅ Teacher assigned successfully:', newAssignment);
+                return newAssignment;
+            }
+
+            getClassTeachers(classId) {
+                return this.assignments
+                    .filter(assignment => assignment.assignClass === classId)
+                    .map(assignment => ({
+                        ...assignment,
+                        teacher: this.teachers.find(t => t.id === assignment.assignTeacher)
+                    }))
+                    .filter(assignment => assignment.teacher);
+            }
+
+            // Rendering Methods
+            renderClasses() {
+                const container = document.getElementById('classesList');
+                console.log('🎨 Rendering classes...', { 
+                    classCount: this.classes.length, 
+                    container: !!container 
+                });
+                
+                if (this.classes.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <h3>📚 Nog geen klassen aangemaakt</h3>
+                            <p>Voeg je eerste klas toe om te beginnen</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = this.classes.map(cls => {
+                    const teachers = this.getClassTeachers(cls.id);
+                    const teacherNames = teachers.length > 0 
+                        ? teachers.map(t => `${t.teacher.fullName} (${t.assignRole})`).join(', ')
+                        : 'Geen leerkrachten toegewezen';
+
+                    return `
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <span>📚</span>
+                                    ${cls.className} - Leerjaar ${cls.classLevel}
+                                </h3>
+                            </div>
+                            <div class="card-content">
+                                <p><strong>Leerlingen:</strong> ${cls.studentCount}${cls.maxStudents ? ` / ${cls.maxStudents}` : ''}</p>
+                                <p><strong>Lokaal:</strong> ${cls.classroom || 'Niet opgegeven'}</p>
+                                <p><strong>Leerkrachten:</strong> ${teacherNames}</p>
+                                ${cls.classNotes ? `<p><strong>Opmerkingen:</strong> ${cls.classNotes}</p>` : ''}
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn-secondary" onclick="openAssignTeacherModal('${cls.id}')">
+                                    🎯 Leerkracht Toewijzen
+                                </button>
+                                <button class="btn-secondary" onclick="removeClass('${cls.id}')">
+                                    🗑️ Verwijderen
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                console.log(`✅ Rendered ${this.classes.length} classes`);
+            }
+
+            renderTeachers() {
+                const container = document.getElementById('teachersList');
+                console.log('🎨 Rendering teachers...', { 
+                    teacherCount: this.teachers.length, 
+                    container: !!container 
+                });
+                
+                if (this.teachers.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <h3>👨‍🏫 Nog geen leerkrachten toegevoegd</h3>
+                            <p>Voeg je eerste leerkracht toe om te beginnen</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = this.teachers.map(teacher => {
+                    const assignments = this.assignments.filter(a => a.assignTeacher === teacher.id);
+                    const classNames = assignments.map(a => {
+                        const cls = this.classes.find(c => c.id === a.assignClass);
+                        return cls ? `${cls.className} (${a.assignRole})` : 'Onbekende klas';
+                    });
+
+                    return `
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <span>👨‍🏫</span>
+                                    ${teacher.fullName}
+                                </h3>
+                            </div>
+                            <div class="card-content">
+                                <p><strong>Email:</strong> ${teacher.teacherEmail}</p>
+                                <p><strong>Telefoon:</strong> ${teacher.teacherPhone || 'Niet opgegeven'}</p>
+                                <p><strong>Vakken:</strong> ${teacher.teacherSubjects || 'Niet opgegeven'}</p>
+                                <p><strong>Klassen:</strong> ${classNames.length > 0 ? classNames.join(', ') : 'Geen klassen toegewezen'}</p>
+                                ${teacher.credentials ? `
+                                    <div style="background: rgba(59, 130, 246, 0.1); padding: 0.75rem; border-radius: 8px; margin-top: 0.5rem;">
+                                        <p style="margin: 0; font-size: 0.9rem;"><strong>🔑 Logingegevens:</strong></p>
+                                        <p style="margin: 0.25rem 0; font-family: monospace; font-size: 0.85rem;">
+                                            <strong>Gebruikersnaam:</strong> ${teacher.credentials.username}<br>
+                                            <strong>Wachtwoord:</strong> ${teacher.credentials.password}
+                                        </p>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn-secondary" onclick="loginAsTeacher('${teacher.id}')">
+                                    🚪 Inloggen als Leerkracht
+                                </button>
+                                <button class="btn-secondary" onclick="viewTeacherCredentials('${teacher.id}')">
+                                    🔑 Toon Gegevens
+                                </button>
+                                <button class="btn-secondary" onclick="removeTeacher('${teacher.id}')">
+                                    🗑️ Verwijderen
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                console.log(`✅ Rendered ${this.teachers.length} teachers`);
+            }
+
+            renderStudents() {
+                const container = document.getElementById('studentsList');
+                console.log('🎨 Rendering students...', { 
+                    studentCount: this.students.length, 
+                    container: !!container 
+                });
+                
+                if (this.students.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <h3>👨‍🎓 Nog geen leerlingen ingeschreven</h3>
+                            <p>Voeg je eerste leerling toe om te beginnen</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = this.students.map(student => {
+                    const cls = this.classes.find(c => c.id === student.studentClass);
+                    const className = cls ? cls.className : 'Onbekende klas';
+
+                    return `
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <span>👨‍🎓</span>
+                                    ${student.fullName}
+                                </h3>
+                            </div>
+                            <div class="card-content">
+                                <p><strong>Klas:</strong> ${className}</p>
+                                <p><strong>Geboortedatum:</strong> ${new Date(student.studentBirthDate).toLocaleDateString('nl-NL')}</p>
+                                <p><strong>Ouder/Verzorger:</strong> ${student.parentName}</p>
+                                <p><strong>Telefoon:</strong> ${student.parentPhone || 'Niet opgegeven'}</p>
+                                <p><strong>Email:</strong> ${student.parentEmail || 'Niet opgegeven'}</p>
+                                ${student.credentials ? `
+                                    <div class="credentials-section">
+                                        <p><strong>🔑 Logingegevens leerling:</strong></p>
+                                        <div class="credentials-box">
+                                            <p><strong>Gebruikersnaam:</strong> 
+                                                <code class="credential-text">${student.credentials.username}</code>
+                                                <button class="btn-copy" onclick="copyToClipboard('${student.credentials.username}', this)" title="Kopieer gebruikersnaam">📋</button>
+                                            </p>
+                                            <p><strong>Wachtwoord:</strong> 
+                                                <code class="credential-text">${student.credentials.password}</code>
+                                                <button class="btn-copy" onclick="copyToClipboard('${student.credentials.password}', this)" title="Kopieer wachtwoord">📋</button>
+                                            </p>
+                                        </div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <div class="card-actions">
+                                ${student.credentials ? `
+                                    <button class="btn-primary" onclick="loginAsStudent('${student.id}')" title="Test login als deze leerling">
+                                        🔑 Inloggen als leerling
+                                    </button>
+                                ` : ''}
+                                <button class="btn-secondary" onclick="removeStudent('${student.id}')">
+                                    🗑️ Verwijderen
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                console.log(`✅ Rendered ${this.students.length} students`);
+            }
+
+            updateStats() {
+                document.getElementById('totalClasses').textContent = this.classes.length;
+                document.getElementById('totalTeachers').textContent = this.teachers.length;
+                document.getElementById('totalStudents').textContent = this.students.length;
+            }
+
+            populateDropdowns() {
+                // Populate student class dropdown
+                const studentClassSelect = document.getElementById('studentClass');
+                if (studentClassSelect) {
+                    studentClassSelect.innerHTML = '<option value="">Selecteer klas...</option>' +
+                        this.classes.map(cls => `<option value="${cls.id}">${cls.className} - Leerjaar ${cls.classLevel}</option>`).join('');
+                }
+
+                // Populate assignment dropdowns
+                const assignClassSelect = document.getElementById('assignClass');
+                if (assignClassSelect) {
+                    assignClassSelect.innerHTML = '<option value="">Selecteer klas...</option>' +
+                        this.classes.map(cls => `<option value="${cls.id}">${cls.className} - Leerjaar ${cls.classLevel}</option>`).join('');
+                }
+
+                const assignTeacherSelect = document.getElementById('assignTeacher');
+                if (assignTeacherSelect) {
+                    assignTeacherSelect.innerHTML = '<option value="">Selecteer leerkracht...</option>' +
+                        this.teachers.map(teacher => `<option value="${teacher.id}">${teacher.fullName}</option>`).join('');
+                }
+            }
+        }
+
+        // Global variables
+        let classManager;
+
+        // Check authentication
+        const demoUser = sessionStorage.getItem('demo_user');
+        if (!demoUser) {
+            window.location.href = '/auth/login.html?role=school';
+        } else {
+            const user = JSON.parse(demoUser);
+            
+            // Check if user has school_admin role
+            if (user.user_metadata?.role !== 'school_admin') {
+                alert('Toegang geweigerd. Alleen schoolbeheerders kunnen deze pagina bekijken.');
+                window.location.href = '/auth/login.html?role=school';
+            }
+            
+            // Update page title and header with school info
+            if (user.user_metadata?.school_name) {
+                document.title = `${user.user_metadata.school_name} - School Dashboard`;
+                document.querySelector('.dashboard-header h1').innerHTML = `
+                    <span>🏫</span>
+                    ${user.user_metadata.school_name}
+                `;
+                document.querySelector('.dashboard-header p').innerHTML = `
+                    Welkom, <strong>${user.user_metadata.full_name}</strong><br>
+                    Schoolbeheerder Dashboard
+                `;
+            }
+
+            // Initialize class manager with school ID
+            const schoolId = user.user_metadata?.school_id || 'demo_school';
+            classManager = new SchoolClassManager(schoolId);
+        }
+
+        // Modal Functions
+        window.openAddClassModal = function() {
+            document.getElementById('addClassModal').classList.add('show');
+        };
+
+        window.closeAddClassModal = function() {
+            document.getElementById('addClassModal').classList.remove('show');
+            document.getElementById('addClassForm').reset();
+        };
+
+        window.openAddTeacherModal = function() {
+            document.getElementById('addTeacherModal').classList.add('show');
+        };
+
+        window.closeAddTeacherModal = function() {
+            document.getElementById('addTeacherModal').classList.remove('show');
+            document.getElementById('addTeacherForm').reset();
+        };
+
+        window.openAddStudentModal = function() {
+            classManager.populateDropdowns();
+            document.getElementById('addStudentModal').classList.add('show');
+        };
+
+        window.closeAddStudentModal = function() {
+            document.getElementById('addStudentModal').classList.remove('show');
+            document.getElementById('addStudentForm').reset();
+        };
+
+        window.openAssignTeacherModal = function(classId = null) {
+            classManager.populateDropdowns();
+            const modal = document.getElementById('assignTeacherModal');
+            if (classId) {
+                document.getElementById('assignClass').value = classId;
+            }
+            modal.classList.add('show');
+        };
+
+        window.closeAssignTeacherModal = function() {
+            document.getElementById('assignTeacherModal').classList.remove('show');
+            document.getElementById('assignTeacherForm').reset();
+        };
+
+        // Form Handlers
+        window.handleAddClass = function(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const classData = {
+                className: formData.get('className'),
+                classLevel: formData.get('classLevel'),
+                maxStudents: formData.get('maxStudents') || null,
+                classroom: formData.get('classroom') || '',
+                classNotes: formData.get('classNotes') || ''
+            };
+            
+            try {
+                const newClass = classManager.addClass(classData);
+                closeAddClassModal();
+                alert(`✅ Klas "${newClass.className}" is succesvol toegevoegd!`);
+            } catch (error) {
+                console.error('❌ Error adding class:', error);
+                alert('❌ Er is een fout opgetreden bij het toevoegen van de klas.');
+            }
+        };
+
+        window.handleAddTeacher = function(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const teacherData = {
+                teacherFirstName: formData.get('teacherFirstName'),
+                teacherLastName: formData.get('teacherLastName'),
+                teacherEmail: formData.get('teacherEmail'),
+                teacherPhone: formData.get('teacherPhone') || '',
+                teacherSubjects: formData.get('teacherSubjects') || ''
+            };
+            
+            try {
+                const newTeacher = classManager.addTeacher(teacherData);
+                closeAddTeacherModal();
+                
+                // Show success message with credentials
+                alert(`✅ Leerkracht "${newTeacher.fullName}" is succesvol toegevoegd!\n\n🔑 Logingegevens voor leerkracht:\nGebruikersnaam: ${newTeacher.credentials.username}\nWachtwoord: ${newTeacher.credentials.password}\n\n⚠️ Bewaar deze gegevens veilig en deel ze met de leerkracht!`);
+            } catch (error) {
+                console.error('❌ Error adding teacher:', error);
+                alert('❌ Er is een fout opgetreden bij het toevoegen van de leerkracht.');
+            }
+        };
+
+        window.handleAddStudent = function(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const studentData = {
+                studentFirstName: formData.get('studentFirstName'),
+                studentLastName: formData.get('studentLastName'),
+                studentBirthDate: formData.get('studentBirthDate'),
+                studentClass: formData.get('studentClass'),
+                parentName: formData.get('parentName'),
+                parentPhone: formData.get('parentPhone') || '',
+                parentEmail: formData.get('parentEmail') || ''
+            };
+            
+            try {
+                const newStudent = classManager.addStudent(studentData);
+                closeAddStudentModal();
+                
+                // Show success message with credentials
+                alert(`✅ Leerling "${newStudent.fullName}" is succesvol toegevoegd!\n\n🔑 Logingegevens voor leerling:\nGebruikersnaam: ${newStudent.credentials.username}\nWachtwoord: ${newStudent.credentials.password}\n\n⚠️ Bewaar deze gegevens veilig en deel ze met de ouders/verzorgers!`);
+            } catch (error) {
+                console.error('❌ Error adding student:', error);
+                alert('❌ Er is een fout opgetreden bij het toevoegen van de leerling.');
+            }
+        };
+
+        window.handleAssignTeacher = function(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const assignmentData = {
+                assignClass: formData.get('assignClass'),
+                assignTeacher: formData.get('assignTeacher'),
+                assignRole: formData.get('assignRole')
+            };
+            
+            try {
+                const assignment = classManager.assignTeacher(assignmentData);
+                closeAssignTeacherModal();
+                alert(`✅ Leerkracht is succesvol toegewezen aan de klas!`);
+            } catch (error) {
+                console.error('❌ Error assigning teacher:', error);
+                alert('❌ Er is een fout opgetreden bij het toewijzen van de leerkracht.');
+            }
+        };
+
+        // Delete Functions
+        window.removeClass = function(classId) {
+            const cls = classManager.classes.find(c => c.id === classId);
+            if (!cls) return;
+            
+            if (confirm(`⚠️ Weet je zeker dat je klas "${cls.className}" wilt verwijderen?\n\nAlle leerlingen en leerkracht-toewijzingen worden ook verwijderd!`)) {
+                classManager.removeClass(classId);
+                alert(`✅ Klas "${cls.className}" is verwijderd.`);
+            }
+        };
+
+        window.removeTeacher = function(teacherId) {
+            const teacher = classManager.teachers.find(t => t.id === teacherId);
+            if (!teacher) return;
+            
+            if (confirm(`⚠️ Weet je zeker dat je leerkracht "${teacher.fullName}" wilt verwijderen?\n\nAlle klas-toewijzingen worden ook verwijderd!`)) {
+                classManager.removeTeacher(teacherId);
+                alert(`✅ Leerkracht "${teacher.fullName}" is verwijderd.`);
+            }
+        };
+
+        window.removeStudent = function(studentId) {
+            const student = classManager.students.find(s => s.id === studentId);
+            if (!student) return;
+            
+            if (confirm(`⚠️ Weet je zeker dat je leerling "${student.fullName}" wilt verwijderen?`)) {
+                classManager.removeStudent(studentId);
+                alert(`✅ Leerling "${student.fullName}" is verwijderd.`);
+            }
+        };
+
+        // Teacher Login Functions
+        window.loginAsTeacher = function(teacherId) {
+            const teacher = classManager.teachers.find(t => t.id === teacherId);
+            if (!teacher) {
+                alert('❌ Leerkracht niet gevonden');
+                return;
+            }
+            
+            if (confirm(`🚪 Wil je inloggen als "${teacher.fullName}"?\n\nJe wordt doorgestuurd naar het leerkracht dashboard.`)) {
+                // Get current school info
+                const currentUser = JSON.parse(sessionStorage.getItem('demo_user'));
+                const schoolInfo = currentUser.user_metadata;
+                
+                // Create teacher user session
+                const teacherUser = {
+                    id: `teacher_${teacherId}`,
+                    email: teacher.teacherEmail,
+                    user_metadata: {
+                        full_name: teacher.fullName,
+                        role: 'teacher',
+                        teacher_id: teacherId,
+                        school_id: schoolInfo.school_id,
+                        school_name: schoolInfo.school_name,
+                        subjects: teacher.teacherSubjects
+                    }
+                };
+                
+                sessionStorage.setItem('demo_user', JSON.stringify(teacherUser));
+                
+                // Redirect to teacher dashboard
+                window.location.href = '/teacher/index.html';
+            }
+        };
+
+        window.viewTeacherCredentials = function(teacherId) {
+            const teacher = classManager.teachers.find(t => t.id === teacherId);
+            if (!teacher || !teacher.credentials) {
+                alert('❌ Logingegevens niet gevonden');
+                return;
+            }
+            
+            const credentials = `
+🔑 Logingegevens voor ${teacher.fullName}
+
+👤 Gebruikersnaam: ${teacher.credentials.username}
+🔒 Wachtwoord: ${teacher.credentials.password}
+
+📧 Email: ${teacher.teacherEmail}
+🏫 School: ${JSON.parse(sessionStorage.getItem('demo_user')).user_metadata.school_name}
+
+⚠️ Bewaar deze gegevens veilig!
+            `;
+            
+            alert(credentials);
+        };
+
+        window.handleLogout = function() {
+            if (confirm('Weet je zeker dat je wilt uitloggen?')) {
+                sessionStorage.removeItem('demo_user');
+                window.location.href = '/index.html';
+            }
+        };
+
+        // Login as student function for testing
+        window.loginAsStudent = function(studentId) {
+            const student = classManager.students.find(s => s.id === studentId);
+            if (!student) {
+                alert('❌ Leerling niet gevonden');
+                return;
+            }
+            
+            if (confirm(`🚪 Wil je inloggen als "${student.fullName}"?\n\nJe wordt doorgestuurd naar het leerling dashboard.`)) {
+                // Get current school info
+                const currentUser = JSON.parse(sessionStorage.getItem('demo_user'));
+                const schoolInfo = currentUser.user_metadata;
+                
+                // Get student's class info
+                const studentClass = classManager.classes.find(c => c.id === student.studentClass);
+                
+                // Create student user session
+                const studentUser = {
+                    id: `student_${studentId}`,
+                    email: student.parentEmail || `${student.credentials.username}@school.edu`,
+                    user_metadata: {
+                        full_name: student.fullName,
+                        role: 'student',
+                        student_id: studentId,
+                        school_id: schoolInfo.school_id,
+                        school_name: schoolInfo.school_name,
+                        class_id: student.studentClass,
+                        class_name: studentClass ? studentClass.className : 'Onbekende klas',
+                        birth_date: student.studentBirthDate,
+                        parent_name: student.parentName,
+                        parent_phone: student.parentPhone,
+                        parent_email: student.parentEmail
+                    }
+                };
+                
+                sessionStorage.setItem('demo_user', JSON.stringify(studentUser));
+                
+                // Redirect to student dashboard
+                window.location.href = '/student/index.html';
+            }
+        };
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal-overlay')) {
+                e.target.classList.remove('show');
+            }
+        });
+
+        console.log('🏫 School Class Management Dashboard geladen!');
+    </script>
+    
+    <!-- Supabase Integration -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/assets/js/modules/supabase-config.js"></script>
+</body>
+</html>

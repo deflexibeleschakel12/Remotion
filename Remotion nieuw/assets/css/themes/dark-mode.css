@@ -1,0 +1,167 @@
+/* =================================
+   DARK-MODE.CSS - Dark mode definities
+   Schoolbeheersysteem v1.0.0
+   Dark mode varianten voor alle thema's
+   ================================= */
+
+/* =================================
+   DARK MODE VARIABELEN
+   ================================= */
+
+[data-mode="dark"] {
+    /* Dark mode basis kleuren */
+    --color-bg-primary: #0f1419;
+    --color-bg-secondary: #1a1f2e;
+    --color-bg-tertiary: #2d3748;
+    --color-bg-quaternary: #4a5568;
+    
+    --color-text-primary: #ffffff;
+    --color-text-secondary: #cbd5e0;
+    --color-text-muted: #a0aec0;
+    --color-text-disabled: #718096;
+    
+    --color-border: rgba(255, 255, 255, 0.1);
+    --color-border-focus: rgba(255, 255, 255, 0.3);
+    
+    /* Dark mode glassmorphism */
+    --glass-base: rgba(255, 255, 255, 0.05);
+    --glass-hover: rgba(255, 255, 255, 0.1);
+    --glass-strong: rgba(255, 255, 255, 0.08);
+    
+    /* Dark mode shadows */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.7);
+    --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.8);
+}
+
+/* =================================
+   DARK MODE THEMA OVERRIDES
+   ================================= */
+
+/* Default theme dark mode */
+[data-theme="default"][data-mode="dark"] {
+    --theme-bg: linear-gradient(135deg, #0f1419 0%, #1a1f2e 50%, #2d3748 100%);
+    --theme-text: var(--color-text-primary);
+    --theme-text-muted: var(--color-text-muted);
+}
+
+/* Admin theme dark mode */
+[data-theme="admin"][data-mode="dark"] {
+    --theme-bg: linear-gradient(135deg, #1a1711 0%, #2d2411 50%, #3d3016 100%);
+    --theme-text: var(--color-text-primary);
+    --theme-text-muted: var(--color-text-muted);
+    --theme-text-inverse: var(--color-gray-900);
+    
+    /* Admin dark glassmorphism */
+    --theme-glass: rgba(245, 158, 11, 0.08);
+    --theme-glass-hover: rgba(245, 158, 11, 0.15);
+    --theme-glass-strong: rgba(245, 158, 11, 0.12);
+    --theme-border: rgba(245, 158, 11, 0.2);
+}
+
+/* School theme dark mode */
+[data-theme="school"][data-mode="dark"] {
+    --theme-bg: linear-gradient(135deg, #0f1419 0%, #1e2a3a 50%, #2a3f5f 100%);
+    --theme-text: var(--color-text-primary);
+    --theme-text-muted: var(--color-text-muted);
+    --theme-text-inverse: var(--color-gray-900);
+    
+    /* School dark glassmorphism */
+    --theme-glass: rgba(59, 130, 246, 0.08);
+    --theme-glass-hover: rgba(59, 130, 246, 0.15);
+    --theme-glass-strong: rgba(59, 130, 246, 0.12);
+    --theme-border: rgba(59, 130, 246, 0.2);
+}
+
+/* Teacher theme dark mode */
+[data-theme="teacher"][data-mode="dark"] {
+    --theme-bg: linear-gradient(135deg, #0f1915 0%, #1a2e1f 50%, #22543d 100%);
+    --theme-text: var(--color-text-primary);
+    --theme-text-muted: var(--color-text-muted);
+    --theme-text-inverse: var(--color-gray-900);
+    
+    /* Teacher dark glassmorphism */
+    --theme-glass: rgba(16, 185, 129, 0.08);
+    --theme-glass-hover: rgba(16, 185, 129, 0.15);
+    --theme-glass-strong: rgba(16, 185, 129, 0.12);
+    --theme-border: rgba(16, 185, 129, 0.2);
+}
+
+/* Student theme dark mode */
+[data-theme="student"][data-mode="dark"] {
+    --theme-bg: linear-gradient(135deg, #1a1625 0%, #2d2438 50%, #44337a 100%);
+    --theme-text: var(--color-text-primary);
+    --theme-text-muted: var(--color-text-muted);
+    --theme-text-inverse: var(--color-gray-900);
+    
+    /* Student dark glassmorphism */
+    --theme-glass: rgba(139, 92, 246, 0.08);
+    --theme-glass-hover: rgba(139, 92, 246, 0.15);
+    --theme-glass-strong: rgba(139, 92, 246, 0.12);
+    --theme-border: rgba(139, 92, 246, 0.2);
+}
+
+/* =================================
+   DARK MODE SPECIFIEKE STYLES
+   ================================= */
+
+[data-mode="dark"] .portal-card {
+    border-color: var(--color-border);
+    box-shadow: var(--shadow-lg);
+}
+
+[data-mode="dark"] .portal-card:hover {
+    border-color: var(--color-border-focus);
+    box-shadow: var(--shadow-xl);
+}
+
+[data-mode="dark"] .theme-toggle {
+    background: var(--glass-base);
+    border-color: var(--color-border);
+    color: var(--color-text-primary);
+}
+
+[data-mode="dark"] .theme-toggle:hover {
+    background: var(--glass-hover);
+    border-color: var(--color-border-focus);
+}
+
+[data-mode="dark"] .theme-selector {
+    background: var(--color-bg-secondary);
+    border-color: var(--color-border);
+    box-shadow: var(--shadow-lg);
+}
+
+[data-mode="dark"] .theme-option {
+    border-color: var(--color-border);
+}
+
+[data-mode="dark"] .theme-option:hover {
+    background: var(--glass-hover);
+    border-color: var(--color-border-focus);
+}
+
+[data-mode="dark"] .theme-option.active {
+    border-color: var(--theme-primary);
+    box-shadow: 0 0 0 2px var(--theme-primary);
+}
+
+[data-mode="dark"] .workflow-step {
+    background: var(--glass-base);
+    border-color: var(--color-border);
+    color: var(--color-text-primary);
+}
+
+[data-mode="dark"] .workflow-step:hover {
+    background: var(--glass-hover);
+    border-color: var(--color-border-focus);
+}
+
+[data-mode="dark"] .stats-counter {
+    color: var(--color-text-primary);
+}
+
+[data-mode="dark"] .stats-label {
+    color: var(--color-text-muted);
+}

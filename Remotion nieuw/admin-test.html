@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Test - School Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .school-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            background: #4F46E5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        
+        .btn:hover {
+            background: #3730A3;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            color: white;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .school-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .school-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #F59E0B;
+        }
+        
+        .school-details {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .credentials-box {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        .credentials-box h4 {
+            margin: 0 0 10px 0;
+            color: #F59E0B;
+        }
+        
+        .actions {
+            margin-top: 15px;
+        }
+        
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+        
+        .btn-danger {
+            background: #EF4444;
+        }
+        
+        .btn-danger:hover {
+            background: #DC2626;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            opacity: 0.7;
+        }
+        
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏫 School Management System - Test</h1>
+            <p>Administrator Dashboard - School Beheer</p>
+        </div>
+        
+        <div class="school-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>Geregistreerde Scholen</h2>
+                <button class="btn" onclick="openAddSchoolModal()">➕ School Toevoegen</button>
+            </div>
+            <div id="schoolList">
+                <!-- Schools will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add School Modal -->
+    <div id="addSchoolModal" class="modal">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>🏫 Nieuwe School Toevoegen</h2>
+                <button class="btn" onclick="closeAddSchoolModal()">✕</button>
+            </div>
+            
+            <form id="addSchoolForm" onsubmit="handleAddSchool(event)">
+                <div class="form-group">
+                    <label for="schoolName">Schoolnaam *</label>
+                    <input type="text" id="schoolName" name="schoolName" placeholder="Bijv. Basisschool De Regenboog" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="schoolType">Type School *</label>
+                        <select id="schoolType" name="schoolType" required>
+                            <option value="">Selecteer type...</option>
+                            <option value="basisschool">Basisschool</option>
+                            <option value="middelbare-school">Middelbare School</option>
+                            <option value="vmbo">VMBO</option>
+                            <option value="havo">HAVO</option>
+                            <option value="vwo">VWO</option>
+                            <option value="mbo">MBO</option>
+                            <option value="speciaal-onderwijs">Speciaal Onderwijs</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="studentCount">Aantal Leerlingen</label>
+                        <input type="number" id="studentCount" name="studentCount" placeholder="250" min="1">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="schoolAddress">Adres</label>
+                    <input type="text" id="schoolAddress" name="schoolAddress" placeholder="Schoolstraat 123, 1234 AB Amsterdam">
+                </div>
+
+                <div class="form-group">
+                    <label for="adminName">Naam Beheerder *</label>
+                    <input type="text" id="adminName" name="adminName" placeholder="Dhr./Mevr. van der Berg" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="adminEmail">Email Beheerder *</label>
+                        <input type="email" id="adminEmail" name="adminEmail" placeholder="beheerder@school.nl" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="adminPhone">Telefoon Beheerder</label>
+                        <input type="tel" id="adminPhone" name="adminPhone" placeholder="06-12345678">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="schoolNotes">Opmerkingen</label>
+                    <textarea id="schoolNotes" name="schoolNotes" rows="3" placeholder="Extra informatie over de school..."></textarea>
+                </div>
+
+                <button type="submit" class="btn" style="width: 100%; margin-top: 20px;">
+                    🏫 School Toevoegen
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication
+        const demoUser = sessionStorage.getItem('demo_user');
+        if (!demoUser) {
+            alert('⚠️ Je bent niet ingelogd! Ga eerst naar de login pagina.');
+            window.location.href = 'auth/login.html?role=admin';
+        }
+
+        // School Management System
+        class SchoolManager {
+            constructor() {
+                this.schools = this.loadSchools();
+                this.init();
+            }
+
+            init() {
+                this.renderSchoolList();
+                console.log('🎯 SchoolManager initialized with', this.schools.length, 'schools');
+            }
+
+            loadSchools() {
+                const stored = localStorage.getItem('admin_schools');
+                if (stored) {
+                    return JSON.parse(stored);
+                }
+                
+                // Default demo schools
+                return [
+                    {
+                        id: 'school_1',
+                        name: 'Basisschool De Regenboog',
+                        type: 'basisschool',
+                        studentCount: 287,
+                        address: 'Schoolstraat 12, 1234 AB Amsterdam',
+                        adminName: 'Mevr. van der Berg',
+                        adminEmail: 'j.vandenberg@regenboog.nl',
+                        adminPhone: '06-12345678',
+                        notes: 'Actieve school met moderne faciliteiten',
+                        credentials: {
+                            username: 'regenboog_admin',
+                            password: 'RB2024_Secure!'
+                        },
+                        status: 'active',
+                        createdAt: new Date('2024-01-15').toISOString(),
+                        lastLogin: new Date('2024-01-20').toISOString()
+                    }
+                ];
+            }
+
+            saveSchools() {
+                localStorage.setItem('admin_schools', JSON.stringify(this.schools));
+                console.log('💾 Schools saved to localStorage');
+            }
+
+            generateCredentials(schoolName) {
+                const cleanName = schoolName.toLowerCase()
+                    .replace(/[^a-z0-9]/g, '')
+                    .substring(0, 8);
+                
+                const username = `${cleanName}_admin`;
+                const password = this.generateSecurePassword();
+                
+                return { username, password };
+            }
+
+            generateSecurePassword() {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%';
+                let password = '';
+                
+                // Ensure at least one of each type
+                password += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[Math.floor(Math.random() * 26)];
+                password += 'abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random() * 26)];
+                password += '0123456789'[Math.floor(Math.random() * 10)];
+                password += '!@#$%'[Math.floor(Math.random() * 5)];
+                
+                // Fill the rest
+                for (let i = 4; i < 12; i++) {
+                    password += chars[Math.floor(Math.random() * chars.length)];
+                }
+                
+                // Shuffle the password
+                return password.split('').sort(() => Math.random() - 0.5).join('');
+            }
+
+            addSchool(schoolData) {
+                const school = {
+                    id: `school_${Date.now()}`,
+                    ...schoolData,
+                    credentials: this.generateCredentials(schoolData.name),
+                    status: 'active',
+                    createdAt: new Date().toISOString(),
+                    lastLogin: null
+                };
+
+                this.schools.push(school);
+                this.saveSchools();
+                this.renderSchoolList();
+
+                return school;
+            }
+
+            removeSchool(schoolId) {
+                this.schools = this.schools.filter(school => school.id !== schoolId);
+                this.saveSchools();
+                this.renderSchoolList();
+            }
+
+            renderSchoolList() {
+                const container = document.getElementById('schoolList');
+                
+                if (this.schools.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <p>🏫 Nog geen scholen geregistreerd</p>
+                            <p style="font-size: 14px; opacity: 0.7;">Voeg je eerste school toe om te beginnen</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = this.schools.map(school => `
+                    <div class="school-item">
+                        <div class="school-name">${school.name}</div>
+                        
+                        <div class="school-details">
+                            🏫 <strong>Type:</strong> ${school.type.charAt(0).toUpperCase() + school.type.slice(1).replace('-', ' ')}<br>
+                            👥 <strong>Leerlingen:</strong> ${school.studentCount || 'Onbekend'}<br>
+                            👤 <strong>Beheerder:</strong> ${school.adminName}<br>
+                            📧 <strong>Email:</strong> ${school.adminEmail}<br>
+                            ${school.adminPhone ? `📞 <strong>Telefoon:</strong> ${school.adminPhone}<br>` : ''}
+                            ${school.address ? `📍 <strong>Adres:</strong> ${school.address}<br>` : ''}
+                            ${school.notes ? `📝 <strong>Opmerkingen:</strong> ${school.notes}` : ''}
+                        </div>
+
+                        <div class="credentials-box">
+                            <h4>🔑 Inloggegevens Beheerder</h4>
+                            <div><strong>Gebruikersnaam:</strong> ${school.credentials.username}</div>
+                            <div><strong>Wachtwoord:</strong> ${school.credentials.password}</div>
+                            <div style="font-size: 12px; opacity: 0.7; margin-top: 10px;">
+                                ⚠️ Deze gegevens zijn alleen zichtbaar voor systeembeheerders
+                            </div>
+                        </div>
+
+                        <div class="actions">
+                            <button class="btn btn-small" onclick="loginAsSchool('${school.id}')">🚪 Inloggen als School</button>
+                            <button class="btn btn-small btn-danger" onclick="removeSchool('${school.id}')">🗑️ Verwijderen</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Initialize school manager
+        const schoolManager = new SchoolManager();
+
+        // Modal functions
+        function openAddSchoolModal() {
+            console.log('🎯 Opening add school modal');
+            document.getElementById('addSchoolModal').classList.add('active');
+        }
+
+        function closeAddSchoolModal() {
+            console.log('🎯 Closing add school modal');
+            document.getElementById('addSchoolModal').classList.remove('active');
+            document.getElementById('addSchoolForm').reset();
+        }
+
+        function handleAddSchool(event) {
+            event.preventDefault();
+            console.log('🎯 Handling add school form submission');
+            
+            const formData = new FormData(event.target);
+            const schoolData = {
+                name: formData.get('schoolName'),
+                type: formData.get('schoolType'),
+                studentCount: formData.get('studentCount') || 0,
+                address: formData.get('schoolAddress') || '',
+                adminName: formData.get('adminName'),
+                adminEmail: formData.get('adminEmail'),
+                adminPhone: formData.get('adminPhone') || '',
+                notes: formData.get('schoolNotes') || ''
+            };
+
+            console.log('📝 School data:', schoolData);
+
+            try {
+                const newSchool = schoolManager.addSchool(schoolData);
+                closeAddSchoolModal();
+                
+                // Show success message with credentials
+                alert(`✅ School "${newSchool.name}" is succesvol toegevoegd!\n\n🔑 Inloggegevens voor beheerder:\nGebruikersnaam: ${newSchool.credentials.username}\nWachtwoord: ${newSchool.credentials.password}\n\n⚠️ Bewaar deze gegevens veilig!`);
+                
+            } catch (error) {
+                alert('❌ Er is een fout opgetreden bij het toevoegen van de school. Probeer het opnieuw.');
+                console.error('Error adding school:', error);
+            }
+        }
+
+        function loginAsSchool(schoolId) {
+            const school = schoolManager.schools.find(s => s.id === schoolId);
+            if (!school) return;
+            
+            if (confirm(`🚪 Wil je inloggen als beheerder van "${school.name}"?\n\nJe wordt doorgestuurd naar het school dashboard.`)) {
+                // Create a demo school admin user session
+                const schoolAdminUser = {
+                    id: `school_admin_${schoolId}`,
+                    email: school.adminEmail,
+                    user_metadata: {
+                        full_name: school.adminName,
+                        role: 'school_admin',
+                        school_id: schoolId,
+                        school_name: school.name
+                    }
+                };
+                
+                sessionStorage.setItem('demo_user', JSON.stringify(schoolAdminUser));
+                
+                // Update last login
+                school.lastLogin = new Date().toISOString();
+                schoolManager.saveSchools();
+                
+                // Redirect to school dashboard
+                const baseUrl = window.location.origin;
+                window.location.href = `${baseUrl}/school/index.html`;
+            }
+        }
+
+        function removeSchool(schoolId) {
+            const school = schoolManager.schools.find(s => s.id === schoolId);
+            if (!school) return;
+            
+            if (confirm(`⚠️ Weet je zeker dat je "${school.name}" wilt verwijderen?\n\nDeze actie kan niet ongedaan worden gemaakt!`)) {
+                schoolManager.removeSchool(schoolId);
+                alert(`✅ School "${school.name}" is verwijderd.`);
+            }
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('addSchoolModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAddSchoolModal();
+            }
+        });
+
+        console.log('🚀 Admin Test Dashboard Loaded!');
+    </script>
+</body>
+</html>

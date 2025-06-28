@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="nl" data-theme="default">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supabase Login - Schoolbeheersysteem</title>
+    
+    <!-- Modulaire CSS Imports -->
+    <link rel="stylesheet" href="/assets/css/shared.css">
+    <link rel="stylesheet" href="/assets/css/components.css">
+    <link rel="stylesheet" href="/assets/css/animations-modular.css">
+    <link rel="stylesheet" href="/assets/css/themes.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .mode-toggle {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.25rem;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .mode-btn.active {
+            background: rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4F46E5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 0.875rem 1.5rem;
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.4);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message, .success-message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #FEE2E2;
+        }
+
+        .success-message {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            color: #D1FAE5;
+        }
+
+        .demo-credentials {
+            background: rgba(251, 191, 36, 0.2);
+            border: 1px solid rgba(251, 191, 36, 0.4);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .demo-credentials h4 {
+            margin: 0 0 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .demo-login-btn {
+            background: rgba(251, 191, 36, 0.3);
+            border: 1px solid rgba(251, 191, 36, 0.5);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin: 0.25rem 0.25rem 0 0;
+            transition: all 0.3s ease;
+        }
+
+        .demo-login-btn:hover {
+            background: rgba(251, 191, 36, 0.4);
+        }
+
+        .status-indicator {
+            text-align: center;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .supabase-connected {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #D1FAE5;
+        }
+
+        .supabase-disconnected {
+            background: rgba(251, 191, 36, 0.2);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            color: #FEF3C7;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>🎓 Schoolbeheersysteem</h1>
+            <p>Supabase Authenticatie</p>
+        </div>
+
+        <!-- Connection Status -->
+        <div id="connectionStatus" class="status-indicator">
+            🔍 Verbindingsstatus controleren...
+        </div>
+
+        <!-- Login Mode Toggle -->
+        <div class="mode-toggle">
+            <button class="mode-btn active" onclick="setMode('login')" id="loginModeBtn">Inloggen</button>
+            <button class="mode-btn" onclick="setMode('register')" id="registerModeBtn">Registreren</button>
+        </div>
+
+        <!-- Error/Success Messages -->
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+
+        <!-- Login/Register Form -->
+        <form id="authForm" onsubmit="handleAuth(event)">
+            <div class="form-group">
+                <label for="email">E-mailadres</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    class="form-input"
+                    placeholder="naam@school.nl" 
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password">Wachtwoord</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    class="form-input"
+                    placeholder="Minimaal 6 karakters" 
+                    required
+                >
+            </div>
+
+            <div class="form-group" id="roleGroup" style="display: none;">
+                <label for="role">Rol</label>
+                <select id="role" name="role" class="form-input">
+                    <option value="teacher">Leerkracht</option>
+                    <option value="admin">Administrator</option>
+                    <option value="student">Student</option>
+                </select>
+            </div>
+
+            <button type="submit" class="login-btn" id="authBtn">
+                🔐 Inloggen
+            </button>
+        </form>
+
+        <!-- Demo Credentials -->
+        <div class="demo-credentials">
+            <h4>🧪 Demo Accounts</h4>
+            <p style="margin-bottom: 0.5rem;">Voor testing (werkt zonder Supabase):</p>
+            <button class="demo-login-btn" onclick="demoLogin('teacher')">👨‍🏫 Leerkracht</button>
+            <button class="demo-login-btn" onclick="demoLogin('student')">👨‍🎓 Student</button>
+            <button class="demo-login-btn" onclick="demoLogin('admin')">👑 Admin</button>
+        </div>
+    </div>
+
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/assets/js/modules/supabase-config.js"></script>
+
+    <script>
+        let currentMode = 'login';
+        let supabaseClient = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initializeSupabase();
+            checkConnection();
+        });
+
+        async function initializeSupabase() {
+            try {
+                // Wait for SupabaseConfig to load
+                if (window.SupabaseConfig) {
+                    supabaseClient = window.SupabaseConfig.supabase;
+                    console.log('✅ Supabase client loaded');
+                } else {
+                    console.warn('⚠️ SupabaseConfig not available');
+                }
+            } catch (error) {
+                console.error('❌ Supabase initialization failed:', error);
+            }
+        }
+
+        function checkConnection() {
+            const statusEl = document.getElementById('connectionStatus');
+            
+            if (supabaseClient && window.SupabaseConfig?.isSupabaseAvailable()) {
+                statusEl.innerHTML = '🟢 Supabase Verbonden - Echte Authenticatie Beschikbaar';
+                statusEl.className = 'status-indicator supabase-connected';
+            } else {
+                statusEl.innerHTML = '🟡 Supabase Niet Beschikbaar - Demo Modus Actief';
+                statusEl.className = 'status-indicator supabase-disconnected';
+            }
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            
+            const loginBtn = document.getElementById('loginModeBtn');
+            const registerBtn = document.getElementById('registerModeBtn');
+            const authBtn = document.getElementById('authBtn');
+            const roleGroup = document.getElementById('roleGroup');
+            
+            if (mode === 'login') {
+                loginBtn.classList.add('active');
+                registerBtn.classList.remove('active');
+                authBtn.innerHTML = '🔐 Inloggen';
+                roleGroup.style.display = 'none';
+            } else {
+                loginBtn.classList.remove('active');
+                registerBtn.classList.add('active');
+                authBtn.innerHTML = '👤 Registreren';
+                roleGroup.style.display = 'block';
+            }
+            
+            clearMessages();
+        }
+
+        async function handleAuth(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
+            const authBtn = document.getElementById('authBtn');
+            
+            // Disable button and show loading
+            authBtn.disabled = true;
+            authBtn.innerHTML = currentMode === 'login' ? '🔄 Inloggen...' : '🔄 Registreren...';
+            
+            clearMessages();
+            
+            try {
+                if (supabaseClient && window.SupabaseConfig?.isSupabaseAvailable()) {
+                    // Use real Supabase auth
+                    if (currentMode === 'login') {
+                        await supabaseLogin(email, password);
+                    } else {
+                        await supabaseRegister(email, password, role);
+                    }
+                } else {
+                    // Fallback to demo auth
+                    await demoAuth(email, password, role);
+                }
+            } catch (error) {
+                showError(error.message);
+                console.error('Auth error:', error);
+            } finally {
+                // Reset button
+                authBtn.disabled = false;
+                authBtn.innerHTML = currentMode === 'login' ? '🔐 Inloggen' : '👤 Registreren';
+            }
+        }
+
+        async function supabaseLogin(email, password) {
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
+            
+            if (error) {
+                throw new Error(`Login failed: ${error.message}`);
+            }
+            
+            if (data.user) {
+                showSuccess('✅ Succesvol ingelogd via Supabase!');
+                
+                // Store user data
+                const userData = {
+                    id: data.user.id,
+                    email: data.user.email,
+                    user_metadata: data.user.user_metadata || {}
+                };
+                
+                sessionStorage.setItem('supabase_user', JSON.stringify(userData));
+                
+                // Redirect based on role
+                setTimeout(() => {
+                    const role = data.user.user_metadata?.role || 'admin';
+                    redirectToRole(role);
+                }, 1500);
+            }
+        }
+
+        async function supabaseRegister(email, password, role) {
+            const { data, error } = await supabaseClient.auth.signUp({
+                email: email,
+                password: password,
+                options: {
+                    data: {
+                        role: role,
+                        full_name: `${role.charAt(0).toUpperCase() + role.slice(1)} User`
+                    }
+                }
+            });
+            
+            if (error) {
+                throw new Error(`Registration failed: ${error.message}`);
+            }
+            
+            if (data.user) {
+                showSuccess('✅ Account succesvol aangemaakt! Check je email voor verificatie.');
+            }
+        }
+
+        async function demoAuth(email, password, role) {
+            // Simulate delay
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            if (currentMode === 'register') {
+                showSuccess('✅ Demo account aangemaakt! Je kunt nu inloggen.');
+                setMode('login');
+                return;
+            }
+            
+            // Demo login
+            if (!email || !password) {
+                throw new Error('Vul alle velden in.');
+            }
+            
+            if (password.length < 6) {
+                throw new Error('Wachtwoord moet minimaal 6 karakters bevatten.');
+            }
+            
+            // Create demo user
+            createDemoUser(email, 'admin');
+        }
+
+        function demoLogin(role) {
+            const emails = {
+                teacher: 'teacher@demo.nl',
+                student: 'student@demo.nl', 
+                admin: 'admin@demo.nl'
+            };
+            
+            document.getElementById('email').value = emails[role];
+            document.getElementById('password').value = 'demo123';
+            
+            createDemoUser(emails[role], role);
+        }
+
+        function createDemoUser(email, role) {
+            const baseMetadata = {
+                role: role,
+                full_name: `Demo ${role.charAt(0).toUpperCase() + role.slice(1)}`
+            };
+            
+            // Add role-specific metadata
+            if (role === 'teacher') {
+                Object.assign(baseMetadata, {
+                    teacher_id: 'demo-teacher-123',
+                    school_id: 'demo-school-123',
+                    school_name: 'Demo Basisschool',
+                    subjects: 'Nederlands, Rekenen'
+                });
+            } else if (role === 'student') {
+                Object.assign(baseMetadata, {
+                    student_id: 'demo-student-main',
+                    school_id: 'demo-school-123',
+                    class_id: 'demo-class-1',
+                    school_name: 'Demo Basisschool',
+                    class_name: 'Groep 5A'
+                });
+            } else if (role === 'admin') {
+                baseMetadata.full_name = 'Demo Administrator';
+            }
+            
+            const demoUser = {
+                id: `demo-${role}-123`,
+                email: email,
+                user_metadata: baseMetadata
+            };
+            
+            sessionStorage.setItem('demo_user', JSON.stringify(demoUser));
+            
+            showSuccess(`✅ Demo login succesvol als ${role}!`);
+            
+            setTimeout(() => {
+                redirectToRole(role);
+            }, 1500);
+        }
+
+        function redirectToRole(role) {
+            const redirects = {
+                admin: '/admin/index.html',
+                teacher: '/teacher/index.html',
+                student: '/student/index.html'
+            };
+            
+            window.location.href = redirects[role] || '/index.html';
+        }
+
+        function showError(message) {
+            const errorEl = document.getElementById('errorMessage');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+        }
+
+        function showSuccess(message) {
+            const successEl = document.getElementById('successMessage');
+            successEl.textContent = message;
+            successEl.style.display = 'block';
+        }
+
+        function clearMessages() {
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

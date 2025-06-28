@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="nl" data-theme="default">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - Schoolbeheersysteem</title>
+    
+    <!-- Modulaire CSS Imports -->
+    <link rel="stylesheet" href="/assets/css/shared.css">
+    <link rel="stylesheet" href="/assets/css/components.css">
+    <link rel="stylesheet" href="/assets/css/animations-modular.css">
+    <link rel="stylesheet" href="/assets/css/themes.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%2310B981' width='100' height='100' rx='20'/><text x='50' y='65' font-size='60' text-anchor='middle' fill='white'>👨‍🏫</text></svg>">
+    
+    <style>
+        :root {
+            --teacher-primary: #10B981;
+            --teacher-secondary: #059669;
+            --teacher-gradient: linear-gradient(135deg, #10B981 0%, #059669 100%);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            margin: 0;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .dashboard-header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .management-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .management-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .management-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--teacher-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.3);
+        }
+
+        /* Teacher Dashboard Specific Styles */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--teacher-primary);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .classes-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            margin: 0;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .classes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .class-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .class-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .class-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .class-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .role-badge {
+            background: var(--teacher-gradient);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .students-list {
+            margin-top: 1rem;
+        }
+
+        .student-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .student-item:last-child {
+            border-bottom: none;
+        }
+
+        .student-name {
+            font-weight: 500;
+        }
+
+        .student-info {
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .empty-state h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.2rem;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <button class="logout-btn" onclick="handleLogout()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M16 17v-3H9v-4h7V7l5 5-5 5M14 2a2 2 0 012 2v2h-2V4H4v16h10v-2h2v2a2 2 0 01-2 2H4a2 2 0 01-2-2V4a2 2 0 012-2h10z"/>
+        </svg>
+        Uitloggen
+    </button>
+
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>
+                <span>👨‍🏫</span>
+                Leerkracht Dashboard
+            </h1>
+            <p id="teacherWelcome">Welkom bij je leerkracht dashboard</p>
+        </header>
+
+        <!-- Quick Stats -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalMyClasses">0</div>
+                <div class="stat-label">Mijn Klassen</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalMyStudents">0</div>
+                <div class="stat-label">Mijn Leerlingen</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="mainClassRole">-</div>
+                <div class="stat-label">Hoofdklas</div>
+            </div>
+        </section>
+
+        <!-- My Classes -->
+        <section class="classes-section">
+            <div class="section-header">
+                <h2>📚 Mijn Klassen</h2>
+                <a href="/school/index.html" class="btn-back">
+                    ← Terug naar School Dashboard
+                </a>
+            </div>
+            <div id="myClassesList" class="classes-grid">
+                <!-- Classes will be rendered here -->
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Teacher Dashboard Manager
+        class TeacherDashboardManager {
+            constructor(teacherId, schoolId) {
+                this.teacherId = teacherId;
+                this.schoolId = schoolId;
+                this.classes = [];
+                this.teachers = [];
+                this.students = [];
+                this.assignments = [];
+                this.init();
+            }
+
+            async init() {
+                console.log('🚀 Initializing TeacherDashboardManager for teacher:', this.teacherId);
+                
+                // Load all data asynchronously
+                this.classes = await this.loadClasses();
+                this.teachers = await this.loadTeachers();
+                this.students = await this.loadStudents();
+                this.assignments = await this.loadAssignments();
+                
+                console.log('📊 Available data:', {
+                    classes: this.classes.length,
+                    teachers: this.teachers.length,
+                    students: this.students.length,
+                    assignments: this.assignments.length
+                });
+                
+                // Save demo data to localStorage for other dashboards
+                this.saveDemoDataToLocalStorage();
+                
+                const myAssignments = this.getMyAssignments();
+                console.log('📋 My assignments:', myAssignments);
+                
+                const myClasses = this.getMyClasses();
+                console.log('🏫 My classes:', myClasses);
+                
+                this.renderMyClasses();
+                this.updateStats();
+                console.log('✅ TeacherDashboardManager initialized');
+            }
+
+            // Method to reload data - can be called after initialization
+            async loadData() {
+                console.log('🔄 Reloading teacher data...');
+                this.classes = await this.loadClasses();
+                this.teachers = await this.loadTeachers();
+                this.students = await this.loadStudents();
+                this.assignments = await this.loadAssignments();
+                
+                // Save demo data to localStorage for other dashboards to use
+                this.saveDemoDataToLocalStorage();
+                
+                this.renderMyClasses();
+                this.updateStats();
+                console.log('✅ Teacher data reloaded');
+            }
+
+            // Save demo data to localStorage for consistency across dashboards
+            saveDemoDataToLocalStorage() {
+                localStorage.setItem(`school_classes_${this.schoolId}`, JSON.stringify(this.classes));
+                localStorage.setItem(`school_teachers_${this.schoolId}`, JSON.stringify(this.teachers));
+                localStorage.setItem(`school_students_${this.schoolId}`, JSON.stringify(this.students));
+                localStorage.setItem(`school_assignments_${this.schoolId}`, JSON.stringify(this.assignments));
+                console.log('💾 Demo data saved to localStorage for school:', this.schoolId);
+            }
+
+            // Data Loading with Supabase integration
+            async loadClasses() {
+                console.log('📚 Loading classes from Supabase...');
+                
+                // Try Supabase first
+                if (window.SupabaseConfig && window.SupabaseConfig.isSupabaseAvailable()) {
+                    try {
+                        const supabaseClasses = await window.SupabaseConfig.supabase
+                            .from('classes')
+                            .select('*')
+                            .eq('school_id', this.schoolId);
+                        
+                        if (supabaseClasses.data && supabaseClasses.data.length > 0) {
+                            console.log(`✅ Loaded ${supabaseClasses.data.length} classes from Supabase`);
+                            return supabaseClasses.data.map(cls => ({
+                                id: cls.id,
+                                className: cls.class_name,
+                                classLevel: cls.class_level,
+                                classYear: cls.class_year,
+                                studentCount: cls.student_count,
+                                maxStudents: cls.max_students
+                            }));
+                        }
+                    } catch (error) {
+                        console.warn('⚠️ Supabase classes loading failed:', error);
+                    }
+                }
+                
+                // Check localStorage
+                const stored = localStorage.getItem(`school_classes_${this.schoolId}`);
+                if (stored) {
+                    console.log('📁 Loading classes from localStorage');
+                    return JSON.parse(stored);
+                }
+                
+                // Return demo data as fallback
+                console.log('🎭 Using demo classes data');
+                return [
+                    {
+                        id: 'demo-class-1',
+                        className: 'Groep 5A',
+                        classLevel: '5',
+                        classYear: '2024',
+                        studentCount: 24,
+                        maxStudents: 30
+                    },
+                    {
+                        id: 'demo-class-2', 
+                        className: 'Groep 5B',
+                        classLevel: '5',
+                        classYear: '2024',
+                        studentCount: 22,
+                        maxStudents: 30
+                    }
+                ];
+            }
+
+            async loadTeachers() {
+                console.log('👨‍🏫 Loading teachers from Supabase...');
+                
+                // Try Supabase first
+                if (window.SupabaseConfig && window.SupabaseConfig.isSupabaseAvailable()) {
+                    try {
+                        const supabaseTeachers = await window.SupabaseConfig.supabase
+                            .from('teachers')
+                            .select('*')
+                            .eq('school_id', this.schoolId);
+                        
+                        if (supabaseTeachers.data && supabaseTeachers.data.length > 0) {
+                            console.log(`✅ Loaded ${supabaseTeachers.data.length} teachers from Supabase`);
+                            return supabaseTeachers.data.map(teacher => ({
+                                id: teacher.id,
+                                firstName: teacher.first_name,
+                                lastName: teacher.last_name,
+                                fullName: teacher.full_name,
+                                email: teacher.email,
+                                phone: teacher.phone,
+                                subjects: teacher.subjects
+                            }));
+                        }
+                    } catch (error) {
+                        console.warn('⚠️ Supabase teachers loading failed:', error);
+                    }
+                }
+                
+                // Check localStorage
+                const stored = localStorage.getItem(`school_teachers_${this.schoolId}`);
+                if (stored) {
+                    console.log('📁 Loading teachers from localStorage');
+                    return JSON.parse(stored);
+                }
+                
+                // Return demo data
+                console.log('🎭 Using demo teachers data');
+                return [
+                    {
+                        id: this.teacherId,
+                        firstName: 'Demo',
+                        lastName: 'Leerkracht',
+                        fullName: 'Demo Leerkracht',
+                        email: 'teacher@demo.nl',
+                        subjects: ['Nederlands', 'Rekenen']
+                    }
+                ];
+            }
+
+            async loadStudents() {
+                console.log('👨‍🎓 Loading students from Supabase...');
+                
+                // Try Supabase first
+                if (window.SupabaseConfig && window.SupabaseConfig.isSupabaseAvailable()) {
+                    try {
+                        const supabaseStudents = await window.SupabaseConfig.supabase
+                            .from('students')
+                            .select('*')
+                            .eq('school_id', this.schoolId);
+                        
+                        if (supabaseStudents.data && supabaseStudents.data.length > 0) {
+                            console.log(`✅ Loaded ${supabaseStudents.data.length} students from Supabase`);
+                            return supabaseStudents.data.map(student => ({
+                                id: student.id,
+                                firstName: student.first_name,
+                                lastName: student.last_name,
+                                fullName: student.full_name,
+                                studentClass: student.class_id,
+                                studentBirthDate: student.birth_date,
+                                parentName: student.parent_name,
+                                parentEmail: student.parent_email
+                            }));
+                        }
+                    } catch (error) {
+                        console.warn('⚠️ Supabase students loading failed:', error);
+                    }
+                }
+                
+                // Check localStorage
+                const stored = localStorage.getItem(`school_students_${this.schoolId}`);
+                if (stored) {
+                    console.log('📁 Loading students from localStorage');
+                    return JSON.parse(stored);
+                }
+                
+                // Return demo data
+                console.log('🎭 Using demo students data');
+                return [
+                    { 
+                        id: 'demo-student-1', 
+                        firstName: 'Emma', 
+                        lastName: 'Jansen', 
+                        fullName: 'Emma Jansen',
+                        studentClass: 'demo-class-1',
+                        studentBirthDate: '2014-03-15',
+                        parentName: 'Maria Jansen'
+                    },
+                    { 
+                        id: 'demo-student-2', 
+                        firstName: 'Liam', 
+                        lastName: 'Peters', 
+                        fullName: 'Liam Peters',
+                        studentClass: 'demo-class-1',
+                        studentBirthDate: '2014-07-22',
+                        parentName: 'Jan Peters'
+                    },
+                    { 
+                        id: 'demo-student-3', 
+                        firstName: 'Sophie', 
+                        lastName: 'Van Berg', 
+                        fullName: 'Sophie van Berg',
+                        studentClass: 'demo-class-1',
+                        studentBirthDate: '2014-01-10',
+                        parentName: 'Anne van Berg'
+                    },
+                    { 
+                        id: 'demo-student-4', 
+                        firstName: 'Daan', 
+                        lastName: 'Smit', 
+                        fullName: 'Daan Smit',
+                        studentClass: 'demo-class-2',
+                        studentBirthDate: '2014-09-05',
+                        parentName: 'Peter Smit'
+                    },
+                    { 
+                        id: 'demo-student-5', 
+                        firstName: 'Noa', 
+                        lastName: 'De Vries', 
+                        fullName: 'Noa de Vries',
+                        studentClass: 'demo-class-2',
+                        studentBirthDate: '2014-11-30',
+                        parentName: 'Lisa de Vries'
+                    }
+                ];
+            }
+
+            async loadAssignments() {
+                console.log('📋 Loading assignments from Supabase...');
+                
+                // Try Supabase first
+                if (window.SupabaseConfig && window.SupabaseConfig.isSupabaseAvailable()) {
+                    try {
+                        const supabaseAssignments = await window.SupabaseConfig.supabase
+                            .from('teacher_class_assignments')
+                            .select('*')
+                            .eq('teacher_id', this.teacherId);
+                        
+                        if (supabaseAssignments.data && supabaseAssignments.data.length > 0) {
+                            console.log(`✅ Loaded ${supabaseAssignments.data.length} assignments from Supabase`);
+                            return supabaseAssignments.data.map(assignment => ({
+                                id: assignment.id,
+                                assignTeacher: assignment.teacher_id,
+                                assignClass: assignment.class_id,  
+                                assignRole: assignment.role
+                            }));
+                        }
+                    } catch (error) {
+                        console.warn('⚠️ Supabase assignments loading failed:', error);
+                    }
+                }
+                
+                // Check localStorage
+                const stored = localStorage.getItem(`school_assignments_${this.schoolId}`);
+                if (stored) {
+                    console.log('📁 Loading assignments from localStorage');
+                    return JSON.parse(stored);
+                }
+                
+                // Return demo assignments
+                console.log('🎭 Using demo assignments data');
+                return [
+                    {
+                        id: 'demo-assignment-1',
+                        assignTeacher: this.teacherId,
+                        assignClass: 'demo-class-1',
+                        assignRole: 'hoofdleerkracht'
+                    },
+                    {
+                        id: 'demo-assignment-2',
+                        assignTeacher: this.teacherId,
+                        assignClass: 'demo-class-2',
+                        assignRole: 'vakleerkracht'
+                    }
+                ];
+            }
+
+            // Get teacher's assignments and classes
+            getMyAssignments() {
+                return this.assignments.filter(assignment => assignment.assignTeacher === this.teacherId);
+            }
+
+            getMyClasses() {
+                const myAssignments = this.getMyAssignments();
+                return myAssignments.map(assignment => {
+                    const cls = this.classes.find(c => c.id === assignment.assignClass);
+                    return {
+                        ...cls,
+                        role: assignment.assignRole,
+                        assignmentId: assignment.id
+                    };
+                }).filter(cls => cls.id); // Filter out classes that don't exist anymore
+            }
+
+            getClassStudents(classId) {
+                return this.students.filter(student => student.studentClass === classId);
+            }
+
+            // Rendering
+            renderMyClasses() {
+                const container = document.getElementById('myClassesList');
+                const myClasses = this.getMyClasses();
+                
+                console.log('🎨 Rendering teacher classes...', { 
+                    classCount: myClasses.length, 
+                    container: !!container,
+                    myClasses: myClasses
+                });
+                
+                if (!container) {
+                    console.error('❌ Container element "myClassesList" not found!');
+                    return;
+                }
+                
+                if (myClasses.length === 0) {
+                    console.log('📭 No classes found for teacher');
+                    container.innerHTML = `
+                        <div class="empty-state" style="text-align: center; padding: 2rem; background: rgba(255,255,255,0.1); border-radius: 15px; margin: 1rem 0;">
+                            <h3>📚 Geen klassen toegewezen</h3>
+                            <p>Je bent nog niet toegewezen aan klassen. Neem contact op met de schoolbeheerder.</p>
+                            <div style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.7;">
+                                <p>Debug info:</p>
+                                <p>Teacher ID: ${this.teacherId}</p>
+                                <p>School ID: ${this.schoolId}</p>
+                                <p>Total classes: ${this.classes.length}</p>
+                                <p>Total assignments: ${this.assignments.length}</p>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = myClasses.map(cls => {
+                    const students = this.getClassStudents(cls.id);
+                    
+                    return `
+                        <div class="class-card">
+                            <div class="class-header">
+                                <h3 class="class-title">
+                                    <span>📚</span>
+                                    ${cls.className} - Leerjaar ${cls.classLevel}
+                                </h3>
+                                <span class="role-badge">${this.getRoleDisplayName(cls.role)}</span>
+                            </div>
+                            
+                            <div class="class-info">
+                                <p><strong>Lokaal:</strong> ${cls.classroom || 'Niet opgegeven'}</p>
+                                <p><strong>Aantal leerlingen:</strong> ${students.length}${cls.maxStudents ? ` / ${cls.maxStudents}` : ''}</p>
+                                ${cls.classNotes ? `<p><strong>Opmerkingen:</strong> ${cls.classNotes}</p>` : ''}
+                            </div>
+
+                            ${students.length > 0 ? `
+                                <div class="students-list">
+                                    <h4 style="margin: 1rem 0 0.5rem 0; font-size: 1rem;">👨‍🎓 Leerlingen:</h4>
+                                    ${students.map(student => `
+                                        <div class="student-item">
+                                            <div>
+                                                <div class="student-name">${student.fullName}</div>
+                                                <div class="student-info">
+                                                    Geboren: ${new Date(student.studentBirthDate).toLocaleDateString('nl-NL')}
+                                                    ${student.parentName ? ` • Ouder: ${student.parentName}` : ''}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : `
+                                <div class="students-list">
+                                    <p style="color: rgba(255, 255, 255, 0.7); font-style: italic;">Nog geen leerlingen in deze klas</p>
+                                </div>
+                            `}
+                        </div>
+                    `;
+                }).join('');
+                
+                console.log(`✅ Rendered ${myClasses.length} classes for teacher`);
+            }
+
+            getRoleDisplayName(role) {
+                const roleNames = {
+                    'hoofdleerkracht': 'Hoofdleerkracht',
+                    'vakleerkracht': 'Vakleerkracht',
+                    'ondersteuning': 'Ondersteuning'
+                };
+                return roleNames[role] || role;
+            }
+
+            updateStats() {
+                const myClasses = this.getMyClasses();
+                const totalStudents = myClasses.reduce((total, cls) => {
+                    return total + this.getClassStudents(cls.id).length;
+                }, 0);
+                
+                // Find main class (hoofdleerkracht role)
+                const mainClass = myClasses.find(cls => cls.role === 'hoofdleerkracht');
+                const mainClassName = mainClass ? mainClass.className : '-';
+                
+                console.log('📊 Updating stats:', { 
+                    myClasses: myClasses.length, 
+                    totalStudents, 
+                    mainClassName 
+                });
+                
+                const classesEl = document.getElementById('totalMyClasses');
+                const studentsEl = document.getElementById('totalMyStudents');
+                const mainClassEl = document.getElementById('mainClassRole');
+                
+                console.log('🔍 Elements found:', { 
+                    classesEl: !!classesEl, 
+                    studentsEl: !!studentsEl, 
+                    mainClassEl: !!mainClassEl 
+                });
+                
+                if (classesEl) classesEl.textContent = myClasses.length;
+                if (studentsEl) studentsEl.textContent = totalStudents;
+                if (mainClassEl) mainClassEl.textContent = mainClassName;
+                
+                console.log('✅ Stats updated successfully');
+            }
+        }
+
+        // Global variables
+        let teacherManager;
+
+        // Check authentication
+        const demoUser = sessionStorage.getItem('demo_user');
+        console.log('🔍 Checking authentication, demo_user:', demoUser);
+        
+        if (!demoUser) {
+            console.log('❌ No demo_user found, redirecting to login');
+            window.location.href = '/auth/login.html?role=teacher';
+        } else {
+            const user = JSON.parse(demoUser);
+            console.log('👤 User found:', user);
+            
+            // Check if user has teacher role
+            if (user.user_metadata?.role !== 'teacher') {
+                console.log('❌ User role mismatch, expected teacher, got:', user.user_metadata?.role);
+                alert('Toegang geweigerd. Alleen leerkrachten kunnen deze pagina bekijken.');
+                window.location.href = '/auth/login.html?role=teacher';
+            }
+            
+            // Update welcome message
+            const welcomeElement = document.getElementById('teacherWelcome');
+            if (user.user_metadata?.full_name && user.user_metadata?.school_name) {
+                welcomeElement.innerHTML = `
+                    Welkom, <strong>${user.user_metadata.full_name}</strong><br>
+                    ${user.user_metadata.school_name}
+                    ${user.user_metadata.subjects ? `<br><small>Vakken: ${user.user_metadata.subjects}</small>` : ''}
+                `;
+            }
+
+            // Initialize teacher manager
+            const teacherId = user.user_metadata?.teacher_id;
+            const schoolId = user.user_metadata?.school_id;
+            
+            if (teacherId && schoolId) {
+                teacherManager = new TeacherDashboardManager(teacherId, schoolId);
+                
+                // Load initial data
+                try {
+                    teacherManager.loadData();
+                    teacherManager.updateStats();
+                } catch (error) {
+                    console.warn('⚠️ Could not load teacher data from Supabase, using demo data:', error);
+                    // Continue with demo functionality
+                }
+            } else {
+                console.error('Missing teacher_id or school_id in user metadata');
+                console.log('User metadata:', user.user_metadata);
+                
+                // For now, create a demo teacher manager to prevent errors
+                console.log('🎭 Creating demo teacher manager for development...');
+                teacherManager = new TeacherDashboardManager('demo-teacher-123', 'demo-school-123');
+                
+                // Show user-friendly message
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-warning';
+                alertDiv.style.cssText = `
+                    background: rgba(255, 193, 7, 0.1);
+                    border: 1px solid rgba(255, 193, 7, 0.3);
+                    color: #856404;
+                    padding: 1rem;
+                    border-radius: 8px;
+                    margin: 1rem 0;
+                `;
+                alertDiv.innerHTML = `
+                    <strong>⚠️ Demo Modus</strong><br>
+                    Je account is nog niet volledig geconfigureerd. Neem contact op met de beheerder om je teacher_id toe te voegen.
+                `;
+                
+                const mainContent = document.querySelector('.dashboard-content');
+                if (mainContent) {
+                    mainContent.insertBefore(alertDiv, mainContent.firstChild);
+                }
+            }
+        }
+
+        window.handleLogout = function() {
+            if (confirm('Weet je zeker dat je wilt uitloggen?')) {
+                sessionStorage.removeItem('demo_user');
+                window.location.href = '/index.html';
+            }
+        };
+
+        console.log('👨‍🏫 Teacher Dashboard geladen!');
+    </script>
+    
+    <!-- Supabase Integration -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/assets/js/modules/supabase-config.js"></script>
+</body>
+</html>

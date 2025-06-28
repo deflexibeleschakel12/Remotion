@@ -1,0 +1,109 @@
+/* =================================
+   BASE-ANIMATIONS.CSS - Core Animation Variables
+   Schoolbeheersysteem v1.0.0
+   
+   Basis variabelen voor alle animaties
+   ================================= */
+
+:root {
+    /* Timing Functions */
+    --ease-linear: linear;
+    --ease-ease: ease;
+    --ease-ease-in: ease-in;
+    --ease-ease-out: ease-out;
+    --ease-ease-in-out: ease-in-out;
+    --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --ease-back: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    
+    /* Duration Variables */
+    --duration-instant: 0ms;
+    --duration-fastest: 100ms;
+    --duration-fast: 150ms;
+    --duration-normal: 300ms;
+    --duration-slow: 500ms;
+    --duration-slower: 750ms;
+    --duration-slowest: 1000ms;
+    
+    /* Distance Variables */
+    --distance-xs: 4px;
+    --distance-sm: 8px;
+    --distance-md: 16px;
+    --distance-lg: 24px;
+    --distance-xl: 32px;
+    --distance-xxl: 48px;
+    
+    /* Transition Presets */
+    --transition-fastest: var(--duration-fastest) var(--ease-smooth);
+    --transition-fast: var(--duration-fast) var(--ease-smooth);
+    --transition-normal: var(--duration-normal) var(--ease-smooth);
+    --transition-slow: var(--duration-slow) var(--ease-smooth);
+    --transition-bounce: var(--duration-normal) var(--ease-bounce);
+    --transition-spring: var(--duration-normal) var(--ease-spring);
+    --transition-elastic: var(--duration-slow) var(--ease-elastic);
+    
+    /* Performance Optimizations */
+    --gpu-acceleration: translateZ(0);
+    --will-change-transform: transform;
+    --will-change-opacity: opacity;
+    --will-change-auto: auto;
+    
+    /* Animation States */
+    --animation-play-state-running: running;
+    --animation-play-state-paused: paused;
+    
+    /* Fill Modes */
+    --animation-fill-forwards: forwards;
+    --animation-fill-backwards: backwards;
+    --animation-fill-both: both;
+    --animation-fill-none: none;
+}
+
+/* Base Animation Classes */
+.animate {
+    animation-duration: var(--duration-normal);
+    animation-timing-function: var(--ease-smooth);
+    animation-fill-mode: var(--animation-fill-both);
+}
+
+.animate-fast {
+    animation-duration: var(--duration-fast);
+}
+
+.animate-slow {
+    animation-duration: var(--duration-slow);
+}
+
+.animate-bounce {
+    animation-timing-function: var(--ease-bounce);
+}
+
+.animate-spring {
+    animation-timing-function: var(--ease-spring);
+}
+
+.animate-delay-1 { animation-delay: 100ms; }
+.animate-delay-2 { animation-delay: 200ms; }
+.animate-delay-3 { animation-delay: 300ms; }
+.animate-delay-4 { animation-delay: 400ms; }
+.animate-delay-5 { animation-delay: 500ms; }
+
+/* Performance Optimizations */
+.animate,
+[data-animate] {
+    backface-visibility: hidden;
+    transform: var(--gpu-acceleration);
+    will-change: var(--will-change-transform);
+}
+
+/* Reduce Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    .animate,
+    [data-animate] {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

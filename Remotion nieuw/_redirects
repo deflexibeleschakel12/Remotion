@@ -1,0 +1,15 @@
+# Netlify Redirects Configuration
+# This file ensures that all internal routes work correctly
+
+# SPA fallback for client-side routing
+/admin/* /admin/index.html 200
+/school/* /school/index.html 200
+/teacher/* /teacher/index.html 200
+/student/* /student/index.html 200
+/auth/* /auth/:splat 200
+
+# Ensure assets are served correctly
+/assets/* /assets/:splat 200
+
+# Default fallback
+/* /index.html 200

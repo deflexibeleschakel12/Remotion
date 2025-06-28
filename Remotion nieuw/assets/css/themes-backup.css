@@ -1,0 +1,628 @@
+/* =================================
+   THEMES.CSS - Color Schemes per Rol
+   Schoolbeheersysteem v1.0.0
+   Max 500 regels per module
+   ================================= */
+
+/* =================================
+   DEFAULT THEME (Portal)
+   ================================= */
+
+[data-theme="default"] {
+    --theme-primary: var(--color-primary);
+    --theme-secondary: var(--color-secondary);
+    --theme-accent: var(--color-accent);
+    --theme-gradient: var(--gradient-primary);
+    --theme-bg: var(--gradient-background);
+    --theme-text: var(--color-white);
+    --theme-text-muted: rgba(255, 255, 255, 0.8);
+}
+
+/* =================================
+   ADMIN THEME (Goud/Oranje)
+   ================================= */
+
+[data-theme="admin"] {
+    --theme-primary: var(--color-admin);
+    --theme-secondary: var(--color-admin-dark);
+    --theme-accent: #FED7AA;
+    --theme-gradient: var(--gradient-admin);
+    --theme-bg: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 50%, #F59E0B 100%);
+    --theme-text: var(--color-gray-900);
+    --theme-text-muted: var(--color-gray-700);
+    --theme-text-inverse: var(--color-white);
+    
+    /* Admin specifieke kleuren */
+    --admin-light: #FEF3C7;
+    --admin-medium: #FCD34D;
+    --admin-dark: #D97706;
+    --admin-darker: #92400E;
+    
+    /* Admin glassmorphism */
+    --theme-glass: rgba(245, 158, 11, 0.1);
+    --theme-glass-hover: rgba(245, 158, 11, 0.2);
+    --theme-glass-strong: rgba(245, 158, 11, 0.15);
+    --theme-border: rgba(245, 158, 11, 0.3);
+    
+    /* Admin shadows */
+    --theme-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+    --theme-shadow-lg: 0 8px 32px rgba(245, 158, 11, 0.25);
+}
+
+[data-theme="admin"] body {
+    background: var(--theme-bg);
+    color: var(--theme-text);
+}
+
+[data-theme="admin"] .card {
+    background: var(--theme-glass);
+    border-color: var(--theme-border);
+    color: var(--theme-text);
+}
+
+[data-theme="admin"] .btn-primary {
+    background: var(--theme-gradient);
+    color: var(--theme-text-inverse);
+}
+
+[data-theme="admin"] .nav-link.active {
+    background: var(--theme-glass-strong);
+    color: var(--theme-primary);
+}
+
+/* =================================
+   SCHOOL THEME (Blauw)
+   ================================= */
+
+[data-theme="school"] {
+    --theme-primary: var(--color-school);
+    --theme-secondary: var(--color-school-dark);
+    --theme-accent: #BFDBFE;
+    --theme-gradient: var(--gradient-school);
+    --theme-bg: linear-gradient(135deg, #DBEAFE 0%, #93C5FD 50%, #3B82F6 100%);
+    --theme-text: var(--color-gray-900);
+    --theme-text-muted: var(--color-gray-700);
+    --theme-text-inverse: var(--color-white);
+    
+    /* School specifieke kleuren */
+    --school-light: #DBEAFE;
+    --school-medium: #60A5FA;
+    --school-dark: #1D4ED8;
+    --school-darker: #1E3A8A;
+    
+    /* School glassmorphism */
+    --theme-glass: rgba(59, 130, 246, 0.1);
+    --theme-glass-hover: rgba(59, 130, 246, 0.2);
+    --theme-glass-strong: rgba(59, 130, 246, 0.15);
+    --theme-border: rgba(59, 130, 246, 0.3);
+    
+    /* School shadows */
+    --theme-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    --theme-shadow-lg: 0 8px 32px rgba(59, 130, 246, 0.25);
+}
+
+[data-theme="school"] body {
+    background: var(--theme-bg);
+    color: var(--theme-text);
+}
+
+[data-theme="school"] .card {
+    background: var(--theme-glass);
+    border-color: var(--theme-border);
+    color: var(--theme-text);
+}
+
+[data-theme="school"] .btn-primary {
+    background: var(--theme-gradient);
+    color: var(--theme-text-inverse);
+}
+
+[data-theme="school"] .nav-link.active {
+    background: var(--theme-glass-strong);
+    color: var(--theme-primary);
+}
+
+/* =================================
+   TEACHER THEME (Groen)
+   ================================= */
+
+[data-theme="teacher"] {
+    --theme-primary: var(--color-teacher);
+    --theme-secondary: var(--color-teacher-dark);
+    --theme-accent: #A7F3D0;
+    --theme-gradient: var(--gradient-teacher);
+    --theme-bg: linear-gradient(135deg, #D1FAE5 0%, #6EE7B7 50%, #10B981 100%);
+    --theme-text: var(--color-gray-900);
+    --theme-text-muted: var(--color-gray-700);
+    --theme-text-inverse: var(--color-white);
+    
+    /* Teacher specifieke kleuren */
+    --teacher-light: #D1FAE5;
+    --teacher-medium: #34D399;
+    --teacher-dark: #059669;
+    --teacher-darker: #065F46;
+    
+    /* Teacher glassmorphism */
+    --theme-glass: rgba(16, 185, 129, 0.1);
+    --theme-glass-hover: rgba(16, 185, 129, 0.2);
+    --theme-glass-strong: rgba(16, 185, 129, 0.15);
+    --theme-border: rgba(16, 185, 129, 0.3);
+    
+    /* Teacher shadows */
+    --theme-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+    --theme-shadow-lg: 0 8px 32px rgba(16, 185, 129, 0.25);
+}
+
+[data-theme="teacher"] body {
+    background: var(--theme-bg);
+    color: var(--theme-text);
+}
+
+[data-theme="teacher"] .card {
+    background: var(--theme-glass);
+    border-color: var(--theme-border);
+    color: var(--theme-text);
+}
+
+[data-theme="teacher"] .btn-primary {
+    background: var(--theme-gradient);
+    color: var(--theme-text-inverse);
+}
+
+[data-theme="teacher"] .nav-link.active {
+    background: var(--theme-glass-strong);
+    color: var(--theme-primary);
+}
+
+/* =================================
+   STUDENT THEME (Paars)
+   ================================= */
+
+[data-theme="student"] {
+    --theme-primary: var(--color-student);
+    --theme-secondary: var(--color-student-dark);
+    --theme-accent: #DDD6FE;
+    --theme-gradient: var(--gradient-student);
+    --theme-bg: linear-gradient(135deg, #EDE9FE 0%, #C4B5FD 50%, #8B5CF6 100%);
+    --theme-text: var(--color-gray-900);
+    --theme-text-muted: var(--color-gray-700);
+    --theme-text-inverse: var(--color-white);
+    
+    /* Student specifieke kleuren */
+    --student-light: #EDE9FE;
+    --student-medium: #A78BFA;
+    --student-dark: #7C3AED;
+    --student-darker: #5B21B6;
+    
+    /* Student glassmorphism */
+    --theme-glass: rgba(139, 92, 246, 0.1);
+    --theme-glass-hover: rgba(139, 92, 246, 0.2);
+    --theme-glass-strong: rgba(139, 92, 246, 0.15);
+    --theme-border: rgba(139, 92, 246, 0.3);
+    
+    /* Student shadows */
+    --theme-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+    --theme-shadow-lg: 0 8px 32px rgba(139, 92, 246, 0.25);
+}
+
+[data-theme="student"] body {
+    background: var(--theme-bg);
+    color: var(--theme-text);
+}
+
+[data-theme="student"] .card {
+    background: var(--theme-glass);
+    border-color: var(--theme-border);
+    color: var(--theme-text);
+}
+
+[data-theme="student"] .btn-primary {
+    background: var(--theme-gradient);
+    color: var(--theme-text-inverse);
+}
+
+[data-theme="student"] .nav-link.active {
+    background: var(--theme-glass-strong);
+    color: var(--theme-primary);
+}
+
+/* =================================
+   DARK MODE VARIANTS
+   ================================= */
+
+[data-theme="admin-dark"] {
+    --theme-bg: linear-gradient(135deg, #451A03 0%, #92400E 50%, #F59E0B 100%);
+    --theme-text: var(--color-white);
+    --theme-text-muted: rgba(255, 255, 255, 0.8);
+    --theme-glass: rgba(245, 158, 11, 0.15);
+    --theme-glass-hover: rgba(245, 158, 11, 0.25);
+}
+
+[data-theme="school-dark"] {
+    --theme-bg: linear-gradient(135deg, #1E3A8A 0%, #1D4ED8 50%, #3B82F6 100%);
+    --theme-text: var(--color-white);
+    --theme-text-muted: rgba(255, 255, 255, 0.8);
+    --theme-glass: rgba(59, 130, 246, 0.15);
+    --theme-glass-hover: rgba(59, 130, 246, 0.25);
+}
+
+[data-theme="teacher-dark"] {
+    --theme-bg: linear-gradient(135deg, #065F46 0%, #059669 50%, #10B981 100%);
+    --theme-text: var(--color-white);
+    --theme-text-muted: rgba(255, 255, 255, 0.8);
+    --theme-glass: rgba(16, 185, 129, 0.15);
+    --theme-glass-hover: rgba(16, 185, 129, 0.25);
+}
+
+[data-theme="student-dark"] {
+    --theme-bg: linear-gradient(135deg, #5B21B6 0%, #7C3AED 50%, #8B5CF6 100%);
+    --theme-text: var(--color-white);
+    --theme-text-muted: rgba(255, 255, 255, 0.8);
+    --theme-glass: rgba(139, 92, 246, 0.15);
+    --theme-glass-hover: rgba(139, 92, 246, 0.25);
+}
+
+/* =================================
+   COMPONENT THEME OVERRIDES
+   ================================= */
+
+/* Portal Cards per theme */
+.portal-card.admin-card {
+    --card-glow-color: rgba(245, 158, 11, 0.3);
+}
+
+.portal-card.school-card {
+    --card-glow-color: rgba(59, 130, 246, 0.3);
+}
+
+.portal-card.teacher-card {
+    --card-glow-color: rgba(16, 185, 129, 0.3);
+}
+
+.portal-card.student-card {
+    --card-glow-color: rgba(139, 92, 246, 0.3);
+}
+
+/* Theme-aware form inputs */
+[data-theme*="admin"] .form-input:focus {
+    border-color: var(--color-admin);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+}
+
+[data-theme*="school"] .form-input:focus {
+    border-color: var(--color-school);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+[data-theme*="teacher"] .form-input:focus {
+    border-color: var(--color-teacher);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+[data-theme*="student"] .form-input:focus {
+    border-color: var(--color-student);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+/* Theme-aware alerts */
+[data-theme*="admin"] .alert-info {
+    background: rgba(245, 158, 11, 0.1);
+    border-color: var(--color-admin);
+    color: var(--color-admin);
+}
+
+[data-theme*="school"] .alert-info {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: var(--color-school);
+    color: var(--color-school);
+}
+
+[data-theme*="teacher"] .alert-info {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: var(--color-teacher);
+    color: var(--color-teacher);
+}
+
+[data-theme*="student"] .alert-info {
+    background: rgba(139, 92, 246, 0.1);
+    border-color: var(--color-student);
+    color: var(--color-student);
+}
+
+/* =================================
+   DYNAMIC THEME SWITCHING
+   ================================= */
+
+/* Smooth theme transitions */
+body {
+    transition: background 0.5s ease, color 0.3s ease;
+}
+
+.card, .btn, .form-input, .nav-link {
+    transition: 
+        background 0.3s ease,
+        border-color 0.3s ease,
+        color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+/* Theme loading state */
+[data-theme-loading="true"] * {
+    transition-duration: 0s !important;
+}
+
+/* =================================
+   ACCESSIBILITY THEME VARIANTS
+   ================================= */
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    [data-theme*="admin"] {
+        --theme-border: rgba(245, 158, 11, 0.8);
+        --theme-glass: rgba(245, 158, 11, 0.3);
+    }
+    
+    [data-theme*="school"] {
+        --theme-border: rgba(59, 130, 246, 0.8);
+        --theme-glass: rgba(59, 130, 246, 0.3);
+    }
+    
+    [data-theme*="teacher"] {
+        --theme-border: rgba(16, 185, 129, 0.8);
+        --theme-glass: rgba(16, 185, 129, 0.3);
+    }
+    
+    [data-theme*="student"] {
+        --theme-border: rgba(139, 92, 246, 0.8);
+        --theme-glass: rgba(139, 92, 246, 0.3);
+    }
+}
+
+/* Forced colors mode (Windows High Contrast) */
+@media (forced-colors: active) {
+    * {
+        background: transparent !important;
+        border-color: ButtonBorder !important;
+        color: ButtonText !important;
+    }
+    
+    .btn {
+        background: ButtonFace !important;
+        border: 1px solid ButtonBorder !important;
+        color: ButtonText !important;
+    }
+    
+    .btn:hover,
+    .btn:focus {
+        background: Highlight !important;
+        color: HighlightText !important;
+    }
+}
+
+/* =================================
+   THEME UTILITY CLASSES
+   ================================= */
+
+/* Quick theme switchers */
+.theme-admin { 
+    background: var(--gradient-admin) !important;
+    color: var(--color-white) !important;
+}
+
+.theme-school { 
+    background: var(--gradient-school) !important;
+    color: var(--color-white) !important;
+}
+
+.theme-teacher { 
+    background: var(--gradient-teacher) !important;
+    color: var(--color-white) !important;
+}
+
+.theme-student { 
+    background: var(--gradient-student) !important;
+    color: var(--color-white) !important;
+}
+
+/* Theme text colors */
+.text-theme-primary { color: var(--theme-primary) !important; }
+.text-theme-secondary { color: var(--theme-secondary) !important; }
+.text-theme-muted { color: var(--theme-text-muted) !important; }
+
+/* Theme backgrounds */
+.bg-theme-glass { 
+    background: var(--theme-glass) !important;
+    backdrop-filter: blur(10px);
+}
+
+.bg-theme-gradient { 
+    background: var(--theme-gradient) !important;
+}
+
+/* Theme borders */
+.border-theme { 
+    border-color: var(--theme-border) !important;
+}
+
+.border-theme-primary { 
+    border-color: var(--theme-primary) !important;
+}
+
+/* =================================
+   RESPONSIVE THEME ADJUSTMENTS
+   ================================= */
+
+@media (max-width: 768px) {
+    /* Verhoogde contrast op mobiel */
+    [data-theme] {
+        --theme-glass: rgba(255, 255, 255, 0.2);
+        --theme-glass-hover: rgba(255, 255, 255, 0.3);
+        --theme-border: rgba(255, 255, 255, 0.4);
+    }
+    
+    /* Grotere touch targets op mobiel */
+    .btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Meer contrast op kleine schermen */
+    [data-theme] {
+        --theme-glass: rgba(255, 255, 255, 0.25);
+        --theme-border: rgba(255, 255, 255, 0.5);
+    }
+}
+
+/* =================================
+   THEME TOGGLE COMPONENT
+   ================================= */
+
+/* Theme Toggle Button */
+.theme-toggle {
+    position: absolute;
+    top: 1rem;
+    right: 12rem;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: var(--bg-glass);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-glass);
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.theme-toggle:hover {
+    background: var(--bg-glass-hover);
+    transform: translateY(-2px);
+}
+
+.theme-icon {
+    width: 20px;
+    height: 20px;
+    transition: transform var(--transition-fast);
+}
+
+.theme-toggle:hover .theme-icon {
+    transform: rotate(15deg);
+}
+
+/* Active Theme Portal Card */
+.portal-card.active-theme {
+    border: 2px solid var(--theme-primary);
+    box-shadow: 0 0 20px rgba(var(--theme-primary-rgb), 0.3);
+}
+
+.portal-card.active-theme .card-glow {
+    opacity: 0.6;
+}
+
+/* =================================
+   ACCESSIBILITY THEME ENHANCEMENTS
+   ================================= */
+
+/* Accessibility Mode Styles */
+.accessibility-mode .portal-card:focus,
+.accessibility-mode .portal-btn:focus,
+.accessibility-mode .lang-toggle:focus,
+.accessibility-mode .theme-toggle:focus {
+    outline: 3px solid #FFD700;
+    outline-offset: 2px;
+}
+
+.accessibility-mode * {
+    transition: none !important;
+    animation: none !important;
+}
+
+/* Reduced Motion */
+.reduced-motion *,
+.reduced-motion *::before,
+.reduced-motion *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+}
+
+/* Screen Reader Only */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Keyboard Navigation */
+.keyboard-navigation .portal-card:focus {
+    outline: 2px solid #4F46E5;
+    outline-offset: 2px;
+}
+
+/* =================================
+   DEBUG PANEL THEME
+   ================================= */
+
+/* Debug Panel */
+.debug-panel {
+    position: fixed;
+    top: 5rem;
+    right: 1rem;
+    background: var(--bg-glass);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--border-glass);
+    border-radius: 8px;
+    padding: 1rem;
+    z-index: 999;
+    min-width: 150px;
+}
+
+.debug-panel h4 {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--color-primary);
+}
+
+.debug-panel button {
+    display: block;
+    width: 100%;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    background: var(--bg-glass-hover);
+    border: 1px solid var(--border-glass);
+    border-radius: 4px;
+    color: white;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.debug-panel button:hover {
+    background: var(--theme-primary);
+}
+
+/* =================================
+   RESPONSIVE THEME ADJUSTMENTS
+   ================================= */
+
+@media (max-width: 768px) {
+    /* Theme toggle responsive */
+    .theme-toggle {
+        position: relative;
+        top: auto;
+        right: auto;
+        margin-bottom: 1rem;
+        margin-right: 1rem;
+    }
+}

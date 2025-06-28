@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Admin</title>
+    <style>
+        body { padding: 20px; font-family: Arial, sans-serif; }
+        .test-btn { 
+            background: #4F46E5; 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 5px; 
+            cursor: pointer;
+            margin: 10px 0;
+            display: block;
+        }
+        .test-result { 
+            background: #f0f0f0; 
+            padding: 10px; 
+            margin: 10px 0; 
+            border-radius: 5px; 
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin Dashboard Test</h1>
+    
+    <button class="test-btn" onclick="testLogin()">Test Admin Login</button>
+    <button class="test-btn" onclick="testRedirect()">Test Redirect to Admin</button>
+    
+    <div id="results"></div>
+
+    <script>
+        function testLogin() {
+            // Create demo admin session
+            const demoUser = {
+                id: 'demo-admin-123',
+                email: 'admin@school.nl',
+                user_metadata: {
+                    role: 'admin',
+                    full_name: 'Test Administrator'
+                }
+            };
+            
+            sessionStorage.setItem('demo_user', JSON.stringify(demoUser));
+            
+            document.getElementById('results').innerHTML += 
+                '<div class="test-result">✅ Demo admin session created</div>';
+        }
+        
+        function testRedirect() {
+            const baseUrl = window.location.origin;
+            const adminUrl = `${baseUrl}/admin/index.html`;
+            
+            document.getElementById('results').innerHTML += 
+                `<div class="test-result">🔄 Redirecting to: ${adminUrl}</div>`;
+                
+            setTimeout(() => {
+                window.location.href = adminUrl;
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

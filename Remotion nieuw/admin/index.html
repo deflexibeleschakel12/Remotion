@@ -1,0 +1,2111 @@
+<!DOCTYPE html>
+<html lang="nl" data-theme="default">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Schoolbeheersysteem</title>
+    
+    <!-- Modulaire CSS Imports -->
+    <link rel="stylesheet" href="/assets/css/shared.css">
+    <link rel="stylesheet" href="/assets/css/components.css">
+    <link rel="stylesheet" href="/assets/css/animations-modular.css">
+    <link rel="stylesheet" href="/assets/css/themes.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23F59E0B' width='100' height='100' rx='20'/><text x='50' y='65' font-size='60' text-anchor='middle' fill='white'>👑</text></svg>">
+    
+    <style>
+        :root {
+            --admin-primary: #F59E0B;
+            --admin-secondary: #F97316;
+            --admin-gradient: linear-gradient(135deg, #F59E0B 0%, #F97316 100%);
+        }
+
+        /* Modal Styles - Ensure modal is visible */
+        .modal-overlay {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            background: rgba(0, 0, 0, 0.7) !important;
+            backdrop-filter: blur(10px) !important;
+            display: none !important;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 99999 !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .modal-overlay.show {
+            display: flex !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        .modal {
+            background: rgba(255, 255, 255, 0.98) !important;
+            backdrop-filter: blur(20px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            border-radius: 20px !important;
+            padding: 2rem !important;
+            max-width: 600px !important;
+            width: 90% !important;
+            max-height: 90vh !important;
+            overflow-y: auto !important;
+            transform: scale(0.9) translateY(20px) !important;
+            transition: all 0.3s ease !important;
+            color: #1a1a1a !important;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .modal-overlay.show .modal {
+            transform: scale(1) translateY(0) !important;
+        }
+
+        .modal-header {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            margin-bottom: 1.5rem !important;
+            padding-bottom: 1rem !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .modal-header h2 {
+            margin: 0 !important;
+            font-size: 1.5rem !important;
+            font-weight: 600 !important;
+            color: #1a1a1a !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.5rem !important;
+        }
+
+        .modal-close {
+            background: rgba(0, 0, 0, 0.1) !important;
+            border: none !important;
+            font-size: 1.5rem !important;
+            cursor: pointer !important;
+            color: #333 !important;
+            width: 32px !important;
+            height: 32px !important;
+            border-radius: 50% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .modal-close:hover {
+            background: rgba(0, 0, 0, 0.2) !important;
+            color: #000 !important;
+        }
+
+        /* Form Styles in Modal */
+        .modal .form-group {
+            margin-bottom: 1.2rem !important;
+        }
+
+        .modal .form-group label {
+            display: block !important;
+            margin-bottom: 0.6rem !important;
+            font-weight: 600 !important;
+            color: #1a1a1a !important;
+            font-size: 0.95rem !important;
+        }
+
+        .modal .form-group input,
+        .modal .form-group select,
+        .modal .form-group textarea {
+            width: 100% !important;
+            padding: 0.8rem !important;
+            border: 2px solid #e0e0e0 !important;
+            border-radius: 8px !important;
+            font-size: 1rem !important;
+            background: #ffffff !important;
+            color: #1a1a1a !important;
+            transition: border-color 0.2s ease !important;
+            box-sizing: border-box !important;
+        }
+
+        .modal .form-group input:focus,
+        .modal .form-group select:focus,
+        .modal .form-group textarea:focus {
+            outline: none !important;
+            border-color: var(--admin-primary) !important;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15) !important;
+        }
+
+        .modal .form-group input::placeholder,
+        .modal .form-group textarea::placeholder {
+            color: #999 !important;
+            opacity: 1 !important;
+        }
+
+        .modal .form-row {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 1rem !important;
+        }
+
+        @media (max-width: 768px) {
+            .modal .form-row {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        .modal .btn-primary {
+            width: 100% !important;
+            padding: 1rem !important;
+            background: var(--admin-gradient) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 8px !important;
+            font-size: 1.1rem !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            transition: transform 0.2s ease !important;
+            margin-top: 1.5rem !important;
+        }
+
+        .modal .btn-primary:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4) !important;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            margin: 0;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* Header */
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-info h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-info p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--admin-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card h3 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--admin-primary);
+        }
+
+        .stat-card p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .stat-card .trend {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .trend.positive {
+            color: #10B981;
+        }
+
+        .trend.negative {
+            color: #EF4444;
+        }
+
+        /* Management Grid */
+        .management-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .management-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .management-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .management-card .card-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--admin-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .management-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .management-card p {
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .management-card .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .management-card .feature-list li {
+            padding: 0.25rem 0;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .management-card .feature-list li::before {
+            content: "✓";
+            color: var(--admin-primary);
+            font-weight: bold;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .quick-actions h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .action-btn {
+            background: var(--admin-gradient);
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            justify-content: center;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+        }
+
+        /* Recent Activity */
+        .recent-activity {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .recent-activity h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .activity-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .activity-item {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-content h4 {
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-content p {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            margin: 0;
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            opacity: 0.6;
+            flex-shrink: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .management-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading States */
+        .loading-skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 75%);
+            background-size: 200% 100%;
+            animation: skeleton-pulse 1.5s ease-in-out infinite;
+            border-radius: 8px;
+            height: 1.2rem;
+            margin: 0.5rem 0;
+        }
+
+        @keyframes skeleton-pulse {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-close {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(239, 68, 68, 0.3);
+            transform: scale(1.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--admin-primary);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--admin-gradient);
+            border: none;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 1rem;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* School List */
+        .school-list {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .school-list h2 {
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .school-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .school-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .school-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .school-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .school-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--admin-primary);
+        }
+
+        .school-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .school-status.active {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10B981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .school-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .school-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .school-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .school-action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .school-action-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .credentials-box {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .credentials-box h4 {
+            margin: 0 0 0.5rem 0;
+            color: var(--admin-primary);
+            font-size: 0.9rem;
+        }
+
+        .credentials-box p {
+            margin: 0.25rem 0;
+            font-size: 0.85rem;
+            font-family: 'Monaco', 'Consolas', monospace;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            opacity: 0.7;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .school-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .school-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p>Dashboard laden...</p>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-info">
+                <h1>
+                    <span>👑</span>
+                    Admin Dashboard
+                </h1>
+                <p>Welkom, <span id="adminName">Systeembeheerder</span>!</p>
+                <div style="margin-top: 0.5rem;">
+                    <small id="databaseStatus" style="padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem; font-weight: 500;">
+                        🔍 Database status controleren...
+                    </small>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">A</div>
+                    <div>
+                        <div style="font-weight: 500;" id="userName">Admin User</div>
+                        <div style="font-size: 0.8rem; opacity: 0.7;">Systeembeheerder</div>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="handleLogout()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M16 17v-3H9v-4h7V7l5 5-5 5M14 2a2 2 0 012 2v2h-2V4H4v16h10v-2h2v2a2 2 0 01-2 2H4a2 2 0 01-2-2V4a2 2 0 012-2h10z"/>
+                    </svg>
+                    Uitloggen
+                </button>
+            </div>
+        </header>
+
+        <!-- Statistics -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <h3 id="totalSchools">247</h3>
+                <p>Geregistreerde Scholen</p>
+                <div class="trend positive">
+                    <span>↗</span> +12% deze maand
+                </div>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalUsers">15,420</h3>
+                <p>Actieve Gebruikers</p>
+                <div class="trend positive">
+                    <span>↗</span> +8% deze maand
+                </div>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalStudents">142,891</h3>
+                <p>Leerlingen</p>
+                <div class="trend positive">
+                    <span>↗</span> +5% dit schooljaar
+                </div>
+            </div>
+            <div class="stat-card">
+                <h3 id="systemHealth">99.8%</h3>
+                <p>Systeem Uptime</p>
+                <div class="trend positive">
+                    <span>✓</span> Alle systemen operationeel
+                </div>
+            </div>
+        </section>
+
+        <!-- School Management Section -->
+        <section class="school-list" id="schoolListSection">
+            <h2>
+                <span>🏫</span>
+                Geregistreerde Scholen
+                <button class="btn-secondary" onclick="openAddSchoolModal()" style="margin-left: auto; width: auto; margin-top: 0;" id="addSchoolBtn">
+                    ➕ School Toevoegen
+                </button>
+            </h2>
+            <div id="schoolList">
+                <!-- School items will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Management Modules -->
+        <section class="management-grid">
+            <div class="management-card" onclick="openModule('schools')">
+                <div class="card-icon">🏫</div>
+                <h3>Schoolbeheer</h3>
+                <p>Beheer alle geregistreerde scholen, registraties en configuraties</p>
+                <ul class="feature-list">
+                    <li>School registratie</li>
+                    <li>Licentie beheer</li>
+                    <li>Configuratie instellingen</li>
+                    <li>Status monitoring</li>
+                </ul>
+            </div>
+
+            <div class="management-card" onclick="openModule('users')">
+                <div class="card-icon">👥</div>
+                <h3>Gebruikersbeheer</h3>
+                <p>Centrale gebruikersadministratie en rechtenbeheer</p>
+                <ul class="feature-list">
+                    <li>Gebruikers overzicht</li>
+                    <li>Rol toewijzing</li>
+                    <li>Toegangsrechten</li>
+                    <li>Account beheer</li>
+                </ul>
+            </div>
+
+            <div class="management-card" onclick="openModule('system')">
+                <div class="card-icon">⚙️</div>
+                <h3>Systeembeheer</h3>
+                <p>Technische configuratie en systeeminstellingen</p>
+                <ul class="feature-list">
+                    <li>Server configuratie</li>
+                    <li>Database beheer</li>
+                    <li>Backup management</li>
+                    <li>Performance monitoring</li>
+                </ul>
+            </div>
+
+            <div class="management-card" onclick="openModule('reports')">
+                <div class="card-icon">📊</div>
+                <h3>Rapportages</h3>
+                <p>Uitgebreide rapportages en analytics</p>
+                <ul class="feature-list">
+                    <li>Gebruiksstatistieken</li>
+                    <li>Performance rapporten</li>
+                    <li>Financiële overzichten</li>
+                    <li>Custom dashboards</li>
+                </ul>
+            </div>
+
+            <div class="management-card" onclick="openModule('security')">
+                <div class="card-icon">🔒</div>
+                <h3>Beveiliging</h3>
+                <p>Security monitoring en toegangscontrole</p>
+                <ul class="feature-list">
+                    <li>Login monitoring</li>
+                    <li>Security logs</li>
+                    <li>Two-factor auth</li>
+                    <li>Toegangshistorie</li>
+                </ul>
+            </div>
+
+            <div class="management-card" onclick="openModule('support')">
+                <div class="card-icon">🎧</div>
+                <h3>Support</h3>
+                <p>Helpdesk en ondersteuning voor gebruikers</p>
+                <ul class="feature-list">
+                    <li>Support tickets</li>
+                    <li>Knowledge base</li>
+                    <li>Live chat</li>
+                    <li>Gebruikerstraining</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="quick-actions">
+            <h2>
+                <span>⚡</span>
+                Snelle Acties
+            </h2>
+            <div class="actions-grid">
+                <button class="action-btn" onclick="quickAction('add-school')">
+                    <span>➕</span>
+                    Nieuwe School
+                </button>
+                <button class="action-btn" onclick="quickAction('add-user')">
+                    <span>👤</span>
+                    Gebruiker Toevoegen
+                </button>
+                <button class="action-btn" onclick="quickAction('backup')">
+                    <span>💾</span>
+                    Backup Maken
+                </button>
+                <button class="action-btn" onclick="quickAction('maintenance')">
+                    <span>🔧</span>
+                    Onderhoud
+                </button>
+                <button class="action-btn" onclick="quickAction('reports')">
+                    <span>📈</span>
+                    Rapport Genereren
+                </button>
+                <button class="action-btn" onclick="quickAction('settings')">
+                    <span>⚙️</span>
+                    Instellingen
+                </button>
+            </div>
+        </section>
+
+        <!-- Recent Activity -->
+        <section class="recent-activity">
+            <h2>
+                <span>📋</span>
+                Recente Activiteit
+            </h2>
+            <ul class="activity-list">
+                <li class="activity-item">
+                    <div class="activity-icon">🏫</div>
+                    <div class="activity-content">
+                        <h4>Nieuwe school geregistreerd</h4>
+                        <p>Basisschool De Regenboog - Amsterdam</p>
+                    </div>
+                    <div class="activity-time">2 uur geleden</div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon">👤</div>
+                    <div class="activity-content">
+                        <h4>Gebruiker account aangemaakt</h4>
+                        <p>Nieuwe directeur toegevoegd voor De Zonnestraal</p>
+                    </div>
+                    <div class="activity-time">4 uur geleden</div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon">💾</div>
+                    <div class="activity-content">
+                        <h4>Automatische backup voltooid</h4>
+                        <p>Dagelijkse database backup succesvol uitgevoerd</p>
+                    </div>
+                    <div class="activity-time">6 uur geleden</div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon">📊</div>
+                    <div class="activity-content">
+                        <h4>Maandrapport gegenereerd</h4>
+                        <p>Gebruiksstatistieken voor december beschikbaar</p>
+                    </div>
+                    <div class="activity-time">1 dag geleden</div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon">🔧</div>
+                    <div class="activity-content">
+                        <h4>Systeem update uitgevoerd</h4>
+                        <p>Versie 1.2.3 succesvol geïnstalleerd</p>
+                    </div>
+                    <div class="activity-time">2 dagen geleden</div>
+                </li>
+            </ul>
+        </section>
+    </div>
+
+    <!-- Add School Modal -->
+    <div id="addSchoolModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>
+                    <span>🏫</span>
+                    Nieuwe School Toevoegen
+                </h2>
+                <button class="modal-close" onclick="closeAddSchoolModal()">
+                    ✕
+                </button>
+            </div>
+            
+            <form id="addSchoolForm" onsubmit="handleAddSchool(event)">
+                <div class="form-group">
+                    <label for="schoolName">Schoolnaam *</label>
+                    <input 
+                        type="text" 
+                        id="schoolName" 
+                        name="schoolName" 
+                        placeholder="Bijv. Basisschool De Regenboog"
+                        required
+                    >
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="schoolType">Type School *</label>
+                        <select id="schoolType" name="schoolType" required>
+                            <option value="">Selecteer type...</option>
+                            <option value="basisschool">Basisschool</option>
+                            <option value="middelbare-school">Middelbare School</option>
+                            <option value="vmbo">VMBO</option>
+                            <option value="havo">HAVO</option>
+                            <option value="vwo">VWO</option>
+                            <option value="mbo">MBO</option>
+                            <option value="speciaal-onderwijs">Speciaal Onderwijs</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="studentCount">Aantal Leerlingen</label>
+                        <input 
+                            type="number" 
+                            id="studentCount" 
+                            name="studentCount" 
+                            placeholder="250"
+                            min="1"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="schoolAddress">Adres</label>
+                    <input 
+                        type="text" 
+                        id="schoolAddress" 
+                        name="schoolAddress" 
+                        placeholder="Schoolstraat 123, 1234 AB Amsterdam"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="adminName">Naam Beheerder *</label>
+                    <input 
+                        type="text" 
+                        id="adminName" 
+                        name="adminName" 
+                        placeholder="Dhr./Mevr. van der Berg"
+                        required
+                    >
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="adminEmail">Email Beheerder *</label>
+                        <input 
+                            type="email" 
+                            id="adminEmail" 
+                            name="adminEmail" 
+                            placeholder="beheerder@school.nl"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="adminPhone">Telefoon Beheerder</label>
+                        <input 
+                            type="tel" 
+                            id="adminPhone" 
+                            name="adminPhone" 
+                            placeholder="06-12345678"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="schoolNotes">Opmerkingen</label>
+                    <textarea 
+                        id="schoolNotes" 
+                        name="schoolNotes" 
+                        rows="3"
+                        placeholder="Extra informatie over de school..."
+                    ></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    🏫 School Toevoegen
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        // Global function stubs to prevent reference errors
+        window.openAddSchoolModal = function() {
+            alert('Systeem wordt geladen, probeer over een moment opnieuw.');
+        };
+        
+        // Import database-enabled components
+        import SchoolManagerDB from '/assets/js/modules/school-manager-db.js';
+        import { SUPABASE_CONFIG, DATABASE_CONFIG, FEATURES } from '/assets/js/config.js';
+
+        // Check authentication
+        const demoUser = sessionStorage.getItem('demo_user');
+        if (!demoUser) {
+            window.location.href = '/auth/login.html?role=admin';
+        } else {
+            const user = JSON.parse(demoUser);
+            
+            // Check if user has admin role
+            if (user.user_metadata?.role !== 'admin') {
+                alert('Toegang geweigerd. Alleen administrators kunnen deze pagina bekijken.');
+                window.location.href = '/auth/login.html?role=admin';
+            }
+            
+            // Update user info in header
+            document.getElementById('userName').textContent = user.user_metadata?.full_name || user.email;
+            document.getElementById('adminName').textContent = user.user_metadata?.full_name || 'Admin';
+            document.getElementById('userAvatar').textContent = (user.user_metadata?.full_name || user.email).charAt(0).toUpperCase();
+        }
+
+        // Initialize School Manager with Database Support
+        let schoolManager;
+        
+        async function initializeSchoolManager() {
+            try {
+                console.log('🚀 Initializing School Management System...');
+                
+                // Wait for Supabase to potentially initialize
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // Create school manager instance
+                schoolManager = new SchoolManager();
+                
+                // Make globally available
+                window.schoolManager = schoolManager;
+                
+                // Define modal functions after schoolManager is ready
+                defineModalFunctions();
+                
+                console.log('✅ School Management System initialized successfully');
+                
+            } catch (error) {
+                console.error('❌ Failed to initialize School Management System:', error);
+                alert('Er is een fout opgetreden bij het laden van het dashboard. Herlaad de pagina.');
+            }
+        }
+
+        // Define modal functions
+        function defineModalFunctions() {
+            window.openAddSchoolModal = function() {
+                console.log('🏫 Opening add school modal...');
+                
+                const modal = document.getElementById('addSchoolModal');
+                const form = document.getElementById('addSchoolForm');
+                
+                console.log('Modal element:', modal);
+                console.log('Modal classes before:', modal ? modal.className : 'MODAL NOT FOUND');
+                
+                if (modal) {
+                    // Ensure modal is in "add" mode (not edit mode)
+                    if (form.dataset.editingSchoolId) {
+                        form.removeAttribute('data-editing-school-id');
+                        document.querySelector('#addSchoolModal .modal-header h2').innerHTML = '<span>🏫</span> Nieuwe School Toevoegen';
+                        document.querySelector('#addSchoolModal .btn-primary').textContent = '🏫 School Toevoegen';
+                        form.reset();
+                    }
+                    
+                    modal.classList.add('show');
+                    console.log('Modal classes after:', modal.className);
+                    console.log('✅ Modal opened successfully');
+                    
+                    // Force focus to modal for accessibility
+                    setTimeout(() => {
+                        const firstInput = modal.querySelector('input, select, textarea');
+                        if (firstInput) {
+                            firstInput.focus();
+                        }
+                    }, 100);
+                } else {
+                    console.error('❌ Modal element not found');
+                }
+            };
+
+            window.closeAddSchoolModal = function() {
+                const modal = document.getElementById('addSchoolModal');
+                const form = document.getElementById('addSchoolForm');
+                
+                modal.classList.remove('show');
+                if (form) {
+                    form.reset();
+                    form.removeAttribute('data-editing-school-id');
+                }
+            };
+        }
+        
+        // Loading state management
+        function showLoadingState(isLoading) {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            if (loadingOverlay) {
+                loadingOverlay.style.display = isLoading ? 'flex' : 'none';
+            }
+            
+            // Disable/enable buttons during loading
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.disabled = isLoading;
+            });
+        }
+        
+        // Error message display
+        function showErrorMessage(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-notification';
+            errorDiv.innerHTML = `
+                <div class="error-content">
+                    <span class="error-icon">⚠️</span>
+                    <span class="error-message">${message}</span>
+                    <button class="error-close" onclick="this.parentElement.parentElement.remove()">✕</button>
+                </div>
+            `;
+            document.body.insertBefore(errorDiv, document.body.firstChild);
+            
+            // Auto-remove after 8 seconds
+            setTimeout(() => {
+                if (errorDiv.parentNode) {
+                    errorDiv.remove();
+                }
+            }, 8000);
+        }
+        
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', initializeSchoolManager);
+
+        // School Management System
+        class SchoolManager {
+            constructor() {
+                this.schools = [];
+                this.init();
+            }
+
+            async init() {
+                console.log('📊 Initializing SchoolManager...');
+                
+                // Update database status
+                updateDatabaseStatus();
+                
+                this.schools = await this.loadSchools();
+                console.log('📊 Schools loaded:', this.schools);
+                this.renderSchoolList();
+                this.updateStats();
+                console.log('✅ SchoolManager initialization complete');
+            }
+
+            async loadSchools() {
+                console.log('📊 Loading schools data...');
+                
+                // Try Supabase first if available
+                if (window.SupabaseConfig && window.SupabaseConfig.isSupabaseAvailable()) {
+                    console.log('🔄 Using Supabase for data loading');
+                    try {
+                        const supabaseSchools = await window.SupabaseConfig.SupabaseAPI.getSchools();
+                        if (supabaseSchools && supabaseSchools.length > 0) {
+                            console.log(`✅ Loaded ${supabaseSchools.length} schools from Supabase`);
+                            return supabaseSchools.map(school => ({
+                                id: school.id,
+                                name: school.school_name,
+                                type: school.school_type,
+                                studentCount: school.student_count || 0,
+                                address: school.address,
+                                adminName: school.admin_name,
+                                adminEmail: school.admin_email,
+                                adminPhone: school.admin_phone,
+                                notes: school.notes,
+                                credentials: school.credentials,
+                                status: school.status || 'active',
+                                lastLogin: school.last_login,
+                                createdAt: school.created_at
+                            }));
+                        }
+                    } catch (error) {
+                        console.warn('⚠️ Supabase loading failed, falling back to localStorage:', error);
+                    }
+                }
+                
+                // Fallback to localStorage
+                console.log('📁 Using localStorage for data loading');
+                const stored = localStorage.getItem('admin_schools');
+                if (stored) {
+                    const localSchools = JSON.parse(stored);
+                    console.log(`✅ Loaded ${localSchools.length} schools from localStorage`);
+                    return localSchools;
+                }
+                
+                // Default demo schools
+                console.log('🎯 Creating default demo schools');
+                return [
+                    {
+                        id: 'school_1',
+                        name: 'Basisschool De Regenboog',
+                        type: 'basisschool',
+                        studentCount: 287,
+                        address: 'Schoolstraat 12, 1234 AB Amsterdam',
+                        adminName: 'Mevr. van der Berg',
+                        adminEmail: 'j.vandenberg@regenboog.nl',
+                        adminPhone: '06-12345678',
+                        notes: 'Actieve school met moderne faciliteiten',
+                        credentials: {
+                            username: 'regenboog_admin',
+                            password: 'RB2024_Secure!'
+                        },
+                        status: 'active',
+                        createdAt: new Date('2024-01-15').toISOString(),
+                        lastLogin: new Date('2024-01-20').toISOString()
+                    },
+                    {
+                        id: 'school_2',
+                        name: 'Middelbare School Het Kompas',
+                        type: 'middelbare-school',
+                        studentCount: 542,
+                        address: 'Leerlinglaan 45, 5678 CD Rotterdam',
+                        adminName: 'Dhr. Jansen',
+                        adminEmail: 'p.jansen@kompas.edu.nl',
+                        adminPhone: '010-1234567',
+                        notes: 'HAVO/VWO met technische profielen',
+                        credentials: {
+                            username: 'kompas_admin',
+                            password: 'KMP2024_Safe!'
+                        },
+                        status: 'active',
+                        createdAt: new Date('2024-01-10').toISOString(),
+                        lastLogin: new Date('2024-01-19').toISOString()
+                    }
+                ];
+            }
+
+            async saveSchools() {
+                console.log('💾 Saving schools data...');
+                
+                // Try Supabase first if available
+                if (window.SupabaseConfig && window.SupabaseConfig.isSupabaseAvailable()) {
+                    console.log('🔄 Using Supabase for data saving');
+                    try {
+                        // Note: In a real implementation, you'd handle individual create/update/delete operations
+                        // This is a simplified approach for demonstration
+                        console.log('ℹ️ Supabase saving requires individual CRUD operations - check console for details');
+                        console.log('Schools to sync:', this.schools);
+                        
+                        // For now, also save to localStorage as backup
+                        localStorage.setItem('admin_schools', JSON.stringify(this.schools));
+                        console.log('✅ Schools saved to localStorage (Supabase sync pending)');
+                        return;
+                    } catch (error) {
+                        console.warn('⚠️ Supabase saving failed, using localStorage:', error);
+                    }
+                }
+                
+                // Fallback to localStorage
+                localStorage.setItem('admin_schools', JSON.stringify(this.schools));
+                console.log('✅ Schools saved to localStorage');
+            }
+
+            generateCredentials(schoolName) {
+                const cleanName = schoolName.toLowerCase()
+                    .replace(/[^a-z0-9]/g, '')
+                    .substring(0, 8);
+                
+                const username = `${cleanName}_admin`;
+                const password = this.generateSecurePassword();
+                
+                return { username, password };
+            }
+
+            generateSecurePassword() {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%';
+                let password = '';
+                
+                // Ensure at least one of each type
+                password += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[Math.floor(Math.random() * 26)];
+                password += 'abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random() * 26)];
+                password += '0123456789'[Math.floor(Math.random() * 10)];
+                password += '!@#$%'[Math.floor(Math.random() * 5)];
+                
+                // Fill the rest
+                for (let i = 4; i < 12; i++) {
+                    password += chars[Math.floor(Math.random() * chars.length)];
+                }
+                
+                // Shuffle the password
+                return password.split('').sort(() => Math.random() - 0.5).join('');
+            }
+
+            async addSchool(schoolData) {
+                console.log('➕ Adding school:', schoolData);
+                
+                const school = {
+                    id: `school_${Date.now()}`,
+                    ...schoolData,
+                    credentials: this.generateCredentials(schoolData.name),
+                    status: 'active',
+                    createdAt: new Date().toISOString(),
+                    lastLogin: null
+                };
+
+                console.log('🔑 Generated credentials:', school.credentials);
+                
+                // Try to save to Supabase first
+                if (window.SupabaseConfig && window.SupabaseConfig.isSupabaseAvailable()) {
+                    console.log('💾 Saving school to Supabase...');
+                    try {
+                        const supabaseSchool = await window.SupabaseConfig.SupabaseAPI.createSchool({
+                            school_name: school.name,
+                            school_type: school.type,
+                            student_count: school.studentCount || 0,
+                            admin_name: school.adminName,
+                            admin_email: school.adminEmail,
+                            admin_phone: school.adminPhone,
+                            address: school.address,
+                            notes: school.notes,
+                            credentials: school.credentials,
+                            status: school.status,
+                            last_login: school.lastLogin
+                        });
+                        
+                        if (supabaseSchool) {
+                            console.log('✅ School saved to Supabase:', supabaseSchool.id);
+                            // Update local school with Supabase ID
+                            school.id = supabaseSchool.id;
+                            school.supabaseId = supabaseSchool.id;
+                        }
+                    } catch (error) {
+                        console.warn('⚠️ Supabase save failed, using localStorage only:', error);
+                    }
+                }
+                
+                // Always save to localStorage as backup
+                this.schools.push(school);
+                await this.saveSchools();
+                this.renderSchoolList();
+                this.updateStats();
+
+                console.log('✅ School added successfully:', school);
+                return school;
+            }
+
+            async removeSchool(schoolId) {
+                console.log('🗑️ Removing school:', schoolId);
+                
+                // Try to delete from Supabase first
+                if (window.SupabaseConfig && window.SupabaseConfig.isSupabaseAvailable()) {
+                    try {
+                        const success = await window.SupabaseConfig.SupabaseAPI.deleteSchool(schoolId);
+                        if (success) {
+                            console.log('✅ School deleted from Supabase');
+                        }
+                    } catch (error) {
+                        console.warn('⚠️ Supabase delete failed:', error);
+                    }
+                }
+                
+                // Remove from local array
+                this.schools = this.schools.filter(school => school.id !== schoolId);
+                await this.saveSchools();
+                this.renderSchoolList();
+                this.updateStats();
+                
+                console.log('✅ School removed from localStorage');
+            }
+
+            async updateSchool(schoolId, schoolData) {
+                console.log('💾 Updating school:', schoolId, schoolData);
+                
+                const schoolIndex = this.schools.findIndex(school => school.id === schoolId);
+                if (schoolIndex === -1) {
+                    throw new Error('School not found');
+                }
+                
+                const existingSchool = this.schools[schoolIndex];
+                const updatedSchool = {
+                    ...existingSchool,
+                    ...schoolData,
+                    updatedAt: new Date().toISOString()
+                };
+
+                // Try to update in Supabase first
+                if (window.SupabaseConfig && window.SupabaseConfig.isSupabaseAvailable()) {
+                    try {
+                        const supabaseResult = await window.SupabaseConfig.SupabaseAPI.updateSchool(schoolId, {
+                            school_name: updatedSchool.name,
+                            school_type: updatedSchool.type,
+                            student_count: updatedSchool.studentCount || 0,
+                            admin_name: updatedSchool.adminName,
+                            admin_email: updatedSchool.adminEmail,
+                            admin_phone: updatedSchool.adminPhone,
+                            address: updatedSchool.address,
+                            notes: updatedSchool.notes,
+                            status: updatedSchool.status
+                        });
+                        
+                        if (supabaseResult) {
+                            console.log('✅ School updated in Supabase');
+                        }
+                    } catch (error) {
+                        console.warn('⚠️ Supabase update failed:', error);
+                    }
+                }
+                
+                // Update local array
+                this.schools[schoolIndex] = updatedSchool;
+                await this.saveSchools();
+                this.renderSchoolList();
+                this.updateStats();
+
+                console.log('✅ School updated successfully');
+                return updatedSchool;
+            }
+
+            updateStats() {
+                // Safely update stats with error checking
+                const totalSchoolsEl = document.getElementById('totalSchools');
+                const totalStudentsEl = document.getElementById('totalStudents');
+                
+                if (totalSchoolsEl) {
+                    totalSchoolsEl.textContent = this.schools.length;
+                }
+                
+                const totalStudents = this.schools.reduce((sum, school) => 
+                    sum + (parseInt(school.studentCount) || 0), 0
+                );
+                
+                if (totalStudentsEl) {
+                    totalStudentsEl.textContent = totalStudents.toLocaleString('nl-NL');
+                }
+                
+                // Animate the updated numbers safely
+                setTimeout(() => {
+                    if (typeof animateStats === 'function') {
+                        animateStats();
+                    }
+                }, 100);
+            }
+
+            renderSchoolList() {
+                const container = document.getElementById('schoolList');
+                console.log('🎨 Rendering school list...', { 
+                    schoolCount: this.schools.length, 
+                    container: !!container 
+                });
+                
+                if (this.schools.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <p>🏫 Nog geen scholen geregistreerd</p>
+                            <p style="font-size: 0.9rem; opacity: 0.7;">Voeg je eerste school toe om te beginnen</p>
+                        </div>
+                    `;
+                    console.log('📋 Rendered empty state');
+                    return;
+                }
+
+                container.innerHTML = this.schools.map(school => `
+                    <div class="school-item">
+                        <div class="school-header">
+                            <div class="school-name">${school.name}</div>
+                            <div class="school-status ${school.status}">${school.status === 'active' ? 'Actief' : 'Inactief'}</div>
+                        </div>
+                        
+                        <div class="school-details">
+                            <div class="school-detail">
+                                <span>🏫</span>
+                                <span>${school.type.charAt(0).toUpperCase() + school.type.slice(1).replace('-', ' ')}</span>
+                            </div>
+                            <div class="school-detail">
+                                <span>👥</span>
+                                <span>${school.studentCount || 'Onbekend'} leerlingen</span>
+                            </div>
+                            <div class="school-detail">
+                                <span>👤</span>
+                                <span>${school.adminName}</span>
+                            </div>
+                            <div class="school-detail">
+                                <span>📧</span>
+                                <span>${school.adminEmail}</span>
+                            </div>
+                            ${school.adminPhone ? `
+                                <div class="school-detail">
+                                    <span>📞</span>
+                                    <span>${school.adminPhone}</span>
+                                </div>
+                            ` : ''}
+                            ${school.address ? `
+                                <div class="school-detail">
+                                    <span>📍</span>
+                                    <span>${school.address}</span>
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <div class="credentials-box">
+                            <h4>🔑 Inloggegevens Beheerder</h4>
+                            <p><strong>Gebruikersnaam:</strong> ${school.credentials.username}</p>
+                            <p><strong>Wachtwoord:</strong> ${school.credentials.password}</p>
+                            <p style="font-size: 0.75rem; opacity: 0.7; margin-top: 0.5rem;">
+                                ⚠️ Deze gegevens zijn alleen zichtbaar voor systeembeheerders
+                            </p>
+                        </div>
+
+                        <div class="school-actions">
+                            <button class="school-action-btn" onclick="viewSchoolDetails('${school.id}')">
+                                👁️ Details
+                            </button>
+                            <button class="school-action-btn" onclick="editSchool('${school.id}')">
+                                ✏️ Bewerken
+                            </button>
+                            <button class="school-action-btn" onclick="loginAsSchool('${school.id}')">
+                                🚪 Inloggen als School
+                            </button>
+                            <button class="school-action-btn" onclick="removeSchool('${school.id}')" style="background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4);">
+                                🗑️ Verwijderen
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+                
+                console.log(`✅ Rendered ${this.schools.length} schools in list`);
+            }
+        }
+
+        // Modal functions are defined in defineModalFunctions() after initialization
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', initializeSchoolManager);
+        
+        window.openAddSchoolModal = function() {
+            console.log('🏫 Opening add school modal...');
+            
+            const modal = document.getElementById('addSchoolModal');
+            const form = document.getElementById('addSchoolForm');
+            
+            console.log('Modal element:', modal);
+            console.log('Modal classes before:', modal ? modal.className : 'MODAL NOT FOUND');
+            
+            if (modal) {
+                // Ensure modal is in "add" mode (not edit mode)
+                if (form.dataset.editingSchoolId) {
+                    form.removeAttribute('data-editing-school-id');
+                    document.querySelector('#addSchoolModal .modal-header h2').innerHTML = '<span>🏫</span> Nieuwe School Toevoegen';
+                    document.querySelector('#addSchoolModal .btn-primary').textContent = '🏫 School Toevoegen';
+                    form.reset();
+                }
+                
+                modal.classList.add('show');
+                console.log('Modal classes after:', modal.className);
+                console.log('Modal computed style display:', window.getComputedStyle(modal).display);
+                console.log('Modal computed style visibility:', window.getComputedStyle(modal).visibility);
+                console.log('Modal computed style opacity:', window.getComputedStyle(modal).opacity);
+                console.log('Modal computed style z-index:', window.getComputedStyle(modal).zIndex);
+                console.log('✅ Modal opened successfully');
+                
+                // Force focus to modal for accessibility
+                setTimeout(() => {
+                    const firstInput = modal.querySelector('input, select, textarea');
+                    if (firstInput) {
+                        firstInput.focus();
+                    }
+                }, 100);
+            } else {
+                console.error('❌ Modal element not found');
+            }
+        };
+
+        window.closeAddSchoolModal = function() {
+            const modal = document.getElementById('addSchoolModal');
+            const form = document.getElementById('addSchoolForm');
+            
+            modal.classList.remove('show');
+            form.reset();
+            
+            // Reset modal to "add" state if it was in "edit" state
+            if (form.dataset.editingSchoolId) {
+                form.removeAttribute('data-editing-school-id');
+                document.querySelector('#addSchoolModal .modal-header h2').innerHTML = '<span>🏫</span> Nieuwe School Toevoegen';
+                document.querySelector('#addSchoolModal .btn-primary').textContent = '🏫 School Toevoegen';
+                console.log('🔄 Modal reset to add mode');
+            }
+        };
+
+        window.handleAddSchool = async function(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const isEditing = !!form.dataset.editingSchoolId;
+            const schoolId = form.dataset.editingSchoolId;
+            
+            console.log(isEditing ? '💾 Updating school...' : '🏫 Adding new school...', { schoolManager, isEditing, schoolId });
+            
+            const formData = new FormData(event.target);
+            const schoolData = {
+                name: formData.get('schoolName'),
+                type: formData.get('schoolType'),
+                studentCount: formData.get('studentCount') || 0,
+                address: formData.get('schoolAddress') || '',
+                adminName: formData.get('adminName'),
+                adminEmail: formData.get('adminEmail'),
+                adminPhone: formData.get('adminPhone') || '',
+                notes: formData.get('schoolNotes') || ''
+            };
+            
+            console.log('📝 School data:', schoolData);
+
+            try {
+                if (!schoolManager) {
+                    throw new Error('SchoolManager not initialized');
+                }
+                
+                // Show loading state
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = isEditing ? '💾 Bijwerken...' : '🏫 Toevoegen...';
+                submitBtn.disabled = true;
+                
+                if (isEditing) {
+                    // Update existing school
+                    const updatedSchool = await schoolManager.updateSchool(schoolId, schoolData);
+                    closeAddSchoolModal();
+                    
+                    alert(`✅ School "${updatedSchool.name}" is succesvol bijgewerkt!`);
+                    
+                    // Reset form state
+                    form.removeAttribute('data-editing-school-id');
+                    document.querySelector('#addSchoolModal .modal-header h2').innerHTML = '<span>🏫</span> Nieuwe School Toevoegen';
+                    document.querySelector('#addSchoolModal .btn-primary').textContent = '🏫 School Toevoegen';
+                } else {
+                    // Add new school
+                    const newSchool = await schoolManager.addSchool(schoolData);
+                    closeAddSchoolModal();
+                    
+                    // Show success message with credentials
+                    alert(`✅ School "${newSchool.name}" is succesvol toegevoegd!\n\n🔑 Inloggegevens voor beheerder:\nGebruikersnaam: ${newSchool.credentials.username}\nWachtwoord: ${newSchool.credentials.password}\n\n⚠️ Bewaar deze gegevens veilig!\n\n${window.SupabaseConfig?.isSupabaseAvailable() ? '💾 Opgeslagen in Supabase database' : '📁 Opgeslagen in localStorage'}`);
+                }
+                
+                // Scroll to the school list
+                document.getElementById('schoolListSection').scrollIntoView({ behavior: 'smooth' });
+                
+            } catch (error) {
+                console.error('❌ Error processing school:', error);
+                alert(`❌ Er is een fout opgetreden bij het ${isEditing ? 'bijwerken' : 'toevoegen'} van de school. Probeer het opnieuw.`);
+            } finally {
+                // Reset button state
+                const submitBtn = form.querySelector('button[type="submit"]');
+                if (submitBtn) {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }
+            }
+        };
+        window.handleLogout = function() {
+            if (confirm('Weet je zeker dat je wilt uitloggen?')) {
+                sessionStorage.removeItem('demo_user');
+                window.location.href = '/index.html';
+            }
+        };
+
+        window.openModule = function(module) {
+            if (module === 'schools') {
+                document.getElementById('schoolListSection').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                alert(`🚧 Module "${module}" wordt binnenkort beschikbaar gemaakt!\n\nDeze functionaliteit is in ontwikkeling.`);
+            }
+        };
+
+        window.quickAction = function(action) {
+            if (action === 'add-school') {
+                openAddSchoolModal();
+                return;
+            }
+            
+            const actions = {
+                'add-user': 'Nieuwe gebruiker toevoegen',
+                'backup': 'Backup wordt gemaakt...',
+                'maintenance': 'Onderhoudsmodus activeren',
+                'reports': 'Rapport wordt gegenereerd...',
+                'settings': 'Systeeminstellingen openen'
+            };
+            
+            alert(`🚧 ${actions[action]}\n\nDeze functionaliteit wordt binnenkort toegevoegd.`);
+        };
+
+        // School management functions
+        window.viewSchoolDetails = function(schoolId) {
+            const school = schoolManager.schools.find(s => s.id === schoolId);
+            if (!school) return;
+            
+            const details = `
+📋 School Details
+
+🏫 Naam: ${school.name}
+📚 Type: ${school.type.charAt(0).toUpperCase() + school.type.slice(1).replace('-', ' ')}
+👥 Leerlingen: ${school.studentCount || 'Onbekend'}
+📍 Adres: ${school.address || 'Niet opgegeven'}
+
+👤 Beheerder: ${school.adminName}
+📧 Email: ${school.adminEmail}
+📞 Telefoon: ${school.adminPhone || 'Niet opgegeven'}
+
+📝 Opmerkingen: ${school.notes || 'Geen opmerkingen'}
+
+📅 Geregistreerd: ${new Date(school.createdAt).toLocaleDateString('nl-NL')}
+🔐 Laatste login: ${school.lastLogin ? new Date(school.lastLogin).toLocaleDateString('nl-NL') : 'Nog niet ingelogd'}
+            `;
+            
+            alert(details);
+        };
+
+        window.editSchool = function(schoolId) {
+            const school = schoolManager.schools.find(s => s.id === schoolId);
+            if (!school) {
+                alert('❌ School niet gevonden');
+                return;
+            }
+            
+            console.log('✏️ Opening edit modal for school:', school.name);
+            
+            // Fill the form with existing school data
+            document.getElementById('schoolName').value = school.name;
+            document.getElementById('schoolType').value = school.type;
+            document.getElementById('studentCount').value = school.studentCount || '';
+            document.getElementById('schoolAddress').value = school.address || '';
+            document.getElementById('adminName').value = school.adminName;
+            document.getElementById('adminEmail').value = school.adminEmail;
+            document.getElementById('adminPhone').value = school.adminPhone || '';
+            document.getElementById('schoolNotes').value = school.notes || '';
+            
+            // Change modal title and button text for editing
+            const modalTitle = document.querySelector('#addSchoolModal .modal-header h2');
+            const submitButton = document.querySelector('#addSchoolModal .btn-primary');
+            const form = document.getElementById('addSchoolForm');
+            
+            modalTitle.innerHTML = '<span>✏️</span> School Bewerken';
+            submitButton.textContent = '💾 Wijzigingen Opslaan';
+            
+            // Store the school ID for the edit operation
+            form.dataset.editingSchoolId = schoolId;
+            
+            // Open the modal
+            openAddSchoolModal();
+        };
+
+        window.loginAsSchool = function(schoolId) {
+            const school = schoolManager.schools.find(s => s.id === schoolId);
+            if (!school) return;
+            
+            if (confirm(`🚪 Wil je inloggen als beheerder van "${school.name}"?\n\nJe wordt doorgestuurd naar het school dashboard.`)) {
+                // Create a demo school admin user session
+                const schoolAdminUser = {
+                    id: `school_admin_${schoolId}`,
+                    email: school.adminEmail,
+                    user_metadata: {
+                        full_name: school.adminName,
+                        role: 'school_admin',
+                        school_id: schoolId,
+                        school_name: school.name
+                    }
+                };
+                
+                sessionStorage.setItem('demo_user', JSON.stringify(schoolAdminUser));
+                
+                // Update last login
+                school.lastLogin = new Date().toISOString();
+                schoolManager.saveSchools();
+                
+                // Redirect to school dashboard
+                window.location.href = '/school/index.html';
+            }
+        };
+
+        window.removeSchool = async function(schoolId) {
+            const school = schoolManager.schools.find(s => s.id === schoolId);
+            if (!school) return;
+            
+            if (confirm(`⚠️ Weet je zeker dat je "${school.name}" wilt verwijderen?\n\nDeze actie kan niet ongedaan worden gemaakt!`)) {
+                try {
+                    await schoolManager.removeSchool(schoolId);
+                    alert(`✅ School "${school.name}" is verwijderd.${window.SupabaseConfig?.isSupabaseAvailable() ? '\n💾 Verwijderd uit Supabase database' : '\n📁 Verwijderd uit localStorage'}`);
+                } catch (error) {
+                    console.error('❌ Error removing school:', error);
+                    alert('❌ Er is een fout opgetreden bij het verwijderen van de school.');
+                }
+            }
+        };
+
+        // Update database status indicator
+        function updateDatabaseStatus() {
+            const statusElement = document.getElementById('databaseStatus');
+            if (!statusElement) return;
+            
+            if (window.SupabaseConfig && window.SupabaseConfig.isSupabaseAvailable()) {
+                statusElement.innerHTML = '💾 Supabase Database Actief';
+                statusElement.style.background = 'rgba(34, 197, 94, 0.2)';
+                statusElement.style.color = '#16a34a';
+                statusElement.style.border = '1px solid rgba(34, 197, 94, 0.3)';
+            } else {
+                statusElement.innerHTML = '📁 LocalStorage Modus';
+                statusElement.style.background = 'rgba(251, 191, 36, 0.2)';
+                statusElement.style.color = '#d97706';
+                statusElement.style.border = '1px solid rgba(251, 191, 36, 0.3)';
+            }
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('addSchoolModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAddSchoolModal();
+            }
+        });
+
+        // Animate statistics on load
+        function animateStats() {
+            // Check if schoolManager is available and has schools data
+            if (!window.schoolManager || !window.schoolManager.schools) {
+                console.log('⚠️ SchoolManager not ready yet, using default values for animation');
+                // Use default values if schoolManager is not ready
+                var schoolCount = 2;
+                var totalStudents = 829;
+            } else {
+                var schoolCount = window.schoolManager.schools.length;
+                var totalStudents = window.schoolManager.schools.reduce((sum, school) => sum + (parseInt(school.studentCount) || 0), 0);
+            }
+            
+            const stats = [
+                { id: 'totalSchools', target: schoolCount },
+                { id: 'totalUsers', target: 15420 },
+                { id: 'totalStudents', target: totalStudents },
+                { id: 'systemHealth', target: 99.8, suffix: '%' }
+            ];
+
+            stats.forEach(stat => {
+                const element = document.getElementById(stat.id);
+                const duration = 2000;
+                const startTime = performance.now();
+                
+                function animate(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    
+                    const easeOut = 1 - Math.pow(1 - progress, 3);
+                    const current = stat.target * easeOut;
+                    
+                    if (stat.suffix) {
+                        element.textContent = current.toFixed(1) + stat.suffix;
+                    } else {
+                        element.textContent = Math.floor(current).toLocaleString('nl-NL');
+                    }
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    }
+                }
+                
+                requestAnimationFrame(animate);
+            });
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(animateStats, 300);
+        });
+
+        console.log('🎯 Admin Dashboard met School Management geladen!');
+        
+        // Debug function for testing modal
+        window.testModal = function() {
+            console.log('🧪 Testing modal visibility...');
+            const modal = document.getElementById('addSchoolModal');
+            if (modal) {
+                console.log('Modal element found:', modal);
+                console.log('Current classes:', modal.className);
+                
+                // Force show modal with inline styles for testing
+                modal.style.position = 'fixed';
+                modal.style.top = '0';
+                modal.style.left = '0';
+                modal.style.right = '0';
+                modal.style.bottom = '0';
+                modal.style.background = 'rgba(0, 0, 0, 0.8)';
+                modal.style.display = 'flex';
+                modal.style.alignItems = 'center';
+                modal.style.justifyContent = 'center';
+                modal.style.zIndex = '99999';
+                modal.style.opacity = '1';
+                modal.style.visibility = 'visible';
+                
+                console.log('✅ Modal forced visible with inline styles');
+                console.log('Try closing with closeAddSchoolModal() or click outside');
+            } else {
+                console.error('❌ Modal not found');
+            }
+        };
+    </script>
+    
+    <!-- Supabase Integration -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/assets/js/modules/supabase-config.js"></script>
+</body>
+</html>

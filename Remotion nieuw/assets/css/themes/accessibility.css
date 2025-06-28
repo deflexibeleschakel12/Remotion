@@ -1,0 +1,334 @@
+/* =================================
+   ACCESSIBILITY.CSS - Toegankelijkheid
+   Schoolbeheersysteem v1.0.0
+   Focus, high contrast, reduced motion
+   ================================= */
+
+/* =================================
+   FOCUS MANAGEMENT
+   ================================= */
+
+/* Focus ring voor keyboard navigatie */
+*:focus {
+    outline: 2px solid var(--theme-primary, var(--color-primary));
+    outline-offset: 2px;
+}
+
+/* Verwijder outline voor muis gebruikers */
+.mouse-user *:focus {
+    outline: none;
+}
+
+/* Keyboard user focus states */
+.keyboard-user *:focus {
+    outline: 3px solid var(--theme-primary, var(--color-primary));
+    outline-offset: 3px;
+}
+
+/* Focus voor interactive elementen */
+button:focus,
+.portal-card:focus,
+.theme-option:focus,
+.workflow-step:focus {
+    outline: 3px solid var(--theme-primary, var(--color-primary));
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5), 
+                0 0 0 5px var(--theme-primary, var(--color-primary));
+}
+
+/* Skip link */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: var(--theme-primary, var(--color-primary));
+    color: var(--color-white);
+    padding: 8px;
+    text-decoration: none;
+    border-radius: 4px;
+    z-index: 10000;
+    transition: top 0.3s ease;
+}
+
+.skip-link:focus {
+    top: 6px;
+}
+
+/* =================================
+   HIGH CONTRAST MODE
+   ================================= */
+
+@media (prefers-contrast: high) {
+    :root {
+        --color-primary: #000000;
+        --color-secondary: #333333;
+        --color-accent: #666666;
+        --color-white: #ffffff;
+        --color-gray-900: #000000;
+        --color-gray-700: #333333;
+        --color-gray-500: #666666;
+        --color-gray-300: #999999;
+        --color-gray-100: #cccccc;
+    }
+    
+    /* High contrast borders */
+    .portal-card,
+    .theme-toggle,
+    .theme-selector,
+    .theme-option,
+    .workflow-step {
+        border: 2px solid #000000 !important;
+    }
+    
+    /* High contrast backgrounds */
+    .portal-card {
+        background: #ffffff !important;
+        color: #000000 !important;
+    }
+    
+    .portal-card:hover {
+        background: #f0f0f0 !important;
+    }
+    
+    /* High contrast text */
+    h1, h2, h3, h4, h5, h6, p, span, div {
+        color: #000000 !important;
+    }
+    
+    /* High contrast buttons */
+    button {
+        background: #ffffff !important;
+        color: #000000 !important;
+        border: 2px solid #000000 !important;
+    }
+    
+    button:hover {
+        background: #000000 !important;
+        color: #ffffff !important;
+    }
+}
+
+/* =================================
+   REDUCED MOTION
+   ================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    /* Disable alle animaties en transities */
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    /* Specifieke animaties uitschakelen */
+    .portal-card,
+    .theme-toggle,
+    .workflow-step,
+    .stats-counter,
+    .animation-test-button {
+        transform: none !important;
+        animation: none !important;
+        transition: none !important;
+    }
+    
+    /* Gradient animaties stoppen */
+    .gradient-animate {
+        animation: none !important;
+        background-size: 100% 100% !important;
+    }
+    
+    /* Parallax effecten uitschakelen */
+    .parallax {
+        transform: none !important;
+    }
+    
+    /* Loading animaties vervangen door statische states */
+    .loading::after {
+        animation: none !important;
+        content: "Loading..." !important;
+    }
+    
+    /* Hover effecten behouden maar zonder animatie */
+    .portal-card:hover,
+    .theme-toggle:hover,
+    .workflow-step:hover {
+        transform: none !important;
+        transition: none !important;
+    }
+}
+
+/* =================================
+   SCREEN READER SUPPORT
+   ================================= */
+
+/* Screen reader only text */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Screen reader only text wanneer gefocust */
+.sr-only:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: inherit;
+    margin: inherit;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+}
+
+/* Live regions voor dynamic content */
+.live-region {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+/* =================================
+   FONT SIZE & ZOOM SUPPORT
+   ================================= */
+
+/* Responsive font sizes voor accessibility */
+@media (min-width: 320px) {
+    html {
+        font-size: calc(16px + 6 * ((100vw - 320px) / 680));
+    }
+}
+
+@media (min-width: 1000px) {
+    html {
+        font-size: 22px;
+    }
+}
+
+/* Support voor user zoom preferences */
+@media (min-resolution: 192dpi) {
+    body {
+        font-size: 1.1em;
+    }
+}
+
+/* Large text mode */
+@media (prefers-reduced-data: reduce) {
+    .portal-card img,
+    .workflow-step img {
+        display: none;
+    }
+}
+
+/* =================================
+   COLOR BLINDNESS SUPPORT
+   ================================= */
+
+/* Protanopia (red-blind) support */
+@media (prefers-color-scheme: no-preference) {
+    .color-blind-protanopia {
+        --color-admin: #D97706; /* Orange instead of red-orange */
+        --color-teacher: #059669; /* Green stays */
+        --color-school: #3B82F6; /* Blue stays */
+        --color-student: #8B5CF6; /* Purple stays */
+    }
+}
+
+/* Deuteranopia (green-blind) support */
+.color-blind-deuteranopia {
+    --color-teacher: #3B82F6; /* Blue instead of green */
+    --color-admin: #D97706; /* Orange stays */
+    --color-school: #8B5CF6; /* Purple instead of blue */
+    --color-student: #DC2626; /* Red instead of purple */
+}
+
+/* Tritanopia (blue-blind) support */
+.color-blind-tritanopia {
+    --color-school: #059669; /* Green instead of blue */
+    --color-student: #DC2626; /* Red instead of purple */
+    --color-admin: #D97706; /* Orange stays */
+    --color-teacher: #059669; /* Green stays */
+}
+
+/* =================================
+   KEYBOARD NAVIGATION
+   ================================= */
+
+/* Tab order indicators */
+[tabindex]:focus {
+    position: relative;
+}
+
+[tabindex]:focus::after {
+    content: attr(tabindex);
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    background: var(--theme-primary, var(--color-primary));
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: bold;
+    z-index: 1000;
+}
+
+/* Focus trap voor modals */
+.focus-trap {
+    position: relative;
+}
+
+.focus-trap::before,
+.focus-trap::after {
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* =================================
+   PRINT STYLES
+   ================================= */
+
+@media print {
+    /* Remove decorative elements */
+    .theme-toggle,
+    .debug-panel,
+    .animation-test-section {
+        display: none !important;
+    }
+    
+    /* Ensure readable colors */
+    * {
+        background: white !important;
+        color: black !important;
+    }
+    
+    /* Add URLs for links */
+    a::after {
+        content: " (" attr(href) ")";
+        font-size: 0.8em;
+        color: #666;
+    }
+    
+    /* Page breaks */
+    .portal-card {
+        break-inside: avoid;
+    }
+    
+    h1, h2, h3 {
+        break-after: avoid;
+    }
+}

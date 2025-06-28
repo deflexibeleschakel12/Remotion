@@ -1,0 +1,143 @@
+/* =================================
+   BASE-THEMES.CSS - Basis thema definities
+   Schoolbeheersysteem v1.0.0
+   Basis kleuren en variabelen per rol
+   ================================= */
+
+/* =================================
+   DEFAULT THEME (Portal)
+   ================================= */
+
+[data-theme="default"] {
+    --theme-primary: var(--color-primary);
+    --theme-secondary: var(--color-secondary);
+    --theme-accent: var(--color-accent);
+    --theme-gradient: var(--gradient-primary);
+    --theme-bg: var(--gradient-background);
+    --theme-text: var(--color-white);
+    --theme-text-muted: rgba(255, 255, 255, 0.8);
+}
+
+/* =================================
+   ADMIN THEME (Goud/Oranje)
+   ================================= */
+
+[data-theme="admin"] {
+    --theme-primary: var(--color-admin);
+    --theme-secondary: var(--color-admin-dark);
+    --theme-accent: #FED7AA;
+    --theme-gradient: var(--gradient-admin);
+    --theme-bg: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 50%, #F59E0B 100%);
+    --theme-text: var(--color-gray-900);
+    --theme-text-muted: var(--color-gray-700);
+    --theme-text-inverse: var(--color-white);
+    
+    /* Admin specifieke kleuren */
+    --admin-light: #FEF3C7;
+    --admin-medium: #FCD34D;
+    --admin-dark: #D97706;
+    --admin-darker: #92400E;
+    
+    /* Admin glassmorphism */
+    --theme-glass: rgba(245, 158, 11, 0.1);
+    --theme-glass-hover: rgba(245, 158, 11, 0.2);
+    --theme-glass-strong: rgba(245, 158, 11, 0.15);
+    --theme-border: rgba(245, 158, 11, 0.3);
+    
+    /* Admin shadows */
+    --theme-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+    --theme-shadow-lg: 0 8px 32px rgba(245, 158, 11, 0.25);
+}
+
+/* =================================
+   SCHOOL THEME (Blauw)
+   ================================= */
+
+[data-theme="school"] {
+    --theme-primary: var(--color-school);
+    --theme-secondary: var(--color-school-dark);
+    --theme-accent: #BFDBFE;
+    --theme-gradient: var(--gradient-school);
+    --theme-bg: linear-gradient(135deg, #DBEAFE 0%, #93C5FD 50%, #3B82F6 100%);
+    --theme-text: var(--color-gray-900);
+    --theme-text-muted: var(--color-gray-700);
+    --theme-text-inverse: var(--color-white);
+    
+    /* School specifieke kleuren */
+    --school-light: #DBEAFE;
+    --school-medium: #60A5FA;
+    --school-dark: #1D4ED8;
+    --school-darker: #1E3A8A;
+    
+    /* School glassmorphism */
+    --theme-glass: rgba(59, 130, 246, 0.1);
+    --theme-glass-hover: rgba(59, 130, 246, 0.2);
+    --theme-glass-strong: rgba(59, 130, 246, 0.15);
+    --theme-border: rgba(59, 130, 246, 0.3);
+    
+    /* School shadows */
+    --theme-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    --theme-shadow-lg: 0 8px 32px rgba(59, 130, 246, 0.25);
+}
+
+/* =================================
+   TEACHER THEME (Groen)
+   ================================= */
+
+[data-theme="teacher"] {
+    --theme-primary: var(--color-teacher);
+    --theme-secondary: var(--color-teacher-dark);
+    --theme-accent: #A7F3D0;
+    --theme-gradient: var(--gradient-teacher);
+    --theme-bg: linear-gradient(135deg, #D1FAE5 0%, #6EE7B7 50%, #10B981 100%);
+    --theme-text: var(--color-gray-900);
+    --theme-text-muted: var(--color-gray-700);
+    --theme-text-inverse: var(--color-white);
+    
+    /* Teacher specifieke kleuren */
+    --teacher-light: #D1FAE5;
+    --teacher-medium: #34D399;
+    --teacher-dark: #059669;
+    --teacher-darker: #065F46;
+    
+    /* Teacher glassmorphism */
+    --theme-glass: rgba(16, 185, 129, 0.1);
+    --theme-glass-hover: rgba(16, 185, 129, 0.2);
+    --theme-glass-strong: rgba(16, 185, 129, 0.15);
+    --theme-border: rgba(16, 185, 129, 0.3);
+    
+    /* Teacher shadows */
+    --theme-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+    --theme-shadow-lg: 0 8px 32px rgba(16, 185, 129, 0.25);
+}
+
+/* =================================
+   STUDENT THEME (Paars)
+   ================================= */
+
+[data-theme="student"] {
+    --theme-primary: var(--color-student);
+    --theme-secondary: var(--color-student-dark);
+    --theme-accent: #DDD6FE;
+    --theme-gradient: var(--gradient-student);
+    --theme-bg: linear-gradient(135deg, #EDE9FE 0%, #C4B5FD 50%, #8B5CF6 100%);
+    --theme-text: var(--color-gray-900);
+    --theme-text-muted: var(--color-gray-700);
+    --theme-text-inverse: var(--color-white);
+    
+    /* Student specifieke kleuren */
+    --student-light: #EDE9FE;
+    --student-medium: #A78BFA;
+    --student-dark: #7C3AED;
+    --student-darker: #5B21B6;
+    
+    /* Student glassmorphism */
+    --theme-glass: rgba(139, 92, 246, 0.1);
+    --theme-glass-hover: rgba(139, 92, 246, 0.2);
+    --theme-glass-strong: rgba(139, 92, 246, 0.15);
+    --theme-border: rgba(139, 92, 246, 0.3);
+    
+    /* Student shadows */
+    --theme-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+    --theme-shadow-lg: 0 8px 32px rgba(139, 92, 246, 0.25);
+}

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="nl" data-theme="default">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tweefactor Authenticatie - Schoolbeheersysteem</title>
+    
+    <!-- Modulaire CSS Imports -->
+    <link rel="stylesheet" href="/assets/css/shared.css">
+    <link rel="stylesheet" href="/assets/css/components.css">
+    <link rel="stylesheet" href="/assets/css/animations-modular.css">
+    <link rel="stylesheet" href="/assets/css/themes.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%234F46E5' width='100' height='100' rx='20'/><text x='50' y='65' font-size='60' text-anchor='middle' fill='white'>🎓</text></svg>">
+    
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mfa-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .mfa-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .mfa-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .mfa-header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .mfa-header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .mfa-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: 0.5rem;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .mfa-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: normal;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .mfa-input:focus {
+            outline: none;
+            border-color: #4F46E5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .verify-btn {
+            width: 100%;
+            padding: 0.875rem 1.5rem;
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .verify-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+        }
+
+        .verify-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .mfa-help {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .mfa-help a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+        }
+
+        .mfa-help a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: white;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .btn-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .mfa-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            .back-link {
+                position: relative;
+                top: auto;
+                left: auto;
+                margin-bottom: 1rem;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="login.html" class="back-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H19V7z"/>
+        </svg>
+        Terug naar Inloggen
+    </a>
+
+    <div class="mfa-container">
+        <div class="mfa-header">
+            <div class="mfa-icon">🔐</div>
+            <h1>Tweefactor Authenticatie</h1>
+            <p>Voer de 6-cijferige code in van je authenticatie-app (Google Authenticator, Authy, etc.)</p>
+        </div>
+
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+        <form id="mfaForm">
+            <div class="form-group">
+                <label for="mfaCode">Verificatiecode</label>
+                <input type="text" id="mfaCode" name="mfaCode" class="mfa-input" placeholder="000000" maxlength="6" pattern="[0-9]{6}" required>
+            </div>
+
+            <button type="submit" id="verifyBtn" class="verify-btn">
+                Verifiëren
+            </button>
+        </form>
+
+        <div class="mfa-help">
+            Geen toegang tot je authenticatie-app?<br>
+            <a href="login.html">Neem contact op met support</a>
+        </div>
+    </div>
+
+    <script type="module">
+        import AuthManager from '/assets/js/modules/auth-manager.js';
+        
+        // Initialize Auth Manager
+        const authManager = new AuthManager({
+            // Use demo credentials for testing
+            supabaseUrl: 'https://demo.supabase.co',
+            supabaseKey: 'demo-key'
+        });
+
+        // Auto-focus on input
+        document.getElementById('mfaCode').focus();
+
+        // Format input as user types
+        document.getElementById('mfaCode').addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+            if (value.length > 6) value = value.slice(0, 6);
+            e.target.value = value;
+        });
+
+        // MFA form handler
+        document.getElementById('mfaForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const mfaCode = document.getElementById('mfaCode').value;
+            const verifyBtn = document.getElementById('verifyBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Reset error state
+            errorMessage.style.display = 'none';
+            
+            // Validate code length
+            if (mfaCode.length !== 6) {
+                errorMessage.textContent = 'Voer een 6-cijferige code in.';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            // Show loading state
+            verifyBtn.innerHTML = '<span class="btn-spinner"></span>';
+            verifyBtn.disabled = true;
+            
+            try {
+                // Demo MFA verification - in real app, this would use Supabase
+                await simulateMFAVerification(mfaCode);
+                
+                // Redirect on success
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirectUrl = urlParams.get('redirect') || '/index.html';
+                window.location.href = redirectUrl;
+                
+            } catch (error) {
+                console.error('MFA verification error:', error);
+                
+                // Show error message
+                errorMessage.textContent = error.message || 'Ongeldige verificatiecode. Probeer het opnieuw.';
+                errorMessage.style.display = 'block';
+                
+                // Clear input and refocus
+                document.getElementById('mfaCode').value = '';
+                document.getElementById('mfaCode').focus();
+            }
+            
+            // Reset button
+            verifyBtn.innerHTML = 'Verifiëren';
+            verifyBtn.disabled = false;
+        });
+
+        // Demo MFA verification function
+        async function simulateMFAVerification(code) {
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Demo validation - accept specific codes for testing
+            const validCodes = ['123456', '000000', '111111', '654321'];
+            
+            if (!validCodes.includes(code)) {
+                throw new Error('Ongeldige verificatiecode. Probeer het opnieuw.');
+            }
+            
+            // Store MFA verification in session
+            sessionStorage.setItem('mfa_verified', 'true');
+            console.log('✅ Demo MFA verification successful');
+        }
+    </script>
+</body>
+</html>

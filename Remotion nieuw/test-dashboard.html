@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2rem;
+            background: #f0f0f0;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #4F46E5;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 0.5rem;
+            font-size: 1rem;
+        }
+        button:hover {
+            background: #3730A3;
+        }
+        .debug {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Dashboard Test Pagina</h1>
+    
+    <div class="card">
+        <h2>Login Methods</h2>
+        <p>Test verschillende login methoden:</p>
+        
+        <button onclick="window.open('/auth/login.html', '_blank')">🔑 Demo Login (localStorage)</button>
+        <button onclick="window.open('/auth/supabase-login.html', '_blank')">🔐 Supabase Login (Real Auth)</button>
+        
+        <h3>Quick Demo Login</h3>
+        <button onclick="quickLoginTeacher()">👨‍🏫 Login als Leerkracht</button>
+        <button onclick="quickLoginStudent()">👨‍🎓 Login als Student</button>
+        <button onclick="quickLoginAdmin()">👑 Login als Admin</button>
+        <button onclick="clearSession()">🗑️ Clear Session</button>
+        
+        <div id="sessionInfo" class="debug"></div>
+    </div>
+    
+    <div class="card">
+        <h2>Dashboard Links</h2>
+        <button onclick="window.open('/teacher/index.html', '_blank')">👨‍🏫 Teacher Dashboard</button>
+        <button onclick="window.open('/student/index.html', '_blank')">👨‍🎓 Student Dashboard</button>
+        <button onclick="window.open('/admin/index.html', '_blank')">👑 Admin Dashboard</button>
+    </div>
+    
+    <div class="card">
+        <h2>Data Sources</h2>
+        <button onclick="showLocalStorageData()">� Show localStorage Data</button>
+        <button onclick="clearLocalStorageData()">🗑️ Clear localStorage</button>
+        <button onclick="testSupabaseConnection()">🔗 Test Supabase Connection</button>
+        <button onclick="loadSupabaseData()">📊 Load Supabase Data</button>
+        <div id="localStorageInfo" class="debug"></div>
+    </div>
+
+    <script>
+        function quickLoginTeacher() {
+            const teacherUser = {
+                id: 'demo-teacher-123',
+                email: 'teacher@demo.nl',
+                user_metadata: {
+                    role: 'teacher',
+                    teacher_id: 'demo-teacher-123',
+                    school_id: 'demo-school-123',
+                    full_name: 'Demo Leerkracht',
+                    school_name: 'Demo Basisschool',
+                    subjects: 'Nederlands, Rekenen'
+                }
+            };
+            
+            sessionStorage.setItem('demo_user', JSON.stringify(teacherUser));
+            updateSessionInfo();
+            console.log('✅ Logged in as teacher');
+        }
+        
+        function quickLoginStudent() {
+            const studentUser = {
+                id: 'demo-student-123',
+                email: 'student@demo.nl',
+                user_metadata: {
+                    role: 'student',
+                    student_id: 'demo-student-123',
+                    school_id: 'demo-school-123',
+                    class_id: 'demo-class-1',
+                    full_name: 'Demo Student',
+                    school_name: 'Demo Basisschool',
+                    class_name: 'Groep 5A'
+                }
+            };
+            
+            sessionStorage.setItem('demo_user', JSON.stringify(studentUser));
+            updateSessionInfo();
+            console.log('✅ Logged in as student');
+        }
+        
+        function quickLoginAdmin() {
+            const adminUser = {
+                id: 'demo-admin-123',
+                email: 'admin@demo.nl',
+                user_metadata: {
+                    role: 'admin',
+                    full_name: 'Demo Admin'
+                }
+            };
+            
+            sessionStorage.setItem('demo_user', JSON.stringify(adminUser));
+            updateSessionInfo();
+            console.log('✅ Logged in as admin');
+        }
+        
+        function clearSession() {
+            sessionStorage.removeItem('demo_user');
+            updateSessionInfo();
+            console.log('🗑️ Session cleared');
+        }
+        
+        function updateSessionInfo() {
+            const user = sessionStorage.getItem('demo_user');
+            const infoDiv = document.getElementById('sessionInfo');
+            
+            if (user) {
+                infoDiv.textContent = `Current User:\n${JSON.stringify(JSON.parse(user), null, 2)}`;
+            } else {
+                infoDiv.textContent = 'No user session found';
+            }
+        }
+        
+        function showLocalStorageData() {
+            const infoDiv = document.getElementById('localStorageInfo');
+            let data = {};
+            
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.includes('school_') || key.includes('admin_')) {
+                    try {
+                        data[key] = JSON.parse(localStorage.getItem(key));
+                    } catch (e) {
+                        data[key] = localStorage.getItem(key);
+                    }
+                }
+            }
+            
+            infoDiv.textContent = Object.keys(data).length > 0 
+                ? JSON.stringify(data, null, 2)
+                : 'No school data found in localStorage';
+        }
+        
+        function clearLocalStorageData() {
+            const keys = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.includes('school_') || key.includes('admin_')) {
+                    keys.push(key);
+                }
+            }
+            
+            keys.forEach(key => localStorage.removeItem(key));
+            showLocalStorageData();
+            console.log('🗑️ LocalStorage school data cleared');
+        }
+        
+        async function testSupabaseConnection() {
+            const infoDiv = document.getElementById('localStorageInfo');
+            
+            try {
+                // Check if Supabase is available
+                if (window.SupabaseConfig && window.SupabaseConfig.isSupabaseAvailable()) {
+                    infoDiv.textContent = '✅ Supabase connection available!\nTesting database connection...';
+                    
+                    // Test a simple query
+                    const { data, error } = await window.SupabaseConfig.supabase
+                        .from('schools')
+                        .select('count', { count: 'exact', head: true });
+                    
+                    if (error) {
+                        infoDiv.textContent = `❌ Supabase database error:\n${error.message}`;
+                    } else {
+                        infoDiv.textContent = `✅ Supabase database connected!\nSchools table accessible.`;
+                    }
+                } else {
+                    infoDiv.textContent = '❌ Supabase not available.\nUsing localStorage mode.';
+                }
+            } catch (error) {
+                infoDiv.textContent = `❌ Connection test failed:\n${error.message}`;
+            }
+        }
+        
+        async function loadSupabaseData() {
+            const infoDiv = document.getElementById('localStorageInfo');
+            
+            try {
+                if (!window.SupabaseConfig?.isSupabaseAvailable()) {
+                    infoDiv.textContent = '❌ Supabase not available';
+                    return;
+                }
+                
+                infoDiv.textContent = 'Loading data from Supabase...';
+                
+                const [schools, classes, teachers, students, assignments] = await Promise.all([
+                    window.SupabaseConfig.supabase.from('schools').select('*'),
+                    window.SupabaseConfig.supabase.from('classes').select('*'),
+                    window.SupabaseConfig.supabase.from('teachers').select('*'),
+                    window.SupabaseConfig.supabase.from('students').select('*'),
+                    window.SupabaseConfig.supabase.from('teacher_class_assignments').select('*')
+                ]);
+                
+                const data = {
+                    schools: schools.data || [],
+                    classes: classes.data || [],
+                    teachers: teachers.data || [],
+                    students: students.data || [],
+                    assignments: assignments.data || []
+                };
+                
+                infoDiv.textContent = `Supabase Data:\n${JSON.stringify(data, null, 2)}`;
+                
+            } catch (error) {
+                infoDiv.textContent = `❌ Error loading Supabase data:\n${error.message}`;
+            }
+        }
+        
+        // Initialize
+        updateSessionInfo();
+        showLocalStorageData();
+    </script>
+    
+    <!-- Supabase Integration -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/assets/js/modules/supabase-config.js"></script>
+</body>
+</html>

@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="nl" data-theme="default">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schoolbeheersysteem Portal</title>
+    
+    <!-- Modulaire CSS Imports -->
+    <link rel="stylesheet" href="assets/css/shared.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/animations-modular.css">
+    <link rel="stylesheet" href="assets/css/themes.css">
+    <link rel="stylesheet" href="assets/css/index.css">
+    
+    <!-- Preload kritieke resources -->
+    <link rel="preload" href="assets/js/modules/ui-components.js" as="script" crossorigin="anonymous">
+    <link rel="preload" href="assets/js/i18n/translations.js" as="script" crossorigin="anonymous">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%234F46E5' width='100' height='100' rx='20'/><text x='50' y='65' font-size='60' text-anchor='middle' fill='white'>🎓</text></svg>">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p data-i18n="loading.system">Systeem laden...</p>
+    </div>
+
+    <!-- Language Selector -->
+    <div class="language-selector">
+        <button class="lang-toggle" id="langToggle">
+            <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 16'><rect fill='%23FF4B1F' width='24' height='16'/><rect fill='%23FFFFFF' width='24' height='11' y='5'/><rect fill='%230F5CA8' width='24' height='5' y='11'/></svg>" alt="NL" class="flag-icon">
+            <span data-i18n="language.current">Nederlands</span>
+            <svg class="chevron" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+            </svg>
+        </button>
+        <div class="lang-dropdown" id="langDropdown">
+            <div class="lang-option active" data-lang="nl">
+                <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 16'><rect fill='%23FF4B1F' width='24' height='16'/><rect fill='%23FFFFFF' width='24' height='11' y='5'/><rect fill='%23002664' width='24' height='5' y='11'/></svg>" alt="NL" class="flag-icon">
+                <span>Nederlands</span>
+            </div>
+            <div class="lang-option" data-lang="en">
+                <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 16'><rect fill='%23012169' width='24' height='16'/><path d='M0 0l24 16M24 0L0 16' stroke='%23FFFFFF' stroke-width='2'/><path d='M10 0v16M0 5.33h24M0 10.67h24' stroke='%23FFFFFF' stroke-width='1.33'/><path d='M0 0l24 16M24 0L0 16' stroke='%23C8102E' stroke-width='0.8'/><path d='M12 0v16M0 8h24' stroke='%23C8102E' stroke-width='0.8'/></svg>" alt="EN" class="flag-icon">
+                <span>English</span>
+            </div>
+            <div class="lang-option" data-lang="de">
+                <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 16'><rect fill='%23000000' width='24' height='5.33'/><rect fill='%23DD0000' width='24' height='5.33' y='5.33'/><rect fill='%23FFCE00' width='24' height='5.33' y='10.67'/></svg>" alt="DE" class="flag-icon">
+                <span>Deutsch</span>
+            </div>
+            <div class="lang-option" data-lang="fr">
+                <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 16'><rect fill='%23002654' width='8' height='16'/><rect fill='%23FFFFFF' width='8' height='16' x='8'/><rect fill='%23ED2939' width='8' height='16' x='16'/></svg>" alt="FR" class="flag-icon">
+                <span>Français</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="main-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">🎓</div>
+                    <div class="logo-text">
+                        <h1 data-i18n="system.title">Schoolbeheersysteem</h1>
+                        <p data-i18n="system.subtitle">Moderne oplossing voor onderwijsbeheer</p>
+                    </div>
+                </div>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="schoolCount">0</span>
+                        <span class="stat-label" data-i18n="stats.schools">Scholen</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="userCount">0</span>
+                        <span class="stat-label" data-i18n="stats.users">Gebruikers</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Portal Cards -->
+        <section class="portal-section">
+            <div class="section-header">
+                <h2 data-i18n="portal.choose_role">Kies je rol</h2>
+                <p data-i18n="portal.description">Selecteer hieronder je rol om toegang te krijgen tot het systeem</p>
+            </div>
+            
+            <div class="portal-grid">
+                <!-- Admin Portal Card -->
+                <div class="portal-card admin-card" data-role="admin">
+                    <div class="card-glow admin-glow"></div>
+                    <div class="card-content">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 6.5V7.5C15 8.3 14.3 9 13.5 9S12 8.3 12 7.5V6.5L9 7V9C9 10.1 8.1 11 7 11S5 10.1 5 9V7L3 7.5V9C3 10.1 2.1 11 1 11V13C2.1 13 3 13.9 3 15V17L5 17.5V16.5C5 15.7 5.7 15 6.5 15S8 15.7 8 16.5V17.5L12 17V15C12 13.9 12.9 13 14 13S16 13.9 16 15V17L21 16.5V15C21 13.9 21.9 13 23 13V11C21.9 11 21 10.1 21 9Z"/>
+                            </svg>
+                        </div>
+                        <h3 data-i18n="roles.admin.title">Systeembeheerder</h3>
+                        <p data-i18n="roles.admin.description">Volledige systeemcontrole, schoolbeheer en gebruikersadministratie</p>
+                        <ul class="feature-list">
+                            <li data-i18n="roles.admin.feature1">Scholen registreren</li>
+                            <li data-i18n="roles.admin.feature2">Systeembeheer</li>
+                            <li data-i18n="roles.admin.feature3">Rapportages</li>
+                        </ul>
+                        <button class="portal-btn admin-btn" data-i18n="actions.login">Inloggen</button>
+                    </div>
+                </div>
+
+                <!-- School Portal Card -->
+                <div class="portal-card school-card" data-role="school">
+                    <div class="card-glow school-glow"></div>
+                    <div class="card-content">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 3L1 9L5 11.18V17.18L12 21L19 17.18V11.18L21 10.09V17H23V9L12 3ZM18.82 9L12 12.72L5.18 9L12 5.28L18.82 9ZM17 16L12 18.72L7 16V12.27L12 15L17 12.27V16Z"/>
+                            </svg>
+                        </div>
+                        <h3 data-i18n="roles.school.title">Schoolbeheerder</h3>
+                        <p data-i18n="roles.school.description">Klassenbeheer, leerkrachten en leerlingen administreren</p>
+                        <ul class="feature-list">
+                            <li data-i18n="roles.school.feature1">Klassen beheren</li>
+                            <li data-i18n="roles.school.feature2">Personeelsbeheer</li>
+                            <li data-i18n="roles.school.feature3">PDF exports</li>
+                        </ul>
+                        <button class="portal-btn school-btn" data-i18n="actions.login">Inloggen</button>
+                    </div>
+                </div>
+
+                <!-- Teacher Portal Card -->
+                <div class="portal-card teacher-card" data-role="teacher">
+                    <div class="card-glow teacher-glow"></div>
+                    <div class="card-content">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V5H19V19ZM17 12H13.5V16H10.5V12H7V9H10.5V7H13.5V9H17V12Z"/>
+                            </svg>
+                        </div>
+                        <h3 data-i18n="roles.teacher.title">Leerkracht</h3>
+                        <p data-i18n="roles.teacher.description">Klasoverzicht, leerlingenadministratie en voortgangsbewaking</p>
+                        <ul class="feature-list">
+                            <li data-i18n="roles.teacher.feature1">Klasoverzicht</li>
+                            <li data-i18n="roles.teacher.feature2">Leerlingenbeheer</li>
+                            <li data-i18n="roles.teacher.feature3">Statistieken</li>
+                        </ul>
+                        <button class="portal-btn teacher-btn" data-i18n="actions.login">Inloggen</button>
+                    </div>
+                </div>
+
+                <!-- Student Portal Card -->
+                <div class="portal-card student-card" data-role="student">
+                    <div class="card-glow student-glow"></div>
+                    <div class="card-content">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 3L1 9L5 11.18V17.18L12 21L19 17.18V11.18L21 10.09V17H23V9L12 3ZM18.82 9L12 12.72L5.18 9L12 5.28L18.82 9ZM17 16L12 18.72L7 16V12.27L12 15L17 12.27V16Z"/>
+                            </svg>
+                        </div>
+                        <h3 data-i18n="roles.student.title">Leerling</h3>
+                        <p data-i18n="roles.student.description">Persoonlijk dashboard en klasinformatie</p>
+                        <ul class="feature-list">
+                            <li data-i18n="roles.student.feature1">Klasinfo</li>
+                            <li data-i18n="roles.student.feature2">Rooster</li>
+                            <li data-i18n="roles.student.feature3">Profiel</li>
+                        </ul>
+                        <button class="portal-btn student-btn" data-i18n="actions.login">Inloggen</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- System Workflow -->
+        <section class="workflow-section">
+            <div class="section-header">
+                <h2 data-i18n="workflow.title">Systeemoverzicht</h2>
+                <p data-i18n="workflow.description">Hoe het schoolbeheersysteem werkt</p>
+            </div>
+            
+            <div class="workflow-diagram">
+                <div class="workflow-step" data-step="1">
+                    <div class="step-icon">📝</div>
+                    <h4 data-i18n="workflow.step1.title">Registratie</h4>
+                    <p data-i18n="workflow.step1.description">Admin registreert scholen in het systeem</p>
+                </div>
+                
+                <div class="workflow-arrow">→</div>
+                
+                <div class="workflow-step" data-step="2">
+                    <div class="step-icon">🏫</div>
+                    <h4 data-i18n="workflow.step2.title">School Setup</h4>
+                    <p data-i18n="workflow.step2.description">School beheert klassen en gebruikers</p>
+                </div>
+                
+                <div class="workflow-arrow">→</div>
+                
+                <div class="workflow-step" data-step="3">
+                    <div class="step-icon">👥</div>
+                    <h4 data-i18n="workflow.step3.title">Gebruikers</h4>
+                    <p data-i18n="workflow.step3.description">Leerkrachten en leerlingen gebruiken het systeem</p>
+                </div>
+                
+                <div class="workflow-arrow">→</div>
+                
+                <div class="workflow-step" data-step="4">
+                    <div class="step-icon">📊</div>
+                    <h4 data-i18n="workflow.step4.title">Rapportage</h4>
+                    <p data-i18n="workflow.step4.description">Overzichten en PDF exports</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4 data-i18n="footer.system">Systeem</h4>
+                    <p data-i18n="footer.version">Versie 1.0.0</p>
+                    <p data-i18n="footer.build">Build: 2025.06.26</p>
+                </div>
+                <div class="footer-section">
+                    <h4 data-i18n="footer.support">Ondersteuning</h4>
+                    <p data-i18n="footer.email">support@school.nl</p>
+                    <p data-i18n="footer.phone">+31 (0)20 123 4567</p>
+                </div>
+                <div class="footer-section">
+                    <h4 data-i18n="footer.powered_by">Aangedreven door</h4>
+                    <div class="tech-badges">
+                        <span class="tech-badge">Supabase</span>
+                        <span class="tech-badge">ES6</span>
+                        <span class="tech-badge">CSS3</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Modulaire JavaScript Imports -->
+    <script type="module">
+        // Core modules laden
+        import { i18nManager } from './assets/js/i18n/translations.js';
+        import { UIComponents } from './assets/js/modules/ui-components.js';
+        import ThemeManager from './assets/js/modules/theme-manager.js';
+        import AnimationController from './assets/js/modules/animation-controller.js';
+        import AuthManager from './assets/js/modules/auth-manager.js';
+        import { AuthGuard, SecurityValidator, authUtils } from './assets/js/utils/auth-utils.js';
+        import { validateBRIN, validateEmail, validatePassword } from './assets/js/utils/validators.js';
+        
+        // App initialiseren
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                console.log('🚀 Starting application initialization...');
+                
+                // Loading overlay weergeven
+                const loadingOverlay = document.getElementById('loading-overlay');
+                
+                console.log('🔐 Creating AuthManager instance...');
+                // Auth Manager initialiseren
+                let authManager;
+                try {
+                    authManager = new AuthManager({
+                        supabaseUrl: 'https://demo.supabase.co', // Replace with actual Supabase URL
+                        supabaseKey: 'demo-anon-key-replace-with-actual-key', // Replace with actual anon key
+                        sessionTimeout: 8 * 60 * 60 * 1000, // 8 hours
+                        csrfEnabled: true,
+                        mfaEnabled: true
+                    });
+                    console.log('✅ AuthManager instance created successfully');
+                } catch (error) {
+                    console.error('❌ Failed to create AuthManager instance:', error);
+                    throw new Error(`AuthManager creation failed: ${error.message}`);
+                }
+                
+                console.log('🔐 Initializing AuthManager...');
+                try {
+                    await authManager.init();
+                    console.log('✅ AuthManager initialized successfully');
+                } catch (error) {
+                    console.error('❌ Failed to initialize AuthManager:', error);
+                    throw new Error(`AuthManager initialization failed: ${error.message}`);
+                }
+                
+                console.log('🛡️ Creating AuthGuard...');
+                // Setup auth guard
+                let authGuard;
+                try {
+                    authGuard = new AuthGuard(authManager);
+                    console.log('✅ AuthGuard created successfully');
+                } catch (error) {
+                    console.error('❌ Failed to create AuthGuard:', error);
+                    throw new Error(`AuthGuard creation failed: ${error.message}`);
+                }
+                
+                console.log('🎨 Creating ThemeManager...');
+                // Theme Manager initialiseren
+                let themeManager;
+                try {
+                    themeManager = new ThemeManager();
+                    await themeManager.init();
+                    console.log('✅ ThemeManager initialized successfully');
+                } catch (error) {
+                    console.error('❌ Failed to create/initialize ThemeManager:', error);
+                    console.warn('⚠️ Continuing without ThemeManager...');
+                    themeManager = null;
+                }
+                
+                console.log('🎬 Creating AnimationController...');
+                // Animation Controller initialiseren
+                let animationController;
+                try {
+                    animationController = new AnimationController();
+                    await animationController.init();
+                    console.log('✅ AnimationController initialized successfully');
+                } catch (error) {
+                    console.error('❌ Failed to create/initialize AnimationController:', error);
+                    console.warn('⚠️ Continuing without AnimationController...');
+                    animationController = null;
+                }
+                
+                console.log('🌍 Initializing i18n...');
+                // i18n initialiseren
+                try {
+                    await i18nManager.init();
+                    console.log('✅ i18n initialized successfully');
+                    
+                    // Setup language selector after i18n is initialized
+                    setupLanguageSelector(i18nManager);
+                } catch (error) {
+                    console.error('❌ Failed to initialize i18n:', error);
+                    console.warn('⚠️ Continuing without i18n...');
+                }
+                
+                console.log('🧩 Creating UI Components...');
+                // UI components laden
+                let ui;
+                try {
+                    ui = new UIComponents();
+                    await ui.init();
+                    console.log('✅ UI Components initialized successfully');
+                } catch (error) {
+                    console.error('❌ Failed to create/initialize UI Components:', error);
+                    console.warn('⚠️ Continuing without UI Components...');
+                    ui = null;
+                }
+                
+                // Make all components globally available
+                window.authManager = authManager;
+                window.authGuard = authGuard;
+                window.themeManager = themeManager;
+                window.animationController = animationController;
+                window.i18nManager = i18nManager;
+                window.uiComponents = ui;
+                window.validators = { validateBRIN, validateEmail, validatePassword };
+                
+                // Theme event listeners
+                if (themeManager) {
+                    setupThemeListeners(themeManager);
+                }
+                
+                // Auth event listeners
+                setupAuthListeners(authManager);
+                
+                // Animation event listeners
+                if (animationController) {
+                    setupAnimationListeners(animationController);
+                }
+                
+                // Portal card event listeners
+                setupPortalNavigation();
+                
+                // Statistieken animeren na initialisatie
+                setTimeout(() => {
+                    animateStats();
+                }, 500);
+                
+                // Loading overlay verbergen
+                setTimeout(() => {
+                    loadingOverlay.style.opacity = '0';
+                    setTimeout(() => {
+                        loadingOverlay.style.display = 'none';
+                        
+                        // Trigger page transition animation
+                        if (window.animationController) {
+                            window.animationController.pageTransition('in');
+                        }
+                    }, 300);
+                }, 1000);
+                
+            } catch (error) {
+                console.error('🚨 Error during app initialization:', error);
+                console.error('Error stack:', error.stack);
+                console.error('Error details:', {
+                    name: error.name,
+                    message: error.message,
+                    line: error.lineNumber,
+                    column: error.columnNumber
+                });
+                
+                // Show error to user and provide basic functionality
+                const loadingOverlay = document.getElementById('loading-overlay');
+                if (loadingOverlay) {
+                    loadingOverlay.innerHTML = `
+                        <div style="text-align: center; padding: 2rem; max-width: 500px;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+                            <h2>System Loading Issue</h2>
+                            <p style="margin: 1rem 0;">The system encountered an error during initialization:</p>
+                            <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace; font-size: 0.9rem; text-align: left;">
+                                ${error.message}
+                            </div>
+                            <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 2rem;">
+                                This might be due to browser security restrictions with local files. 
+                                For full functionality, please serve this application from a web server.
+                            </p>
+                            <div style="display: flex; gap: 1rem; justify-content: center;">
+                                <button onclick="window.location.reload()" style="
+                                    background: #4F46E5; 
+                                    color: white; 
+                                    border: none; 
+                                    padding: 0.75rem 1.5rem; 
+                                    border-radius: 8px; 
+                                    cursor: pointer;
+                                ">
+                                    Retry
+                                </button>
+                                <button onclick="showBasicLogin()" style="
+                                    background: #10B981; 
+                                    color: white; 
+                                    border: none; 
+                                    padding: 0.75rem 1.5rem; 
+                                    border-radius: 8px; 
+                                    cursor: pointer;
+                                ">
+                                    Basic Login
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Add basic login functionality
+                window.showBasicLogin = function() {
+                    const mainContainer = document.querySelector('.main-container');
+                    if (mainContainer) {
+                        mainContainer.innerHTML = `
+                            <div style="max-width: 400px; margin: 2rem auto; padding: 2rem; background: var(--bg-glass); border-radius: 20px; backdrop-filter: blur(15px);">
+                                <h2 style="text-align: center; margin-bottom: 2rem;">Inloggen</h2>
+                                <form id="basicLoginForm" style="display: flex; flex-direction: column; gap: 1rem;">
+                                    <div>
+                                        <label for="email" style="display: block; margin-bottom: 0.5rem;">Email:</label>
+                                        <input type="email" id="email" required style="
+                                            width: 100%; 
+                                            padding: 0.75rem; 
+                                            border: 1px solid var(--border-glass); 
+                                            border-radius: 8px; 
+                                            background: var(--bg-glass);
+                                            color: white;
+                                        ">
+                                    </div>
+                                    <div>
+                                        <label for="password" style="display: block; margin-bottom: 0.5rem;">Wachtwoord:</label>
+                                        <input type="password" id="password" required style="
+                                            width: 100%; 
+                                            padding: 0.75rem; 
+                                            border: 1px solid var(--border-glass); 
+                                            border-radius: 8px; 
+                                            background: var(--bg-glass);
+                                            color: white;
+                                        ">
+                                    </div>
+                                    <div>
+                                        <label for="role" style="display: block; margin-bottom: 0.5rem;">Rol:</label>
+                                        <select id="role" required style="
+                                            width: 100%; 
+                                            padding: 0.75rem; 
+                                            border: 1px solid var(--border-glass); 
+                                            border-radius: 8px; 
+                                            background: var(--bg-glass);
+                                            color: white;
+                                        ">
+                                            <option value="">Selecteer rol</option>
+                                            <option value="admin">Systeembeheerder</option>
+                                            <option value="school">Schoolbeheerder</option>
+                                            <option value="teacher">Leerkracht</option>
+                                            <option value="student">Leerling</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" style="
+                                        background: var(--color-primary); 
+                                        color: white; 
+                                        border: none; 
+                                        padding: 1rem; 
+                                        border-radius: 8px; 
+                                        cursor: pointer; 
+                                        font-size: 1rem;
+                                        margin-top: 1rem;
+                                    ">
+                                        Inloggen
+                                    </button>
+                                </form>
+                                <div id="loginMessage" style="margin-top: 1rem; text-align: center; display: none;"></div>
+                            </div>
+                        `;
+                        
+                        // Add basic form handling
+                        document.getElementById('basicLoginForm').addEventListener('submit', function(e) {
+                            e.preventDefault();
+                            const email = document.getElementById('email').value;
+                            const role = document.getElementById('role').value;
+                            const messageEl = document.getElementById('loginMessage');
+                            
+                            messageEl.style.display = 'block';
+                            messageEl.innerHTML = `
+                                <div style="padding: 1rem; background: var(--color-primary); border-radius: 8px; margin-top: 1rem;">
+                                    ✅ Demo login successful!<br>
+                                    Email: ${email}<br>
+                                    Role: ${role}<br><br>
+                                    <small>In production, this would redirect to the ${role} dashboard.</small>
+                                </div>
+                            `;
+                        });
+                    }
+                    
+                    const loadingOverlay = document.getElementById('loading-overlay');
+                    if (loadingOverlay) {
+                        loadingOverlay.style.display = 'none';
+                    }
+                };
+            }
+        });
+        
+        // Portal navigatie setup
+        function setupPortalNavigation() {
+            const portalCards = document.querySelectorAll('.portal-card');
+            
+            portalCards.forEach(card => {
+                const button = card.querySelector('.portal-btn');
+                const role = card.dataset.role;
+                
+                button.addEventListener('click', async () => {
+                    try {
+                        // Check if user is authenticated
+                        if (!window.authManager?.isAuthenticated()) {
+                            // Redirect to login page for the specific role
+                            window.location.href = `/auth/login.html?role=${role}&redirect=${encodeURIComponent(getTargetUrl(role))}`;
+                            return;
+                        }
+                        
+                        // Validate user role
+                        const validation = await window.authManager.validateRole(role);
+                        if (!validation.valid) {
+                            // Show role validation error
+                            showAuthError(`Je hebt geen toegang tot de ${getRoleDisplayName(role)} sectie.`);
+                            return;
+                        }
+                        
+                        // Loading animatie
+                        button.innerHTML = '<div class="btn-spinner"></div>';
+                        button.disabled = true;
+                        
+                        // Navigate naar juiste portal
+                        setTimeout(() => {
+                            window.location.href = getTargetUrl(role);
+                        }, 500);
+                        
+                    } catch (error) {
+                        console.error('❌ Portal navigation error:', error);
+                        showAuthError('Er is een fout opgetreden bij het inloggen.');
+                        
+                        // Reset button
+                        button.innerHTML = button.dataset.originalText || 'Inloggen';
+                        button.disabled = false;
+                    }
+                });
+                
+                // Store original button text
+                button.dataset.originalText = button.textContent;
+                
+                // Hover effecten
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-8px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        }
+        
+        // Helper functions for portal navigation
+        function getTargetUrl(role) {
+            const urls = {
+                'admin': '/admin/index.html',
+                'school': '/school/index.html',
+                'teacher': '/teacher/index.html',
+                'student': '/student/index.html'
+            };
+            return urls[role] || '/';
+        }
+        
+        function getRoleDisplayName(role) {
+            const names = {
+                'admin': 'Systeembeheerder',
+                'school': 'Schoolbeheerder', 
+                'teacher': 'Leerkracht',
+                'student': 'Leerling'
+            };
+            return names[role] || role;
+        }
+        
+        function showAuthError(message) {
+            // Create or update error notification
+            let errorDiv = document.querySelector('.auth-error');
+            if (!errorDiv) {
+                errorDiv = document.createElement('div');
+                errorDiv.className = 'auth-error';
+                errorDiv.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: rgba(239, 68, 68, 0.9);
+                    color: white;
+                    padding: 1rem 2rem;
+                    border-radius: 8px;
+                    backdrop-filter: blur(10px);
+                    z-index: 10000;
+                    animation: slideInTop 0.3s ease;
+                `;
+                document.body.appendChild(errorDiv);
+            }
+            
+            errorDiv.textContent = message;
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                errorDiv.remove();
+            }, 5000);
+        }
+        
+        // Auth event listeners setup
+        function setupAuthListeners(authManager) {
+            // Listen for authentication state changes
+            authManager.on('auth:login', (data) => {
+                console.log('✅ User logged in:', data.user);
+                updateUIForAuthenticatedUser(data.user);
+            });
+            
+            authManager.on('auth:logout', () => {
+                console.log('👋 User logged out');
+                updateUIForUnauthenticatedUser();
+            });
+            
+            authManager.on('auth:sessionExpired', () => {
+                console.log('⏰ Session expired');
+                showAuthError('Je sessie is verlopen. Log opnieuw in.');
+                setTimeout(() => {
+                    window.location.href = 'auth/login.html';
+                }, 2000);
+            });
+            
+            authManager.on('auth:sessionTimeout', () => {
+                console.log('⏰ Session timeout');
+                showAuthError('Je sessie is verlopen door inactiviteit.');
+            });
+            
+            authManager.on('auth:accessDenied', (data) => {
+                console.warn('🚫 Access denied:', data);
+                showAuthError('Je hebt geen toegang tot deze functie.');
+            });
+            
+            authManager.on('auth:loginError', (data) => {
+                console.error('❌ Login error:', data.error);
+                showAuthError('Inloggen mislukt. Controleer je gegevens.');
+            });
+            
+            authManager.on('auth:mfaRequired', () => {
+                console.log('🔐 MFA required');
+                // Redirect to MFA page
+                window.location.href = 'auth/mfa.html';
+            });
+            
+            // Check initial auth state
+            if (authManager.isAuthenticated()) {
+                updateUIForAuthenticatedUser(authManager.getUser());
+            } else {
+                updateUIForUnauthenticatedUser();
+            }
+        }
+        
+        function updateUIForAuthenticatedUser(user) {
+            // Add user info to header if authenticated
+            const headerStats = document.querySelector('.header-stats');
+            if (headerStats && !document.querySelector('.user-info')) {
+                const userInfo = document.createElement('div');
+                userInfo.className = 'user-info';
+                userInfo.innerHTML = `
+                    <div class="user-avatar">
+                        <img src="${authUtils.getAvatarUrl(user)}" alt="Avatar" onerror="this.style.display='none'">
+                        <span class="user-initials">${authUtils.getUserInitials(user)}</span>
+                    </div>
+                    <div class="user-details">
+                        <span class="user-name">${authUtils.getUserDisplayName(user)}</span>
+                        <span class="user-role">${user.user_metadata?.role || 'Gebruiker'}</span>
+                    </div>
+                    <button class="logout-btn" onclick="handleLogout()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M16 17v-3H9v-4h7V7l5 5-5 5M14 2a2 2 0 012 2v2h-2V4H4v16h10v-2h2v2a2 2 0 01-2 2H4a2 2 0 01-2-2V4a2 2 0 012-2h10z"/>
+                        </svg>
+                    </button>
+                `;
+                headerStats.appendChild(userInfo);
+            }
+            
+            // Highlight user's role card
+            const userRole = user.user_metadata?.role || user.app_metadata?.role;
+            if (userRole) {
+                const roleCard = document.querySelector(`.portal-card[data-role="${userRole}"]`);
+                if (roleCard) {
+                    roleCard.classList.add('active-user-role');
+                }
+            }
+        }
+        
+        function updateUIForUnauthenticatedUser() {
+            // Remove user info
+            const userInfo = document.querySelector('.user-info');
+            if (userInfo) {
+                userInfo.remove();
+            }
+            
+            // Remove role highlighting
+            document.querySelectorAll('.portal-card.active-user-role').forEach(card => {
+                card.classList.remove('active-user-role');
+            });
+        }
+        
+        // Global logout handler
+        window.handleLogout = async function() {
+            try {
+                if (window.authManager) {
+                    await window.authManager.logout();
+                    showAuthError('Je bent uitgelogd.');
+                }
+            } catch (error) {
+                console.error('❌ Logout error:', error);
+                showAuthError('Fout bij uitloggen.');
+            }
+        };
+        
+        // Animation event listeners setup
+        function setupAnimationListeners(animationController) {
+            // Listen for performance metrics
+            setInterval(() => {
+                const metrics = animationController.getPerformanceMetrics();
+                if (metrics.averageFrameTime > 16.67) { // Below 60fps
+                    console.warn('⚠️ Animation performance below 60fps:', metrics);
+                }
+            }, 5000);
+            
+            // Setup loading state demos
+            setupLoadingStates(animationController);
+            
+            // Add animation data attributes to elements
+            addAnimationAttributes();
+        }
+        
+        // Setup loading states for demonstration
+        function setupLoadingStates(animationController) {
+            // Add loading demo buttons (for testing)
+            if (window.location.search.includes('debug=true')) {
+                const debugPanel = document.createElement('div');
+                debugPanel.className = 'debug-panel';
+                debugPanel.innerHTML = `
+                    <h4>Animation Debug</h4>
+                    <button onclick="showLoadingDemo('spinner')">Spinner</button>
+                    <button onclick="showLoadingDemo('skeleton')">Skeleton</button>
+                    <button onclick="showLoadingDemo('progress')">Progress</button>
+                    <button onclick="showLoadingDemo('dots')">Dots</button>
+                `;
+                document.body.appendChild(debugPanel);
+                
+                // Make loading demo function global
+                window.showLoadingDemo = (type) => {
+                    const container = document.querySelector('.main-container');
+                    const loader = animationController.createSpinner(container, {
+                        overlay: true,
+                        text: 'Loading...'
+                    });
+                    
+                    setTimeout(() => {
+                        loader.remove();
+                    }, 3000);
+                };
+            }
+        }
+        
+        // Add animation attributes to elements
+        function addAnimationAttributes() {
+            // Portal cards
+            document.querySelectorAll('.portal-card').forEach((card, index) => {
+                card.dataset.animate = 'slideInLeft';
+                card.dataset.delay = (index * 150).toString();
+            });
+            
+            // Workflow steps
+            document.querySelectorAll('.workflow-step').forEach((step, index) => {
+                step.dataset.animate = 'fadeIn';
+                step.dataset.delay = (index * 200).toString();
+            });
+            
+            // Footer sections
+            document.querySelectorAll('.footer-section').forEach((section, index) => {
+                section.dataset.animate = 'slideInRight';
+                section.dataset.delay = (index * 100).toString();
+            });
+            
+            // Stats items
+            document.querySelectorAll('.stat-item').forEach((stat, index) => {
+                stat.dataset.animate = 'scaleIn';
+                stat.dataset.delay = (index * 100).toString();
+                stat.dataset.essential = 'true'; // Don't cancel during performance optimization
+            });
+        }
+        
+        // Enhanced stats animation using Animation Controller
+        function animateStats() {
+            const schoolCount = document.getElementById('schoolCount');
+            const userCount = document.getElementById('userCount');
+            
+            // Use animation controller for better performance
+            if (window.animationController) {
+                // Animate the stats with custom counter animation
+                animateStatCounter(schoolCount, 0, 247, 2000);
+                animateStatCounter(userCount, 0, 15420, 2500);
+            } else {
+                // Fallback to original method
+                animateNumber(schoolCount, 0, 247, 2000);
+                animateNumber(userCount, 0, 15420, 2500);
+            }
+        }
+        
+        // Enhanced stat counter animation
+        function animateStatCounter(element, start, end, duration) {
+            const animationId = window.animationController.generateAnimationId();
+            window.animationController.startPerformanceMeasurement(animationId);
+            
+            const startTime = performance.now();
+            
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Improved easing function
+                const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+                const current = Math.floor(start + (end - start) * easeOutCubic);
+                
+                element.textContent = current.toLocaleString('nl-NL');
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                } else {
+                    window.animationController.endPerformanceMeasurement(animationId);
+                }
+            }
+            
+            requestAnimationFrame(update);
+        }
+        
+        // Original animateNumber function as fallback
+        function animateNumber(element, start, end, duration) {
+            const startTime = performance.now();
+            
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                const current = Math.floor(start + (end - start) * easeOut);
+                
+                element.textContent = current.toLocaleString('nl-NL');
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+            
+            requestAnimationFrame(update);
+        }
+
+        // Theme event listeners setup
+        function setupThemeListeners(themeManager) {
+            // Theme toggle functionality would go here
+            // For now, just log that it's set up
+            console.log('🎨 Theme listeners configured');
+            
+            // Listen for theme changes from ThemeManager
+            if (themeManager.on) {
+                themeManager.on('themeChanged', (theme) => {
+                    console.log('Theme changed to:', theme);
+                    document.documentElement.setAttribute('data-theme', theme);
+                });
+            }
+        }
+
+        // Language selector setup
+        function setupLanguageSelector(i18nManager) {
+            console.log('🌍 Setting up language selector...');
+            
+            const langToggle = document.getElementById('langToggle');
+            const langDropdown = document.getElementById('langDropdown');
+            const langOptions = document.querySelectorAll('.lang-option');
+            
+            if (!langToggle || !langDropdown) {
+                console.warn('⚠️ Language selector elements not found');
+                return;
+            }
+            
+            // Set initial active language
+            const currentLang = i18nManager.currentLang || 'nl';
+            updateLanguageUI(currentLang, langToggle, langOptions);
+            
+            // Toggle dropdown
+            langToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                langDropdown.classList.toggle('show');
+                console.log('🌍 Language dropdown toggled');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!langToggle.contains(e.target) && !langDropdown.contains(e.target)) {
+                    langDropdown.classList.remove('show');
+                }
+            });
+            
+            // Handle language selection
+            langOptions.forEach(option => {
+                option.addEventListener('click', async (e) => {
+                    e.stopPropagation();
+                    
+                    const selectedLang = option.getAttribute('data-lang');
+                    console.log('🌍 Language selected:', selectedLang);
+                    
+                    if (!selectedLang || selectedLang === currentLang) {
+                        langDropdown.classList.remove('show');
+                        return;
+                    }
+                    
+                    try {
+                        // Show loading state
+                        langToggle.style.opacity = '0.7';
+                        langToggle.style.pointerEvents = 'none';
+                        
+                        // Change language
+                        await i18nManager.setLanguage(selectedLang);
+                        
+                        // Update UI
+                        updateLanguageUI(selectedLang, langToggle, langOptions);
+                        
+                        // Close dropdown
+                        langDropdown.classList.remove('show');
+                        
+                        console.log('✅ Language changed successfully to:', selectedLang);
+                        
+                    } catch (error) {
+                        console.error('❌ Failed to change language:', error);
+                        alert('Fout bij het wijzigen van de taal. Probeer het opnieuw.');
+                    } finally {
+                        // Reset loading state
+                        langToggle.style.opacity = '1';
+                        langToggle.style.pointerEvents = 'auto';
+                    }
+                });
+            });
+            
+            console.log('✅ Language selector setup complete');
+        }
+        
+        // Update language UI elements
+        function updateLanguageUI(selectedLang, langToggle, langOptions) {
+            // Update active state
+            langOptions.forEach(opt => opt.classList.remove('active'));
+            const selectedOption = document.querySelector(`[data-lang="${selectedLang}"]`);
+            if (selectedOption) {
+                selectedOption.classList.add('active');
+                
+                // Update toggle button
+                const flagIcon = langToggle.querySelector('.flag-icon');
+                const textSpan = langToggle.querySelector('[data-i18n="language.current"]');
+                
+                if (flagIcon && selectedOption.querySelector('.flag-icon')) {
+                    flagIcon.src = selectedOption.querySelector('.flag-icon').src;
+                    flagIcon.alt = selectedOption.querySelector('.flag-icon').alt;
+                }
+                
+                if (textSpan && selectedOption.querySelector('span')) {
+                    textSpan.textContent = selectedOption.querySelector('span').textContent;
+                }
+            }
+        }
+    </script>
+
+    <!-- CSS Modules inline voor kritieke stijlen -->
+    <style>
+        /* Shared Variables */
+        :root {
+            --color-primary: #4F46E5;
+            --color-secondary: #7C3AED;
+            --color-admin: #F59E0B;
+            --color-school: #3B82F6;
+            --color-teacher: #10B981;
+            --color-student: #8B5CF6;
+            
+            --gradient-admin: linear-gradient(135deg, #F59E0B 0%, #F97316 100%);
+            --gradient-school: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+            --gradient-teacher: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            --gradient-student: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+            
+            --bg-glass: rgba(255, 255, 255, 0.1);
+            --bg-glass-hover: rgba(255, 255, 255, 0.2);
+            --border-glass: rgba(255, 255, 255, 0.2);
+            
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
+            
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity var(--transition-normal);
+            backdrop-filter: blur(10px);
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Language Selector */
+        .language-selector {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1000;
+        }
+
+        .lang-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-glass);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: white;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .lang-toggle:hover {
+            background: var(--bg-glass-hover);
+            transform: translateY(-2px);
+        }
+
+        .flag-icon {
+            width: 20px;
+            height: 14px;
+            border-radius: 2px;
+        }
+
+        .chevron {
+            width: 16px;
+            height: 16px;
+            transition: transform var(--transition-fast);
+        }
+
+        .lang-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: var(--bg-glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border-glass);
+            border-radius: 8px;
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all var(--transition-fast);
+            min-width: 150px;
+        }
+
+        .lang-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .lang-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: background var(--transition-fast);
+        }
+
+        .lang-option:hover {
+            background: var(--bg-glass-hover);
+        }
+
+        .lang-option.active {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 12rem;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-glass);
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-glass-hover);
+            transform: translateY(-2px);
+        }
+
+        .theme-icon {
+            width: 20px;
+            height: 20px;
+            transition: transform var(--transition-fast);
+        }
+
+        .theme-toggle:hover .theme-icon {
+            transform: rotate(15deg);
+        }
+
+        /* Active Theme Portal Card */
+        .portal-card.active-theme {
+            border: 2px solid var(--theme-primary);
+            box-shadow: 0 0 20px rgba(var(--theme-primary-rgb), 0.3);
+        }
+
+        .portal-card.active-theme .card-glow {
+            opacity: 0.6;
+        }
+
+        /* Accessibility Mode Styles */
+        .accessibility-mode .portal-card:focus,
+        .accessibility-mode .portal-btn:focus,
+        .accessibility-mode .lang-toggle:focus,
+        .accessibility-mode .theme-toggle:focus {
+            outline: 3px solid #FFD700;
+            outline-offset: 2px;
+        }
+
+        .accessibility-mode * {
+            transition: none !important;
+            animation: none !important;
+        }
+
+        /* Reduced Motion */
+        .reduced-motion *,
+        .reduced-motion *::before,
+        .reduced-motion *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+
+        /* Screen Reader Only */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Keyboard Navigation */
+        .keyboard-navigation .portal-card:focus {
+            outline: 2px solid #4F46E5;
+            outline-offset: 2px;
+        }
+
+        /* Debug Panel */
+        .debug-panel {
+            position: fixed;
+            top: 5rem;
+            right: 1rem;
+            background: var(--bg-glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border-glass);
+            border-radius: 8px;
+            padding: 1rem;
+            z-index: 999;
+            min-width: 150px;
+        }
+
+        .debug-panel h4 {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--color-primary);
+        }
+
+        .debug-panel button {
+            display: block;
+            width: 100%;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            background: var(--bg-glass-hover);
+            border: 1px solid var(--border-glass);
+            border-radius: 4px;
+            color: white;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .debug-panel button:hover {
+            background: var(--theme-primary);
+        }
+
+        /* Enhanced Animation Styles */
+        [data-animate] {
+            transition: all var(--transition-normal);
+        }
+
+        [data-animate="fadeIn"] {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        [data-animate="slideInLeft"] {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+
+        [data-animate="slideInRight"] {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+
+        [data-animate="scaleIn"] {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        [data-animate="bounceIn"] {
+            opacity: 0;
+            transform: scale(0.3);
+        }
+
+        /* Animation Performance Optimizations */
+        .portal-card,
+        .workflow-step,
+        .stat-item {
+            will-change: transform, opacity;
+        }
+
+        .portal-card.animating,
+        .workflow-step.animating,
+        .stat-item.animating {
+            will-change: transform, opacity;
+        }
+
+        .portal-card:not(.animating),
+        .workflow-step:not(.animating),
+        .stat-item:not(.animating) {
+            will-change: auto;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            font-size: 4rem;
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 1rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .logo-text h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo-text p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #F59E0B;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Portal Section */
+        .portal-section {
+            margin-bottom: 4rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .portal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Portal Cards */
+        .portal-card {
+            position: relative;
+            background: var(--bg-glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all var(--transition-normal);
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .card-glow {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity var(--transition-normal);
+            pointer-events: none;
+        }
+
+        .portal-card:hover .card-glow {
+            opacity: 1;
+        }
+
+        .admin-card:hover .admin-glow {
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.2) 0%, transparent 70%);
+        }
+
+        .school-card:hover .school-glow {
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+        }
+
+        .teacher-card:hover .teacher-glow {
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%);
+        }
+
+        .student-card:hover .student-glow {
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, transparent 70%);
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-card .card-icon {
+            background: var(--gradient-admin);
+        }
+
+        .school-card .card-icon {
+            background: var(--gradient-school);
+        }
+
+        .teacher-card .card-icon {
+            background: var(--gradient-teacher);
+        }
+
+        .student-card .card-icon {
+            background: var(--gradient-student);
+        }
+
+        .card-icon svg {
+            width: 100%;
+            height: 100%;
+            color: white;
+        }
+
+        .portal-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .portal-card p {
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .feature-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            opacity: 0.8;
+        }
+
+        .feature-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--color-primary);
+            font-weight: bold;
+        }
+
+        .portal-btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-btn {
+            background: var(--gradient-admin);
+        }
+
+        .school-btn {
+            background: var(--gradient-school);
+        }
+
+        .teacher-btn {
+            background: var(--gradient-teacher);
+        }
+
+        .student-btn {
+            background: var(--gradient-student);
+        }
+
+        .portal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .portal-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .btn-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        /* Workflow Section */
+        .workflow-section {
+            margin-bottom: 4rem;
+        }
+
+        .workflow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .workflow-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            max-width: 200px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            padding: 2rem 1rem;
+            transition: transform var(--transition-fast);
+        }
+
+        .workflow-step:hover {
+            transform: translateY(-5px);
+        }
+
+        .step-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .workflow-step h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .workflow-step p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        .workflow-arrow {
+            font-size: 2rem;
+            color: var(--color-primary);
+            font-weight: bold;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-glass);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .footer-section h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--color-primary);
+        }
+
+        .footer-section p {
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+
+        .tech-badges {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .tech-badge {
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* User Info in Header */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 0.5rem 1rem;
+            transition: all var(--transition-fast);
+        }
+
+        .user-avatar {
+            position: relative;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: var(--color-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-initials {
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+        }
+
+        .user-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .user-role {
+            font-size: 0.7rem;
+            opacity: 0.8;
+            text-transform: capitalize;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logout-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .active-user-role {
+            border: 2px solid var(--color-primary) !important;
+            box-shadow: 0 0 20px rgba(79, 70, 229, 0.3) !important;
+        }
+
+        /* Auth Error Animation */
+        @keyframes slideInTop {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        /* ...existing code... */
+    </style>
+</body>
+</html>

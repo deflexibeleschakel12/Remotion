@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supabase Migration Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .button {
+            background: #3B82F6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-size: 16px;
+        }
+        .button:hover {
+            background: #2563EB;
+        }
+        .button.success {
+            background: #10B981;
+        }
+        .button.warning {
+            background: #F59E0B;
+        }
+        .button.danger {
+            background: #EF4444;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+        .status.success {
+            background: #D1FAE5;
+            color: #065F46;
+            border: 1px solid #10B981;
+        }
+        .status.error {
+            background: #FEE2E2;
+            color: #991B1B;
+            border: 1px solid #EF4444;
+        }
+        .status.info {
+            background: #DBEAFE;
+            color: #1E40AF;
+            border: 1px solid #3B82F6;
+        }
+        .log {
+            background: #1F2937;
+            color: #F9FAFB;
+            padding: 20px;
+            border-radius: 6px;
+            font-family: monospace;
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 20px 0;
+        }
+        .step {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #E5E7EB;
+            border-radius: 6px;
+        }
+        .step h3 {
+            margin: 0 0 10px 0;
+            color: #374151;
+        }
+        .step-completed {
+            background: #F0FDF4;
+            border-color: #10B981;
+        }
+        .step-completed h3 {
+            color: #065F46;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗄️ Supabase Database Migration Demo</h1>
+        <p>Deze pagina helpt je bij het migreren van localStorage data naar Supabase database.</p>
+
+        <div class="status info">
+            <strong>Status:</strong> <span id="connectionStatus">Controleren...</span>
+        </div>
+
+        <div class="step" id="step1">
+            <h3>Stap 1: Database Schema Setup</h3>
+            <p>Voer eerst de SQL schema uit in je Supabase dashboard (zie SUPABASE_SETUP.md)</p>
+            <button class="button" onclick="checkSchema()">🔍 Controleer Schema</button>
+            <div id="schemaResult"></div>
+        </div>
+
+        <div class="step" id="step2">
+            <h3>Stap 2: Huidige Data Bekijken</h3>
+            <p>Bekijk welke data er momenteel in localStorage staat:</p>
+            <button class="button" onclick="analyzeLocalData()">📊 Analyseer LocalStorage</button>
+            <div id="dataAnalysis"></div>
+        </div>
+
+        <div class="step" id="step3">
+            <h3>Stap 3: Test Database Connectie</h3>
+            <p>Test of we kunnen communiceren met Supabase:</p>
+            <button class="button" onclick="testConnection()">🔗 Test Verbinding</button>
+            <div id="connectionResult"></div>
+        </div>
+
+        <div class="step" id="step4">
+            <h3>Stap 4: Migratie Uitvoeren</h3>
+            <p><strong>Let op:</strong> Dit zal je localStorage data naar Supabase kopiëren!</p>
+            <button class="button warning" onclick="startMigration()">🚀 Start Migratie</button>
+            <div id="migrationResult"></div>
+        </div>
+
+        <div class="step" id="step5">
+            <h3>Stap 5: Verificatie</h3>
+            <p>Controleer of de migratie succesvol was:</p>
+            <button class="button success" onclick="verifyMigration()">✅ Verifieer Data</button>
+            <div id="verificationResult"></div>
+        </div>
+
+        <div class="step" id="step6">
+            <h3>Stap 6: LocalStorage Cleanup (Optioneel)</h3>
+            <p><strong>Waarschuwing:</strong> Dit verwijdert alle lokale data permanent!</p>
+            <button class="button danger" onclick="cleanupLocalStorage()">🧹 Ruim LocalStorage Op</button>
+            <div id="cleanupResult"></div>
+        </div>
+
+        <div class="log" id="logOutput"></div>
+    </div>
+
+    <!-- Supabase Integration -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/assets/js/modules/supabase-config.js"></script>
+
+    <script>
+        let logOutput = document.getElementById('logOutput');
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const colors = {
+                info: '#3B82F6',
+                success: '#10B981',
+                warning: '#F59E0B',
+                error: '#EF4444'
+            };
+            
+            logOutput.innerHTML += `<div style="color: ${colors[type]}">[${timestamp}] ${message}</div>`;
+            logOutput.scrollTop = logOutput.scrollHeight;
+            console.log(message);
+        }
+
+        function updateStatus(message, type = 'info') {
+            const status = document.getElementById('connectionStatus');
+            status.textContent = message;
+            status.parentElement.className = `status ${type}`;
+        }
+
+        function markStepCompleted(stepId) {
+            document.getElementById(stepId).classList.add('step-completed');
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            log('🚀 Migration demo loaded');
+            checkSupabaseConnection();
+        });
+
+        function checkSupabaseConnection() {
+            log('🔍 Checking Supabase connection...');
+            
+            if (!window.SupabaseConfig) {
+                log('❌ Supabase configuration not loaded', 'error');
+                updateStatus('Supabase configuratie niet geladen', 'error');
+                return;
+            }
+
+            if (window.SupabaseConfig.isSupabaseAvailable()) {
+                log('✅ Supabase client is available', 'success');
+                updateStatus('Supabase verbinding beschikbaar', 'success');
+            } else {
+                log('⚠️ Supabase client not initialized', 'warning');
+                updateStatus('Supabase client niet geïnitialiseerd', 'warning');
+            }
+        }
+
+        async function checkSchema() {
+            log('🔍 Checking database schema...');
+            
+            if (!window.SupabaseConfig?.isSupabaseAvailable()) {
+                log('❌ Supabase not available', 'error');
+                document.getElementById('schemaResult').innerHTML = '<div class="status error">Supabase niet beschikbaar</div>';
+                return;
+            }
+
+            try {
+                // Try to query each table to see if it exists
+                const tables = ['schools', 'classes', 'teachers', 'students', 'teacher_class_assignments'];
+                let results = [];
+
+                for (const table of tables) {
+                    try {
+                        const { data, error } = await window.supabase
+                            .from(table)
+                            .select('*')
+                            .limit(1);
+                        
+                        if (error) {
+                            results.push(`❌ ${table}: ${error.message}`);
+                        } else {
+                            results.push(`✅ ${table}: OK`);
+                        }
+                    } catch (err) {
+                        results.push(`❌ ${table}: ${err.message}`);
+                    }
+                }
+
+                const resultHtml = results.map(r => `<div>${r}</div>`).join('');
+                document.getElementById('schemaResult').innerHTML = `<div class="status info">${resultHtml}</div>`;
+                
+                log('✅ Schema check completed', 'success');
+                if (results.every(r => r.includes('✅'))) {
+                    markStepCompleted('step1');
+                }
+
+            } catch (error) {
+                log(`❌ Schema check failed: ${error.message}`, 'error');
+                document.getElementById('schemaResult').innerHTML = `<div class="status error">Schema check failed: ${error.message}</div>`;
+            }
+        }
+
+        function analyzeLocalData() {
+            log('📊 Analyzing localStorage data...');
+
+            const keys = Object.keys(localStorage);
+            const schoolKeys = keys.filter(k => k.includes('school') || k === 'admin_schools');
+            
+            let analysis = {
+                schools: 0,
+                classes: 0,
+                teachers: 0,
+                students: 0,
+                assignments: 0
+            };
+
+            try {
+                // Count schools
+                const schools = JSON.parse(localStorage.getItem('admin_schools') || '[]');
+                analysis.schools = schools.length;
+
+                // Count classes, teachers, students for each school
+                schools.forEach(school => {
+                    const schoolId = school.id;
+                    
+                    const classes = JSON.parse(localStorage.getItem(`school_classes_${schoolId}`) || '[]');
+                    analysis.classes += classes.length;
+                    
+                    const teachers = JSON.parse(localStorage.getItem(`school_teachers_${schoolId}`) || '[]');
+                    analysis.teachers += teachers.length;
+                    
+                    const students = JSON.parse(localStorage.getItem(`school_students_${schoolId}`) || '[]');
+                    analysis.students += students.length;
+                    
+                    const assignments = JSON.parse(localStorage.getItem(`school_assignments_${schoolId}`) || '[]');
+                    analysis.assignments += assignments.length;
+                });
+
+                const resultHtml = `
+                    <div class="status info">
+                        <strong>LocalStorage Data:</strong><br>
+                        🏫 Schools: ${analysis.schools}<br>
+                        📚 Classes: ${analysis.classes}<br>
+                        👨‍🏫 Teachers: ${analysis.teachers}<br>
+                        👨‍🎓 Students: ${analysis.students}<br>
+                        🔗 Assignments: ${analysis.assignments}
+                    </div>
+                `;
+                
+                document.getElementById('dataAnalysis').innerHTML = resultHtml;
+                log(`✅ Found ${analysis.schools} schools, ${analysis.classes} classes, ${analysis.teachers} teachers, ${analysis.students} students`, 'success');
+                markStepCompleted('step2');
+
+            } catch (error) {
+                log(`❌ Data analysis failed: ${error.message}`, 'error');
+                document.getElementById('dataAnalysis').innerHTML = `<div class="status error">Analyse mislukt: ${error.message}</div>`;
+            }
+        }
+
+        async function testConnection() {
+            log('🔗 Testing Supabase connection...');
+
+            if (!window.SupabaseConfig?.isSupabaseAvailable()) {
+                log('❌ Supabase not available', 'error');
+                document.getElementById('connectionResult').innerHTML = '<div class="status error">Supabase niet beschikbaar</div>';
+                return;
+            }
+
+            try {
+                // Try to create a test school
+                const testSchool = {
+                    school_name: 'Test School - ' + Date.now(),
+                    school_type: 'Test',
+                    admin_name: 'Test Admin',
+                    admin_email: 'test@example.com'
+                };
+
+                const result = await window.SupabaseConfig.SupabaseAPI.createSchool(testSchool);
+                
+                if (result) {
+                    log('✅ Test school created successfully', 'success');
+                    
+                    // Clean up test data
+                    await window.SupabaseConfig.SupabaseAPI.deleteSchool(result.id);
+                    log('🧹 Test school cleaned up', 'info');
+                    
+                    document.getElementById('connectionResult').innerHTML = '<div class="status success">✅ Database verbinding werkt perfect!</div>';
+                    markStepCompleted('step3');
+                } else {
+                    throw new Error('Failed to create test school');
+                }
+
+            } catch (error) {
+                log(`❌ Connection test failed: ${error.message}`, 'error');
+                document.getElementById('connectionResult').innerHTML = `<div class="status error">Verbindingstest mislukt: ${error.message}</div>`;
+            }
+        }
+
+        async function startMigration() {
+            log('🚀 Starting migration process...');
+
+            if (!window.SupabaseConfig?.isSupabaseAvailable()) {
+                log('❌ Supabase not available', 'error');
+                document.getElementById('migrationResult').innerHTML = '<div class="status error">Supabase niet beschikbaar</div>';
+                return;
+            }
+
+            try {
+                const success = await window.SupabaseConfig.MigrationHelper.migrateLocalStorageToSupabase();
+                
+                if (success) {
+                    log('✅ Migration completed successfully!', 'success');
+                    document.getElementById('migrationResult').innerHTML = '<div class="status success">✅ Migratie succesvol voltooid!</div>';
+                    markStepCompleted('step4');
+                } else {
+                    throw new Error('Migration returned false');
+                }
+
+            } catch (error) {
+                log(`❌ Migration failed: ${error.message}`, 'error');
+                document.getElementById('migrationResult').innerHTML = `<div class="status error">Migratie mislukt: ${error.message}</div>`;
+            }
+        }
+
+        async function verifyMigration() {
+            log('✅ Verifying migration...');
+
+            if (!window.SupabaseConfig?.isSupabaseAvailable()) {
+                log('❌ Supabase not available', 'error');
+                document.getElementById('verificationResult').innerHTML = '<div class="status error">Supabase niet beschikbaar</div>';
+                return;
+            }
+
+            try {
+                const schools = await window.SupabaseConfig.SupabaseAPI.getSchools();
+                
+                if (schools && schools.length > 0) {
+                    log(`✅ Found ${schools.length} schools in Supabase`, 'success');
+                    
+                    let totalClasses = 0, totalTeachers = 0, totalStudents = 0;
+                    
+                    for (const school of schools) {
+                        const classes = await window.SupabaseConfig.SupabaseAPI.getClasses(school.id);
+                        const teachers = await window.SupabaseConfig.SupabaseAPI.getTeachers(school.id);
+                        const students = await window.SupabaseConfig.SupabaseAPI.getStudents(school.id);
+                        
+                        totalClasses += classes?.length || 0;
+                        totalTeachers += teachers?.length || 0;
+                        totalStudents += students?.length || 0;
+                    }
+
+                    const resultHtml = `
+                        <div class="status success">
+                            <strong>✅ Migratie Verificatie:</strong><br>
+                            🏫 Schools: ${schools.length}<br>
+                            📚 Classes: ${totalClasses}<br>
+                            👨‍🏫 Teachers: ${totalTeachers}<br>
+                            👨‍🎓 Students: ${totalStudents}
+                        </div>
+                    `;
+                    
+                    document.getElementById('verificationResult').innerHTML = resultHtml;
+                    markStepCompleted('step5');
+                    
+                } else {
+                    log('⚠️ No schools found in Supabase', 'warning');
+                    document.getElementById('verificationResult').innerHTML = '<div class="status warning">Geen scholen gevonden in Supabase</div>';
+                }
+
+            } catch (error) {
+                log(`❌ Verification failed: ${error.message}`, 'error');
+                document.getElementById('verificationResult').innerHTML = `<div class="status error">Verificatie mislukt: ${error.message}</div>`;
+            }
+        }
+
+        async function cleanupLocalStorage() {
+            if (!confirm('⚠️ Weet je zeker dat je alle localStorage data wilt verwijderen?\n\nDit kan niet ongedaan worden gemaakt!')) {
+                return;
+            }
+
+            log('🧹 Cleaning up localStorage...');
+
+            try {
+                await window.SupabaseConfig.MigrationHelper.clearLocalStorage();
+                log('✅ LocalStorage cleanup completed', 'success');
+                document.getElementById('cleanupResult').innerHTML = '<div class="status success">✅ LocalStorage opgeruimd!</div>';
+                markStepCompleted('step6');
+
+            } catch (error) {
+                log(`❌ Cleanup failed: ${error.message}`, 'error');
+                document.getElementById('cleanupResult').innerHTML = `<div class="status error">Opruimen mislukt: ${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>

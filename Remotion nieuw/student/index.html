@@ -1,0 +1,2620 @@
+<!DOCTYPE html>
+<html lang="nl" data-theme="default">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Schoolbeheersysteem</title>
+    
+    <!-- Modulaire CSS Imports -->
+    <link rel="stylesheet" href="/assets/css/shared.css">
+    <link rel="stylesheet" href="/assets/css/components.css">
+    <link rel="stylesheet" href="/assets/css/animations-modular.css">
+    <link rel="stylesheet" href="/assets/css/themes.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%238B5CF6' width='100' height='100' rx='20'/><text x='50' y='65' font-size='60' text-anchor='middle' fill='white'>👨‍🎓</text></svg>">
+    
+    <style>
+        :root {
+            --student-primary: #8B5CF6;
+            --student-secondary: #7C3AED;
+            --student-gradient: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+            
+            /* CASEL Vaardigheden Kleuren */
+            --casel-zelfbewustzijn: #004aad;
+            --casel-zelfmanagement: #af3686;
+            --casel-sociaal-bewustzijn: #fbff40;
+            --casel-relatievaardigheden: #00bf63;
+            --casel-verantwoordelijke-besluitvorming: #ff9d00;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            margin: 0;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .dashboard-header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Info Section Styles */
+        .info-section {
+            margin-bottom: 2rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .info-icon {
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: var(--student-gradient);
+            border-radius: 12px;
+        }
+
+        .info-content h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+            color: white;
+        }
+
+        .info-content p {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        /* Content Sections */
+        .content-sections {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .content-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: var(--student-gradient);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 1.4rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-content {
+            padding: 2rem;
+        }
+
+        /* Teachers and Classmates Lists */
+        .person-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .person-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .person-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--student-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .person-info h4 {
+            margin: 0 0 0.25rem 0;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .person-info p {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        /* Action Grid */
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .action-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .action-btn span {
+            font-weight: 500;
+            text-align: center;
+        }
+
+        /* Loading and Empty States */
+        .loading-state, .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .empty-state h3 {
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Herinneringen Systeem Styles */
+        .memories-section {
+            margin-bottom: 2rem;
+        }
+
+        .memories-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .memories-header h2 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .add-memory-btn {
+            background: var(--student-gradient);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .add-memory-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        .memory-filters {
+            margin-bottom: 1rem;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+        }
+
+        .primary-filters {
+            justify-content: flex-start;
+        }
+
+        .advanced-filters {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            min-width: 120px;
+        }
+
+        .filter-group label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        .filter-group select {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: white;
+            padding: 0.4rem 0.6rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-group select:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .filter-group select option {
+            background: #2a2a2a;
+            color: white;
+        }
+
+        .filter-group input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: white;
+            padding: 0.4rem 0.6rem;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .filter-group input:hover,
+        .filter-group input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            outline: none;
+        }
+
+        .filter-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .clear-filters-btn {
+            background: rgba(255, 82, 82, 0.2);
+            border: 1px solid rgba(255, 82, 82, 0.3);
+            border-radius: 6px;
+            color: white;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            height: fit-content;
+            align-self: flex-end;
+        }
+
+        .clear-filters-btn:hover {
+            background: rgba(255, 82, 82, 0.3);
+            border-color: rgba(255, 82, 82, 0.5);
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            color: white;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .filter-btn.casel-zelfbewustzijn { border-color: var(--casel-zelfbewustzijn); }
+        .filter-btn.casel-zelfmanagement { border-color: var(--casel-zelfmanagement); }
+        .filter-btn.casel-sociaal-bewustzijn { border-color: var(--casel-sociaal-bewustzijn); }
+        .filter-btn.casel-relatievaardigheden { border-color: var(--casel-relatievaardigheden); }
+        .filter-btn.casel-verantwoordelijke-besluitvorming { border-color: var(--casel-verantwoordelijke-besluitvorming); }
+
+        .filter-status {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 1rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%);
+        }
+
+        .memory-item {
+            position: relative;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            margin-left: 1rem;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .memory-item:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .memory-item::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 1.5rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid;
+        }
+
+        .memory-item.casel-zelfbewustzijn::before { border-color: var(--casel-zelfbewustzijn); }
+        .memory-item.casel-zelfmanagement::before { border-color: var(--casel-zelfmanagement); }
+        .memory-item.casel-sociaal-bewustzijn::before { border-color: var(--casel-sociaal-bewustzijn); }
+        .memory-item.casel-relatievaardigheden::before { border-color: var(--casel-relatievaardigheden); }
+        .memory-item.casel-verantwoordelijke-besluitvorming::before { border-color: var(--casel-verantwoordelijke-besluitvorming); }
+        .memory-item.no-casel::before { border-color: #ccc; }
+
+        .memory-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .memory-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0;
+            flex: 1;
+        }
+
+        .memory-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .memory-action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .memory-action-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .memory-action-btn.edit-btn {
+            border-color: rgba(74, 144, 226, 0.5);
+        }
+
+        .memory-action-btn.delete-btn {
+            border-color: rgba(220, 53, 69, 0.5);
+        }
+
+        .memory-action-btn.edit-btn:hover {
+            background: rgba(74, 144, 226, 0.2);
+        }
+
+        .memory-action-btn.delete-btn:hover {
+            background: rgba(220, 53, 69, 0.2);
+        }
+
+        .memory-action-btn.edit {
+            border: 1px solid rgba(34, 197, 94, 0.5);
+        }
+
+        .memory-action-btn.edit:hover {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: rgba(34, 197, 94, 0.8);
+        }
+
+        .memory-action-btn.delete {
+            border: 1px solid rgba(239, 68, 68, 0.5);
+        }
+
+        .memory-action-btn.delete:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.8);
+        }
+
+        .memory-date {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+        }
+
+        .memory-description {
+            margin: 0.75rem 0;
+            line-height: 1.5;
+        }
+
+        .memory-casel {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        .memory-casel.zelfbewustzijn { 
+            background: var(--casel-zelfbewustzijn); 
+            color: white;
+        }
+        .memory-casel.zelfmanagement { 
+            background: var(--casel-zelfmanagement); 
+            color: white;
+        }
+        .memory-casel.sociaal-bewustzijn { 
+            background: var(--casel-sociaal-bewustzijn); 
+            color: black;
+        }
+        .memory-casel.relatievaardigheden { 
+            background: var(--casel-relatievaardigheden); 
+            color: white;
+        }
+        .memory-casel.verantwoordelijke-besluitvorming { 
+            background: var(--casel-verantwoordelijke-besluitvorming); 
+            color: black;
+        }
+
+        /* Memory Modal */
+        .memory-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .memory-modal.show {
+            display: flex;
+        }
+
+        .memory-modal-content {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .memory-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .memory-modal-header h3 {
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .modal-close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+
+        .modal-close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: white;
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-select option {
+            background: #2D1B69;
+            color: white;
+            padding: 0.5rem;
+        }
+
+        .form-input::placeholder, .form-textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--student-primary);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .date-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.5rem;
+        }
+
+        .save-memory-btn {
+            width: 100%;
+            background: var(--student-gradient);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .save-memory-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        .empty-memories {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+        }
+
+        .empty-memories p {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+
+        /* Bestand weergave styling */
+        .memory-file {
+            margin-top: 0.75rem;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .file-link {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .file-link:hover {
+            color: #8B5CF6;
+        }
+
+        .file-preview {
+            text-align: center;
+        }
+
+        .file-preview img {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .file-preview img:hover {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .memories-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-row {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .advanced-filters {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+            
+            .filter-group {
+                min-width: auto;
+                width: 100%;
+            }
+            
+            .clear-filters-btn {
+                align-self: stretch;
+                text-align: center;
+            }
+            
+            .timeline {
+                padding-left: 1.5rem;
+            }
+            
+            .timeline::before {
+                left: 0.75rem;
+            }
+            
+            .memory-item::before {
+                left: -1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="logout-btn" onclick="handleLogout()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M16 17v-3H9v-4h7V7l5 5-5 5M14 2a2 2 0 012 2v2h-2V4H4v16h10v-2h2v2a2 2 0 01-2 2H4a2 2 0 01-2-2V4a2 2 0 012-2h10z"/>
+        </svg>
+        Uitloggen
+    </button>
+
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>
+                <span>👨‍🎓</span>
+                <span id="studentName">Leerling Dashboard</span>
+            </h1>
+            <p id="studentInfo">Je persoonlijke schoolportaal</p>
+        </header>
+
+        <!-- Student Info Section -->
+        <section class="info-section">
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-icon">🏫</div>
+                    <div class="info-content">
+                        <h3>Mijn School</h3>
+                        <p id="schoolName">-</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">📚</div>
+                    <div class="info-content">
+                        <h3>Mijn Klas</h3>
+                        <p id="className">-</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">�‍🏫</div>
+                    <div class="info-content">
+                        <h3>Mijn Leerkrachten</h3>
+                        <p id="teacherCount">-</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">👥</div>
+                    <div class="info-content">
+                        <h3>Klasgenoten</h3>
+                        <p id="classmateCount">-</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mijn Herinneringen Section -->
+        <section class="memories-section">
+            <div class="memories-header">
+                <h2>
+                    <span>🌟</span>
+                    Mijn Herinneringen
+                </h2>
+                <button class="add-memory-btn" onclick="openAddMemoryModal()">
+                    <span>➕</span>
+                    Herinnering Toevoegen
+                </button>
+            </div>
+
+            <!-- Filters -->
+            <div class="memory-filters">
+                <!-- Primary Filters -->
+                <div class="filter-row primary-filters">
+                    <button class="filter-btn active" data-filter="all" onclick="filterMemories('all')">
+                        🔍 Alle
+                    </button>
+                    <button class="filter-btn casel-zelfbewustzijn" data-filter="zelfbewustzijn" onclick="filterMemories('zelfbewustzijn')">
+                        🧠 Zelfbewustzijn
+                    </button>
+                    <button class="filter-btn casel-zelfmanagement" data-filter="zelfmanagement" onclick="filterMemories('zelfmanagement')">
+                        ⚖️ Zelfmanagement
+                    </button>
+                    <button class="filter-btn casel-sociaal-bewustzijn" data-filter="sociaal-bewustzijn" onclick="filterMemories('sociaal-bewustzijn')">
+                        👥 Sociaal Bewustzijn
+                    </button>
+                    <button class="filter-btn casel-relatievaardigheden" data-filter="relatievaardigheden" onclick="filterMemories('relatievaardigheden')">
+                        🤝 Relatievaardigheden
+                    </button>
+                    <button class="filter-btn casel-verantwoordelijke-besluitvorming" data-filter="verantwoordelijke-besluitvorming" onclick="filterMemories('verantwoordelijke-besluitvorming')">
+                        🎯 Verantwoordelijke Besluitvorming
+                    </button>
+                </div>
+
+                <!-- Advanced Filters -->
+                <div class="filter-row advanced-filters">
+                    <div class="filter-group">
+                        <label for="yearFilter">📅 Jaar:</label>
+                        <select id="yearFilter" onchange="updateAdvancedFilters()">
+                            <option value="all">Alle jaren</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="monthFilter">🗓️ Maand:</label>
+                        <select id="monthFilter" onchange="updateAdvancedFilters()">
+                            <option value="all">Alle maanden</option>
+                            <option value="1">Januari</option>
+                            <option value="2">Februari</option>
+                            <option value="3">Maart</option>
+                            <option value="4">April</option>
+                            <option value="5">Mei</option>
+                            <option value="6">Juni</option>
+                            <option value="7">Juli</option>
+                            <option value="8">Augustus</option>
+                            <option value="9">September</option>
+                            <option value="10">Oktober</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="searchFilter">🔍 Zoeken:</label>
+                        <input type="text" id="searchFilter" placeholder="Zoek in titel of beschrijving..." onkeyup="updateAdvancedFilters()">
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="fileFilter">📎 Met bijlage:</label>
+                        <select id="fileFilter" onchange="updateAdvancedFilters()">
+                            <option value="all">Alle</option>
+                            <option value="with-files">Met bestanden</option>
+                            <option value="without-files">Zonder bestanden</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <button class="clear-filters-btn" onclick="clearAllFilters()">
+                            🧹 Wis filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Status -->
+            <div id="filterStatus" class="filter-status" style="display: none;">
+                <span id="filterStatusText"></span>
+            </div>
+
+            <!-- Timeline -->
+            <div id="memoriesTimeline" class="timeline">
+                <div class="empty-memories">
+                    <p>🌱 Je hebt nog geen herinneringen toegevoegd</p>
+                    <p style="font-size: 0.9rem; opacity: 0.7;">Klik op "Herinnering Toevoegen" om je eerste mooie moment vast te leggen!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content Sections -->
+        <section class="content-sections">
+            <!-- My Teachers Section -->
+            <div class="content-card">
+                <div class="card-header">
+                    <h2>👨‍🏫 Mijn Leerkrachten</h2>
+                </div>
+                <div class="card-content">
+                    <div id="teachersList">
+                        <div class="loading-state">Leerkrachten laden...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Classmates Section -->
+            <div class="content-card">
+                <div class="card-header">
+                    <h2>👥 Mijn Klasgenoten</h2>
+                </div>
+                <div class="card-content">
+                    <div id="classmatesList">
+                        <div class="loading-state">Klasgenoten laden...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions Section -->
+            <div class="content-card">
+                <div class="card-header">
+                    <h2>⚡ Snelle Acties</h2>
+                </div>
+                <div class="card-content">
+                    <div class="action-grid">
+                        <button class="action-btn" onclick="openModule('schedule')">
+                            <div class="action-icon">�</div>
+                            <span>Mijn Rooster</span>
+                        </button>
+                        <button class="action-btn" onclick="openModule('grades')">
+                            <div class="action-icon">📊</div>
+                            <span>Mijn Cijfers</span>
+                        </button>
+                        <button class="action-btn" onclick="openModule('homework')">
+                            <div class="action-icon">📝</div>
+                            <span>Huiswerk</span>
+                        </button>
+                        <button class="action-btn" onclick="openModule('profile')">
+                            <div class="action-icon">👤</div>
+                            <span>Mijn Profiel</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Add Memory Modal -->
+    <div id="addMemoryModal" class="memory-modal">
+        <div class="memory-modal-content">
+            <div class="memory-modal-header">
+                <h3>🌟 Nieuwe Herinnering</h3>
+                <button class="modal-close-btn" onclick="closeAddMemoryModal()">✕</button>
+            </div>
+
+            <form id="addMemoryForm" onsubmit="handleAddMemory(event)">
+                <div class="form-group">
+                    <label for="memoryTitle">Titel van je herinnering *</label>
+                    <input 
+                        type="text" 
+                        id="memoryTitle" 
+                        class="form-input"
+                        placeholder="Bijvoorbeeld: Mijn eerste dag op school"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="memoryDescription">Vertel over je herinnering</label>
+                    <textarea 
+                        id="memoryDescription" 
+                        class="form-textarea"
+                        placeholder="Wat gebeurde er? Hoe voelde het? Wat was er speciaal aan dit moment?"
+                    ></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Wanneer was dit? (vul in wat je weet)</label>
+                    <div class="date-inputs">
+                        <div>
+                            <label for="memoryYear" style="font-size: 0.8rem; margin-bottom: 0.25rem;">Jaar</label>
+                            <input 
+                                type="number" 
+                                id="memoryYear" 
+                                class="form-input"
+                                placeholder="2024"
+                                min="2000"
+                                max="2030"
+                            >
+                        </div>
+                        <div>
+                            <label for="memoryMonth" style="font-size: 0.8rem; margin-bottom: 0.25rem;">Maand</label>
+                            <select id="memoryMonth" class="form-select">
+                                <option value="">Kies maand...</option>
+                                <option value="1">Januari</option>
+                                <option value="2">Februari</option>
+                                <option value="3">Maart</option>
+                                <option value="4">April</option>
+                                <option value="5">Mei</option>
+                                <option value="6">Juni</option>
+                                <option value="7">Juli</option>
+                                <option value="8">Augustus</option>
+                                <option value="9">September</option>
+                                <option value="10">Oktober</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="memoryDay" style="font-size: 0.8rem; margin-bottom: 0.25rem;">Dag</label>
+                            <input 
+                                type="number" 
+                                id="memoryDay" 
+                                class="form-input"
+                                placeholder="15"
+                                min="1"
+                                max="31"
+                            >
+                        </div>
+                    </div>
+                    <small style="opacity: 0.7; font-size: 0.8rem;">Je hoeft niet alles in te vullen - alleen wat je nog weet!</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="memoryCasel">Is deze herinnering verbonden met een vaardigheid?</label>
+                    <select id="memoryCasel" class="form-select">
+                        <option value="">Geen specifieke vaardigheid</option>
+                        <option value="zelfbewustzijn">🧠 Zelfbewustzijn - Jezelf begrijpen</option>
+                        <option value="zelfmanagement">⚡ Zelfmanagement - Jezelf organiseren</option>
+                        <option value="sociaal-bewustzijn">👀 Sociaal Bewustzijn - Anderen begrijpen</option>
+                        <option value="relatievaardigheden">🤝 Relatievaardigheden - Omgaan met anderen</option>
+                        <option value="verantwoordelijke-besluitvorming">🎯 Verantwoordelijke Besluitvorming - Goede keuzes maken</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="memoryFile">Upload een bestand (optioneel)</label>
+                    <input 
+                        type="file" 
+                        id="memoryFile" 
+                        class="form-input"
+                        accept="image/*,application/pdf"
+                    >
+                </div>
+
+                <button type="submit" class="save-memory-btn">
+                    🌟 Herinnering Opslaan
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Memory Modal -->
+    <div id="editMemoryModal" class="memory-modal">
+        <div class="memory-modal-content">
+            <div class="memory-modal-header">
+                <h3>✏️ Herinnering Bewerken</h3>
+                <button class="modal-close-btn" onclick="closeEditMemoryModal()">✕</button>
+            </div>
+
+            <form id="editMemoryForm" onsubmit="handleEditMemory(event)">
+                <input type="hidden" id="editMemoryId">
+                
+                <div class="form-group">
+                    <label for="editMemoryTitle">Titel van je herinnering *</label>
+                    <input 
+                        type="text" 
+                        id="editMemoryTitle" 
+                        class="form-input"
+                        placeholder="Bijvoorbeeld: Mijn eerste dag op school"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="editMemoryDescription">Vertel over je herinnering</label>
+                    <textarea 
+                        id="editMemoryDescription" 
+                        class="form-textarea"
+                        placeholder="Wat gebeurde er? Hoe voelde het? Wat was er speciaal aan dit moment?"
+                    ></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Wanneer was dit? (vul in wat je weet)</label>
+                    <div class="date-inputs">
+                        <div>
+                            <label for="editMemoryYear" style="font-size: 0.8rem; margin-bottom: 0.25rem;">Jaar</label>
+                            <input 
+                                type="number" 
+                                id="editMemoryYear" 
+                                class="form-input"
+                                placeholder="2024"
+                                min="2000"
+                                max="2030"
+                            >
+                        </div>
+                        <div>
+                            <label for="editMemoryMonth" style="font-size: 0.8rem; margin-bottom: 0.25rem;">Maand</label>
+                            <select id="editMemoryMonth" class="form-select">
+                                <option value="">Kies maand...</option>
+                                <option value="1">Januari</option>
+                                <option value="2">Februari</option>
+                                <option value="3">Maart</option>
+                                <option value="4">April</option>
+                                <option value="5">Mei</option>
+                                <option value="6">Juni</option>
+                                <option value="7">Juli</option>
+                                <option value="8">Augustus</option>
+                                <option value="9">September</option>
+                                <option value="10">Oktober</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="editMemoryDay" style="font-size: 0.8rem; margin-bottom: 0.25rem;">Dag</label>
+                            <input 
+                                type="number" 
+                                id="editMemoryDay" 
+                                class="form-input"
+                                placeholder="15"
+                                min="1"
+                                max="31"
+                            >
+                        </div>
+                    </div>
+                    <small style="opacity: 0.7; font-size: 0.8rem;">Je hoeft niet alles in te vullen - alleen wat je nog weet!</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="editMemoryCasel">Is deze herinnering verbonden met een vaardigheid?</label>
+                    <select id="editMemoryCasel" class="form-select">
+                        <option value="">Geen specifieke vaardigheid</option>
+                        <option value="zelfbewustzijn">🧠 Zelfbewustzijn - Jezelf begrijpen</option>
+                        <option value="zelfmanagement">⚡ Zelfmanagement - Jezelf organiseren</option>
+                        <option value="sociaal-bewustzijn">👀 Sociaal Bewustzijn - Anderen begrijpen</option>
+                        <option value="relatievaardigheden">🤝 Relatievaardigheden - Omgaan met anderen</option>
+                        <option value="verantwoordelijke-besluitvorming">🎯 Verantwoordelijke Besluitvorming - Goede keuzes maken</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="editMemoryFile">Upload een bestand (optioneel)</label>
+                    <input 
+                        type="file" 
+                        id="editMemoryFile" 
+                        class="form-input"
+                        accept="image/*,application/pdf"
+                    >
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="save-memory-btn" style="flex: 1;">
+                        ✏️ Wijzigingen Opslaan
+                    </button>
+                    <button type="button" onclick="closeEditMemoryModal()" class="cancel-btn" style="flex: 0 0 auto; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer;">
+                        Annuleren
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentStudent = null;
+        let studentData = null;
+        let memories = [];
+        let currentFilter = 'all';
+
+        // CASEL Vaardigheden definities
+        const caselSkills = {
+            'zelfbewustzijn': {
+                name: 'Zelfbewustzijn',
+                icon: '🧠',
+                color: '#004aad',
+                description: 'Jezelf begrijpen'
+            },
+            'zelfmanagement': {
+                name: 'Zelfmanagement', 
+                icon: '⚡',
+                color: '#af3686',
+                description: 'Jezelf organiseren'
+            },
+            'sociaal-bewustzijn': {
+                name: 'Sociaal Bewustzijn',
+                icon: '👀', 
+                color: '#fbff40',
+                description: 'Anderen begrijpen'
+            },
+            'relatievaardigheden': {
+                name: 'Relatievaardigheden',
+                icon: '🤝',
+                color: '#00bf63', 
+                description: 'Omgaan met anderen'
+            },
+            'verantwoordelijke-besluitvorming': {
+                name: 'Verantwoordelijke Besluitvorming',
+                icon: '🎯',
+                color: '#ff9d00',
+                description: 'Goede keuzes maken'
+            }
+        };
+
+        // Check authentication and load student data
+        function initializeStudentDashboard() {
+            const demoUser = sessionStorage.getItem('demo_user');
+            if (!demoUser) {
+                window.location.href = '/auth/login.html?role=student';
+                return;
+            }
+            
+            const user = JSON.parse(demoUser);
+            
+            // Check if user has student role
+            if (user.user_metadata?.role !== 'student') {
+                alert('Toegang geweigerd. Alleen leerlingen kunnen deze pagina bekijken.');
+                window.location.href = '/auth/login.html?role=student';
+                return;
+            }
+            
+            currentStudent = user;
+            loadStudentData();
+        }
+
+        function loadStudentData() {
+            const metadata = currentStudent.user_metadata;
+            
+            console.log('👨‍🎓 Loading student data:', metadata);
+            
+            // Update header with student info
+            const studentNameEl = document.getElementById('studentName');
+            const studentInfoEl = document.getElementById('studentInfo');
+            
+            if (studentNameEl) studentNameEl.textContent = `Welkom, ${metadata.full_name}!`;
+            if (studentInfoEl) studentInfoEl.textContent = `${metadata.class_name} - ${metadata.school_name}`;
+            
+            // Update info cards
+            const schoolNameEl = document.getElementById('schoolName');
+            const classNameEl = document.getElementById('className');
+            
+            if (schoolNameEl) schoolNameEl.textContent = metadata.school_name;
+            if (classNameEl) classNameEl.textContent = metadata.class_name;
+            
+            console.log('✅ Student header updated');
+            
+            // Load school data to get teachers and classmates
+            loadSchoolData();
+            
+            // Load memories
+            loadMemories();
+        }
+
+        function loadSchoolData() {
+            const schoolId = currentStudent.user_metadata.school_id;
+            const classId = currentStudent.user_metadata.class_id;
+            const studentId = currentStudent.user_metadata.student_id;
+            
+            console.log('🔍 Loading school data for student:', { schoolId, classId, studentId });
+            
+            // Try to load from localStorage first, then use demo data
+            let teachers = JSON.parse(localStorage.getItem(`school_teachers_${schoolId}`)) || [];
+            let assignments = JSON.parse(localStorage.getItem(`school_assignments_${schoolId}`)) || [];
+            let students = JSON.parse(localStorage.getItem(`school_students_${schoolId}`)) || [];
+            
+            // If no data in localStorage, create demo data
+            if (teachers.length === 0) {
+                teachers = [
+                    {
+                        id: 'teacher_1',
+                        firstName: 'Anna',
+                        lastName: 'de Vries',
+                        fullName: 'Anna de Vries',
+                        teacherEmail: 'a.devries@school.nl',
+                        teacherSubjects: 'Nederlands, Geschiedenis',
+                        experience: 8
+                    },
+                    {
+                        id: 'teacher_2',
+                        firstName: 'Jan',
+                        lastName: 'Bakker',
+                        fullName: 'Jan Bakker',
+                        teacherEmail: 'j.bakker@school.nl',
+                        teacherSubjects: 'Rekenen, Natuurkunde',
+                        experience: 12
+                    },
+                    {
+                        id: 'teacher_3',
+                        firstName: 'Lisa',
+                        lastName: 'van den Berg',
+                        fullName: 'Lisa van den Berg',
+                        teacherEmail: 'l.vandenberg@school.nl',
+                        teacherSubjects: 'Engels, Gym',
+                        experience: 5
+                    }
+                ];
+                localStorage.setItem('demo_teachers', JSON.stringify(teachers));
+            }
+            
+            if (assignments.length === 0) {
+                assignments = [
+                    {
+                        id: 'assignment_1',
+                        assignTeacher: 'teacher_1',
+                        assignClass: classId,
+                        assignRole: 'Hoofdleerkracht',
+                        assignSubject: 'Nederlands'
+                    },
+                    {
+                        id: 'assignment_2',
+                        assignTeacher: 'teacher_2',
+                        assignClass: classId,
+                        assignRole: 'Vakleerkracht',
+                        assignSubject: 'Rekenen'
+                    },
+                    {
+                        id: 'assignment_3',
+                        assignTeacher: 'teacher_3',
+                        assignClass: classId,
+                        assignRole: 'Vakleerkracht',
+                        assignSubject: 'Engels'
+                    }
+                ];
+                localStorage.setItem('demo_assignments', JSON.stringify(assignments));
+            }
+            
+            if (students.length === 0) {
+                students = [
+                    {
+                        id: studentId,
+                        firstName: currentStudent.user_metadata.first_name || 'Demo',
+                        lastName: currentStudent.user_metadata.last_name || 'Student',
+                        fullName: currentStudent.user_metadata.full_name || 'Demo Student',
+                        studentClass: classId,
+                        studentBirthDate: '2014-06-15'
+                    },
+                    {
+                        id: 'demo-student-1',
+                        firstName: 'Emma',
+                        lastName: 'Jansen',
+                        fullName: 'Emma Jansen',
+                        studentClass: classId,
+                        studentBirthDate: '2014-03-15'
+                    },
+                    {
+                        id: 'demo-student-2',
+                        firstName: 'Liam',
+                        lastName: 'Peters',
+                        fullName: 'Liam Peters',
+                        studentClass: classId,
+                        studentBirthDate: '2014-07-22'
+                    },
+                    {
+                        id: 'demo-student-3',
+                        firstName: 'Sophie',
+                        lastName: 'de Wit',
+                        fullName: 'Sophie de Wit',
+                        studentClass: classId,
+                        studentBirthDate: '2014-01-08'
+                    },
+                    {
+                        id: 'demo-student-4',
+                        firstName: 'Max',
+                        lastName: 'van der Meer',
+                        fullName: 'Max van der Meer',
+                        studentClass: classId,
+                        studentBirthDate: '2014-09-30'
+                    },
+                    {
+                        id: 'demo-student-5',
+                        firstName: 'Zara',
+                        lastName: 'Hassan',
+                        fullName: 'Zara Hassan',
+                        studentClass: classId,
+                        studentBirthDate: '2014-11-12'
+                    }
+                ];
+                localStorage.setItem('demo_students', JSON.stringify(students));
+            }
+            
+            console.log('📊 Loaded data:', { teachers: teachers.length, assignments: assignments.length, students: students.length });
+            
+            // Get teachers assigned to this class (using consistent field names)
+            const classTeachers = assignments
+                .filter(assignment => assignment.assignClass === classId)
+                .map(assignment => {
+                    const teacher = teachers.find(t => t.id === assignment.assignTeacher);
+                    return teacher ? {
+                        ...teacher,
+                        role: assignment.assignRole,
+                        subject: assignment.assignSubject
+                    } : null;
+                })
+                .filter(Boolean);
+            
+            // Get classmates (students in same class, excluding current student)
+            const classmates = students.filter(student => 
+                student.studentClass === classId && student.id !== studentId
+            );
+            
+            console.log('👥 Found classmates:', classmates.length);
+            console.log('👨‍🏫 Found teachers:', classTeachers.length);
+            
+            // Update counts with safe element checks
+            const teacherCountEl = document.getElementById('teacherCount');
+            const classmateCountEl = document.getElementById('classmateCount');
+            
+            if (teacherCountEl) {
+                teacherCountEl.textContent = classTeachers.length;
+            }
+            if (classmateCountEl) {
+                classmateCountEl.textContent = classmates.length;
+            }
+            
+            console.log('📊 Student stats updated');
+            
+            // Render teachers and classmates
+            renderTeachers(classTeachers);
+            renderClassmates(classmates);
+        }
+
+        function renderTeachers(teachers) {
+            const container = document.getElementById('teachersList');
+            
+            if (teachers.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>👨‍🏫 Nog geen leerkrachten toegewezen</h3>
+                        <p>Er zijn nog geen leerkrachten toegewezen aan jouw klas</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = `
+                <div class="person-list">
+                    ${teachers.map(teacher => `
+                        <div class="person-item">
+                            <div class="person-avatar">👨‍🏫</div>
+                            <div class="person-info">
+                                <h4>${teacher.fullName}</h4>
+                                <p>${teacher.role || 'Leerkracht'}${teacher.subject ? ` • ${teacher.subject}` : ''}${teacher.teacherSubjects ? ` • ${teacher.teacherSubjects}` : ''}</p>
+                                ${teacher.teacherEmail ? `<p>📧 ${teacher.teacherEmail}</p>` : ''}
+                                ${teacher.experience ? `<p>📚 ${teacher.experience} jaar ervaring</p>` : ''}
+                            </div>
+                        </div>
+                    `).join('')}
+
+                </div>
+            `;
+        }
+
+        function renderClassmates(classmates) {
+            const container = document.getElementById('classmatesList');
+            
+            if (classmates.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>👥 Nog geen klasgenoten</h3>
+                        <p>Er zijn nog geen andere leerlingen ingeschreven in jouw klas</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = `
+                <div class="person-list">
+                    ${classmates.map(classmate => `
+                        <div class="person-item">
+                            <div class="person-avatar">👨‍🎓</div>
+                            <div class="person-info">
+                                <h4>${classmate.fullName}</h4>
+                                <p>Leerling • Geboortedatum: ${new Date(classmate.studentBirthDate).toLocaleDateString('nl-NL')}</p>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // =====================
+        // =====================
+        // HERINNERINGEN SYSTEEM - FUNCTIES EERST DEFINIËREN
+        // =====================
+
+        // Modal openen
+        function openAddMemoryModal() {
+            const modal = document.getElementById('addMemoryModal');
+            if (modal) {
+                modal.classList.add('show');
+                
+                // Focus op eerste input
+                setTimeout(() => {
+                    const titleInput = document.getElementById('memoryTitle');
+                    if (titleInput) titleInput.focus();
+                }, 100);
+            }
+        }
+
+        // Modal sluiten
+        function closeAddMemoryModal() {
+            const modal = document.getElementById('addMemoryModal');
+            if (modal) {
+                modal.classList.remove('show');
+                
+                // Form resetten
+                const form = document.getElementById('addMemoryForm');
+                if (form) form.reset();
+            }
+        }
+
+        // Filter variabelen
+        let currentYearFilter = 'all';
+        let currentMonthFilter = 'all';
+        let currentFileFilter = 'all';
+        let currentSearchFilter = '';
+
+        // Filter functie voor CASEL skills
+        function filterMemories(filter) {
+            currentFilter = filter;
+            
+            // Update filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            const activeBtn = document.querySelector(`[data-filter="${filter}"]`);
+            if (activeBtn) activeBtn.classList.add('active');
+            
+            // Re-render memories
+            renderMemories();
+        }
+
+        // Geavanceerde filters update functie
+        function updateAdvancedFilters() {
+            currentYearFilter = document.getElementById('yearFilter').value;
+            currentMonthFilter = document.getElementById('monthFilter').value;
+            currentFileFilter = document.getElementById('fileFilter').value;
+            currentSearchFilter = document.getElementById('searchFilter').value.toLowerCase().trim();
+            
+            console.log('🔍 Filters updated:', {
+                casel: currentFilter,
+                year: currentYearFilter,
+                month: currentMonthFilter,
+                files: currentFileFilter,
+                search: currentSearchFilter
+            });
+            
+            // Re-render memories met nieuwe filters
+            renderMemories();
+        }
+
+        // Wis alle filters
+        function clearAllFilters() {
+            currentFilter = 'all';
+            currentYearFilter = 'all';
+            currentMonthFilter = 'all';
+            currentFileFilter = 'all';
+            currentSearchFilter = '';
+            
+            // Reset UI elements
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector('[data-filter="all"]').classList.add('active');
+            
+            document.getElementById('yearFilter').value = 'all';
+            document.getElementById('monthFilter').value = 'all';
+            document.getElementById('fileFilter').value = 'all';
+            document.getElementById('searchFilter').value = '';
+            
+            console.log('🧹 All filters cleared');
+            renderMemories();
+        }
+
+        // Initialiseer jaar filter opties
+        function initializeYearFilter() {
+            const yearSelect = document.getElementById('yearFilter');
+            if (!yearSelect) return;
+            
+            const memories = window.allMemories || [];
+            const years = new Set();
+            
+            memories.forEach(memory => {
+                if (memory.memory_date || memory.year) {
+                    const date = memory.memory_date ? new Date(memory.memory_date) : null;
+                    const year = date ? date.getFullYear() : (memory.year ? parseInt(memory.year) : null);
+                    if (year) years.add(year);
+                }
+            });
+            
+            // Sorteer jaren aflopend
+            const sortedYears = Array.from(years).sort((a, b) => b - a);
+            
+            // Behoud huidige opties en voeg nieuwe toe
+            const existingOptions = Array.from(yearSelect.options).map(opt => opt.value);
+            
+            sortedYears.forEach(year => {
+                if (!existingOptions.includes(year.toString())) {
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.textContent = year;
+                    yearSelect.appendChild(option);
+                }
+            });
+            
+            console.log('📅 Year filter initialized with years:', sortedYears);
+        }
+
+        // Update filter status indicator
+        function updateFilterStatus(totalCount, filteredCount) {
+            const statusDiv = document.getElementById('filterStatus');
+            const statusText = document.getElementById('filterStatusText');
+            
+            if (!statusDiv || !statusText) return;
+            
+            const hasActiveFilters = currentFilter !== 'all' || currentYearFilter !== 'all' || 
+                                   currentMonthFilter !== 'all' || currentFileFilter !== 'all' || currentSearchFilter !== '';
+            
+            if (hasActiveFilters && totalCount > 0) {
+                statusDiv.style.display = 'block';
+                statusText.textContent = `📊 ${filteredCount} van ${totalCount} herinneringen getoond`;
+            } else {
+                statusDiv.style.display = 'none';
+            }
+        }
+
+        // Controleer of herinnering door filters heen komt
+        function passesFilters(memory) {
+            // CASEL skill filter
+            if (currentFilter !== 'all') {
+                const memorySkill = memory.casel_skill || memory.caselSkill;
+                if (memorySkill !== currentFilter) {
+                    return false;
+                }
+            }
+            
+            // Jaar filter
+            if (currentYearFilter !== 'all') {
+                const date = memory.memory_date ? new Date(memory.memory_date) : null;
+                const year = date ? date.getFullYear() : (memory.year ? parseInt(memory.year) : null);
+                if (!year || year.toString() !== currentYearFilter) {
+                    return false;
+                }
+            }
+            
+            // Maand filter
+            if (currentMonthFilter !== 'all') {
+                const date = memory.memory_date ? new Date(memory.memory_date) : null;
+                const month = date ? (date.getMonth() + 1) : (memory.month ? parseInt(memory.month) : null);
+                if (!month || month.toString() !== currentMonthFilter) {
+                    return false;
+                }
+            }
+            
+            // Bestand filter
+            if (currentFileFilter !== 'all') {
+                const hasFile = !!(memory.file_url || memory.fileData || memory.file_name);
+                if (currentFileFilter === 'with-files' && !hasFile) {
+                    return false;
+                }
+                if (currentFileFilter === 'without-files' && hasFile) {
+                    return false;
+                }
+            }
+            
+            // Zoek filter
+            if (currentSearchFilter) {
+                const searchableText = [
+                    memory.title || '',
+                    memory.description || ''
+                ].join(' ').toLowerCase();
+                
+                if (!searchableText.includes(currentSearchFilter)) {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+
+        // Bestand uploaden en opslaan
+        function handleFileUpload(inputElement) {
+            const file = inputElement.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    inputElement.dataset.fileData = event.target.result;
+                    inputElement.dataset.fileName = file.name;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Herinnering toevoegen
+        async function handleAddMemory(event) {
+            event.preventDefault();
+
+            const title = document.getElementById('memoryTitle').value;
+            const description = document.getElementById('memoryDescription').value;
+            const year = document.getElementById('memoryYear').value;
+            const month = document.getElementById('memoryMonth').value;
+            const day = document.getElementById('memoryDay').value;
+            const casel = document.getElementById('memoryCasel').value;
+            const fileInput = document.getElementById('memoryFile');
+            const file = fileInput.files[0];
+
+            console.log('📝 Adding new memory:', { title, description, year, month, casel });
+
+            const studentId = currentStudent?.user_metadata?.student_id;
+            const schoolId = currentStudent?.user_metadata?.school_id;
+
+            if (!studentId) {
+                console.error('❌ No student ID found');
+                alert('Fout: Geen student ID gevonden');
+                return;
+            }
+
+            let fileUrl = null;
+            let fileName = null;
+            let fileType = null;
+            let fileSize = null;
+
+            // Upload bestand naar Supabase Storage als er een bestand is
+            if (file && window.SupabaseConfig && window.SupabaseConfig.isSupabaseAvailable()) {
+                try {
+                    console.log('📤 Uploading file to Supabase Storage...');
+                    const filePath = `student_${studentId}/memories/${Date.now()}_${file.name}`;
+                    const uploadResult = await window.SupabaseConfig.SupabaseAPI.uploadFile(file, filePath);
+                    
+                    if (uploadResult && uploadResult.path) {
+                        fileUrl = await window.SupabaseConfig.SupabaseAPI.getFileUrl(filePath);
+                        fileName = file.name;
+                        fileType = file.type;
+                        fileSize = file.size;
+                        console.log('✅ File uploaded to Supabase Storage:', fileUrl);
+                    } else {
+                        console.log('⚠️ File upload failed or bucket not available');
+                    }
+                } catch (error) {
+                    console.error('❌ Error uploading file:', error);
+                }
+            }
+
+            // Fallback: sla bestand op als base64 als Supabase niet beschikbaar is
+            let fileData = null;
+            if (file && !fileUrl) {
+                try {
+                    fileData = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(file);
+                    });
+                    fileName = file.name;
+                    console.log('📦 File saved as base64 (fallback)');
+                } catch (error) {
+                    console.error('❌ Error reading file:', error);
+                }
+            }
+
+            // Maak memory datum aan
+            const memoryDate = year && month ? 
+                `${year}-${month.padStart(2, '0')}-${(day || '01').padStart(2, '0')}` : 
+                null;
+
+            // Probeer naar Supabase op te slaan
+            if (window.SupabaseConfig && window.SupabaseConfig.isSupabaseAvailable()) {
+                try {
+                    const memoryData = {
+                        student_id: studentId,
+                        school_id: schoolId,
+                        title,
+                        description,
+                        memory_date: memoryDate,
+                        casel_skill: casel,
+                        file_url: fileUrl,
+                        file_name: fileName,
+                        file_type: fileType,
+                        file_size: fileSize
+                    };
+
+                    console.log('💾 Attempting to save memory to Supabase:', memoryData);
+                    const supabaseMemory = await window.SupabaseConfig.SupabaseAPI.createMemory(memoryData);
+                    
+                    if (supabaseMemory) {
+                        console.log('✅ Memory saved to Supabase:', supabaseMemory);
+                        // Herlaad memories van Supabase
+                        await loadMemories();
+                        closeAddMemoryModal();
+                        
+                        // Toon succesbericht
+                        setTimeout(() => {
+                            alert('💾 Herinnering is opgeslagen in Supabase!');
+                        }, 300);
+                        return;
+                    } else {
+                        console.log('❌ Failed to save memory to Supabase (RLS or table issue), falling back to localStorage');
+                    }
+                } catch (error) {
+                    console.error('❌ Error saving to Supabase:', error);
+                }
+            }
+
+            // Fallback naar localStorage
+            console.log('📦 Falling back to localStorage');
+            const newMemory = {
+                id: Date.now(),
+                title,
+                description,
+                year: year ? parseInt(year) : null,
+                month: month ? parseInt(month) : null,
+                day: day ? parseInt(day) : null,
+                casel,
+                fileData,
+                fileName,
+                fileUrl,
+                createdAt: new Date().toISOString()
+            };
+
+            memories.push(newMemory);
+            saveMemories();
+            renderMemories();
+            closeAddMemoryModal();
+            
+            // Toon succesbericht
+            setTimeout(() => {
+                alert('💾 Herinnering is opgeslagen (lokaal)!');
+            }, 300);
+        }
+
+        // Herinnering bewerken
+        async function handleEditMemory(event) {
+            event.preventDefault();
+
+            const memoryId = document.getElementById('editMemoryId').value;
+            const memory = memories.find(m => String(m.id) === String(memoryId));
+
+            if (!memory) {
+                console.error('❌ Memory not found:', memoryId);
+                alert('Herinnering niet gevonden.');
+                return;
+            }
+
+            console.log('✏️ Editing memory:', memoryId);
+
+            const title = document.getElementById('editMemoryTitle').value;
+            const description = document.getElementById('editMemoryDescription').value;
+            const year = document.getElementById('editMemoryYear').value;
+            const month = document.getElementById('editMemoryMonth').value;
+            const day = document.getElementById('editMemoryDay').value;
+            const casel = document.getElementById('editMemoryCasel').value;
+            const fileInput = document.getElementById('editMemoryFile');
+            const file = fileInput.files[0];
+
+            let fileUrl = memory.fileUrl;
+            let fileName = memory.fileName;
+            let fileType = memory.fileType;
+            let fileSize = memory.fileSize;
+            let fileData = memory.fileData;
+
+            // Upload nieuw bestand naar Supabase Storage als er een bestand is
+            if (file && window.SupabaseConfig && window.SupabaseConfig.isSupabaseAvailable()) {
+                try {
+                    console.log('📤 Uploading new file to Supabase Storage...');
+                    const studentId = currentStudent?.user_metadata?.student_id;
+                    const filePath = `student_${studentId}/memories/${Date.now()}_${file.name}`;
+                    const uploadResult = await window.SupabaseConfig.SupabaseAPI.uploadFile(file, filePath);
+                    
+                    if (uploadResult && uploadResult.path) {
+                        // Verwijder oude bestand als het een Supabase URL is
+                        if (memory.fileUrl && memory.fileUrl.includes('supabase')) {
+                            // Extract path from URL voor verwijdering (optioneel)
+                        }
+                        
+                        fileUrl = await window.SupabaseConfig.SupabaseAPI.getFileUrl(filePath);
+                        fileName = file.name;
+                        fileType = file.type;
+                        fileSize = file.size;
+                        fileData = null; // Verwijder base64 data als we Supabase gebruiken
+                        console.log('✅ New file uploaded to Supabase Storage:', fileUrl);
+                    } else {
+                        console.log('⚠️ File upload failed or bucket not available');
+                    }
+                } catch (error) {
+                    console.error('❌ Error uploading new file:', error);
+                }
+            }
+
+            // Fallback: sla bestand op als base64 als Supabase niet beschikbaar is
+            if (file && !fileUrl) {
+                try {
+                    fileData = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(file);
+                    });
+                    fileName = file.name;
+                    fileUrl = null; // Verwijder Supabase URL als we base64 gebruiken
+                    console.log('📦 New file saved as base64 (fallback)');
+                } catch (error) {
+                    console.error('❌ Error reading new file:', error);
+                }
+            }
+
+            // Maak memory datum aan
+            const memoryDate = year && month ? 
+                `${year}-${month.padStart(2, '0')}-${(day || '01').padStart(2, '0')}` : 
+                null;
+
+            // Probeer naar Supabase op te slaan als memory een UUID heeft (van Supabase)
+            if (memory.id && typeof memory.id === 'string' && memory.id.includes('-') && window.SupabaseConfig && window.SupabaseConfig.isSupabaseAvailable()) {
+                try {
+                    const updates = {
+                        title,
+                        description,
+                        memory_date: memoryDate,
+                        casel_skill: casel,
+                        file_url: fileUrl,
+                        file_name: fileName,
+                        file_type: fileType,
+                        file_size: fileSize
+                    };
+
+                    const updatedMemory = await window.SupabaseConfig.SupabaseAPI.updateMemory(memory.id, updates);
+                    
+                    if (updatedMemory) {
+                        console.log('✅ Memory updated in Supabase');
+                        // Herlaad memories van Supabase
+                        await loadMemories();
+                        closeEditMemoryModal();
+                        
+                        // Toon succesbericht
+                        setTimeout(() => {
+                            alert('✏️ Herinnering is bijgewerkt!');
+                        }, 300);
+                        return;
+                    } else {
+                        console.log('❌ Failed to update memory in Supabase, falling back to localStorage');
+                    }
+                } catch (error) {
+                    console.error('❌ Error updating memory in Supabase:', error);
+                }
+            }
+
+            // Fallback naar localStorage update
+            console.log('📦 Updating memory in localStorage');
+            memory.title = title;
+            memory.description = description;
+            memory.year = year ? parseInt(year) : null;
+            memory.month = month ? parseInt(month) : null;
+            memory.day = day ? parseInt(day) : null;
+            memory.casel = casel;
+            memory.fileData = fileData;
+            memory.fileName = fileName;
+            memory.fileUrl = fileUrl;
+            memory.updatedAt = new Date().toISOString();
+
+            saveMemories();
+            renderMemories();
+            closeEditMemoryModal();
+            
+            // Toon succesbericht
+            setTimeout(() => {
+                alert('✏️ Herinnering is bijgewerkt (lokaal)!');
+            }, 300);
+        }
+        
+        // Open Edit Memory Modal
+        function openEditMemoryModal(memoryId) {
+            const memory = memories.find(m => String(m.id) === String(memoryId));
+
+            if (!memory) {
+                console.error('❌ Memory not found:', memoryId);
+                alert('Herinnering niet gevonden.');
+                return;
+            }
+
+            console.log('✏️ Opening edit modal for memory:', memory);
+
+            document.getElementById('editMemoryId').value = memory.id;
+            document.getElementById('editMemoryTitle').value = memory.title || '';
+            document.getElementById('editMemoryDescription').value = memory.description || '';
+            document.getElementById('editMemoryYear').value = memory.year || '';
+            document.getElementById('editMemoryMonth').value = memory.month || '';
+            document.getElementById('editMemoryDay').value = memory.day || '';
+            document.getElementById('editMemoryCasel').value = memory.casel || '';
+
+            // Bestand informatie voorbereiden
+            const fileInput = document.getElementById('editMemoryFile');
+            fileInput.dataset.fileData = memory.fileData || '';
+            fileInput.dataset.fileName = memory.fileName || '';
+            fileInput.dataset.fileUrl = memory.fileUrl || '';
+
+            document.getElementById('editMemoryModal').classList.add('show');
+        }
+        
+        function closeEditMemoryModal() {
+            const modal = document.getElementById('editMemoryModal');
+            if (modal) {
+                modal.classList.remove('show');
+                
+                // Form resetten
+                const form = document.getElementById('editMemoryForm');
+                if (form) form.reset();
+            }
+        }
+        
+        async function deleteMemory(memoryId) {
+            const memory = memories.find(m => String(m.id) === String(memoryId));
+            if (!memory) {
+                console.error('❌ Memory not found:', memoryId);
+                alert('Herinnering niet gevonden!');
+                return;
+            }
+            
+            if (confirm(`Weet je zeker dat je "${memory.title}" wilt verwijderen? Dit kan niet ongedaan worden gemaakt.`)) {
+                console.log('🗑️ Deleting memory:', memoryId);
+                
+                // Probeer van Supabase te verwijderen als memory een UUID heeft
+                if (memory.id && typeof memory.id === 'string' && memory.id.includes('-') && window.SupabaseConfig && window.SupabaseConfig.isSupabaseAvailable()) {
+                    try {
+                        const deleted = await window.SupabaseConfig.SupabaseAPI.deleteMemory(memory.id);
+                        
+                        if (deleted) {
+                            // Verwijder ook eventueel bestand uit Supabase Storage
+                            if (memory.fileUrl && memory.fileUrl.includes('supabase')) {
+                                // Hier zou je de file path kunnen extraheren en verwijderen
+                                // Voor nu laten we dit voor later
+                            }
+                            
+                            console.log('✅ Memory deleted from Supabase');
+                            // Herlaad memories van Supabase
+                            await loadMemories();
+                            
+                            // Succesbericht
+                            setTimeout(() => {
+                                alert('🗑️ Herinnering is verwijderd.');
+                            }, 300);
+                            return;
+                        }
+                    } catch (error) {
+                        console.error('❌ Error deleting from Supabase:', error);
+                    }
+                }
+                
+                // Fallback naar localStorage verwijdering
+                console.log('📦 Deleting memory from localStorage');
+                const index = memories.findIndex(m => String(m.id) === String(memoryId));
+                if (index !== -1) {
+                    memories.splice(index, 1);
+                    
+                    // Opslaan en renderen
+                    saveMemories();
+                    renderMemories();
+                    
+                    // Succesbericht
+                    setTimeout(() => {
+                        alert('🗑️ Herinnering is verwijderd.');
+                    }, 300);
+                }
+            }
+        }
+
+        // GLOBALE FUNCTIES
+        // =====================
+
+        window.openAddMemoryModal = openAddMemoryModal;
+        window.closeAddMemoryModal = closeAddMemoryModal;
+        window.handleAddMemory = handleAddMemory;
+        window.openEditMemoryModal = openEditMemoryModal;
+        window.closeEditMemoryModal = closeEditMemoryModal;
+        window.handleEditMemory = handleEditMemory;
+        window.deleteMemory = deleteMemory;
+        window.filterMemories = filterMemories;
+
+        window.handleLogout = function() {
+            if (confirm('Weet je zeker dat je wilt uitloggen?')) {
+                sessionStorage.removeItem('demo_user');
+                window.location.href = '/index.html';
+            }
+        };
+
+        window.openModule = function(module) {
+            const moduleNames = {
+                'schedule': 'Mijn Rooster',
+                'grades': 'Mijn Cijfers', 
+                'homework': 'Huiswerk',
+                'profile': 'Mijn Profiel'
+            };
+            
+            alert(`🚧 Module "${moduleNames[module] || module}" wordt binnenkort beschikbaar!\n\nDeze functie is nog in ontwikkeling.`);
+        };
+
+        // =====================
+        // HERINNERINGEN SYSTEEM
+        // =====================
+
+        // Herinneringen laden van Supabase of localStorage
+        async function loadMemories() {
+            const studentId = currentStudent?.user_metadata?.student_id;
+            if (!studentId) return;
+
+            console.log('🔄 Loading memories for student:', studentId);
+
+            // Probeer eerst van Supabase te laden
+            if (window.SupabaseConfig && window.SupabaseConfig.isSupabaseAvailable()) {
+                try {
+                    const supabaseMemories = await window.SupabaseConfig.SupabaseAPI.getStudentMemories(studentId);
+                    
+                    if (supabaseMemories !== null) {
+                        console.log('✅ Loaded memories from Supabase:', supabaseMemories);
+                        
+                        if (supabaseMemories.length > 0) {
+                            // Converteer Supabase format naar lokaal format
+                            memories = supabaseMemories.map(memory => ({
+                                id: memory.id,
+                                title: memory.title,
+                                description: memory.description,
+                                year: memory.memory_date ? new Date(memory.memory_date).getFullYear() : null,
+                                month: memory.memory_date ? new Date(memory.memory_date).getMonth() + 1 : null,
+                                day: memory.memory_date ? new Date(memory.memory_date).getDate() : null,
+                                casel: memory.casel_skill,
+                                fileUrl: memory.file_url,
+                                fileName: memory.file_name,
+                                fileType: memory.file_type,
+                                fileSize: memory.file_size,
+                                createdAt: memory.created_at,
+                                updatedAt: memory.updated_at
+                            }));
+                        } else {
+                            // Supabase werkt maar is leeg - probeer demo data toe te voegen
+                            console.log('📝 Supabase is empty, creating demo memories...');
+                            memories = [];
+                            const demoCreated = await createDemoMemoriesInSupabase();
+                            if (!demoCreated) {
+                                // Als demo creation faalt, gebruik localStorage fallback
+                                console.log('📦 Demo creation failed, using localStorage fallback');
+                                createLocalDemoMemories();
+                            }
+                        }
+                        
+                        renderMemories();
+                        initializeYearFilter(); // Initialiseer jaar filter na laden van memories
+                        return;
+                    } else {
+                        console.log('⚠️ Supabase database not set up properly');
+                        console.log('💡 To set up Supabase, check the setup guide in SUPABASE_SETUP.md');
+                        console.log('📋 Run the SQL setup script to create the student_memories table');
+                    }
+                } catch (error) {
+                    console.error('❌ Error loading from Supabase:', error);
+                }
+            }
+
+            // Fallback naar localStorage
+            console.log('📦 Falling back to localStorage');
+            const stored = localStorage.getItem(`student_memories_${studentId}`);
+            memories = stored ? JSON.parse(stored) : [];
+            
+            // Demo herinneringen toevoegen als er nog geen zijn
+            if (memories.length === 0) {
+                console.log('🎭 Loading demo memories');
+                memories = [
+                    {
+                        id: 'demo-memory-1',
+                        title: 'Mijn eerste dag op school',
+                        description: 'Ik was een beetje zenuwachtig, maar mijn juf was heel aardig. Ik heb nieuwe vrienden gemaakt tijdens de pauze.',
+                        year: 2023,
+                        month: 9,
+                        day: 4,
+                        casel: 'sociaal-bewustzijn',
+                        createdAt: new Date('2023-09-04').toISOString()
+                    },
+                    {
+                        id: 'demo-memory-2',
+                        title: 'Toen ik een moeilijke som kon oplossen',
+                        description: 'Ik bleef proberen ook al was het heel moeilijk. Uiteindelijk lukte het en voelde ik me heel trots!',
+                        year: 2024,
+                        month: 3,
+                        day: 15,
+                        casel: 'zelfmanagement',
+                        createdAt: new Date('2024-03-15').toISOString()
+                    },
+                    {
+                        id: 'demo-memory-3',
+                        title: 'Mijn verjaardag',
+                        description: 'Ik werd 10 jaar! We hadden een feestje met de hele klas en ik mocht trakteren.',
+                        year: 2024,
+                        month: 6,
+                        day: 15,
+                        casel: null,
+                        createdAt: new Date('2024-06-15').toISOString()
+                    }
+                ];
+                saveMemories();
+            }
+            
+            renderMemories();
+            initializeYearFilter(); // Initialiseer jaar filter na laden van memories
+        }
+
+        // Demo memories in Supabase aanmaken
+        async function createDemoMemoriesInSupabase() {
+            const studentId = currentStudent?.user_metadata?.student_id;
+            const schoolId = currentStudent?.user_metadata?.school_id;
+            
+            if (!studentId || !window.SupabaseConfig || !window.SupabaseConfig.isSupabaseAvailable()) {
+                console.log('⚠️ Supabase not available, creating demo memories in localStorage');
+                return createLocalDemoMemories();
+            }
+
+            console.log('🎭 Creating demo memories in Supabase...');
+
+            const demoMemories = [
+                {
+                    student_id: studentId,
+                    school_id: schoolId,
+                    title: 'Mijn eerste dag op school',
+                    description: 'Ik was een beetje zenuwachtig, maar mijn juf was heel aardig. Ik heb nieuwe vrienden gemaakt tijdens de pauze.',
+                    memory_date: '2023-09-04',
+                    casel_skill: 'sociaal-bewustzijn'
+                },
+                {
+                    student_id: studentId,
+                    school_id: schoolId,
+                    title: 'Toen ik een moeilijke som kon oplossen',
+                    description: 'Ik bleef proberen ook al was het heel moeilijk. Uiteindelijk lukte het en voelde ik me heel trots!',
+                    memory_date: '2024-03-15',
+                    casel_skill: 'zelfmanagement'
+                },
+                {
+                    student_id: studentId,
+                    school_id: schoolId,
+                    title: 'Mijn verjaardag',
+                    description: 'Ik werd 10 jaar! We hadden een feestje met de hele klas en ik mocht trakteren.',
+                    memory_date: '2024-06-15',
+                    casel_skill: null
+                }
+            ];
+
+            try {
+                let successCount = 0;
+                for (const memoryData of demoMemories) {
+                    const result = await window.SupabaseConfig.SupabaseAPI.createMemory(memoryData);
+                    if (result) {
+                        console.log('✅ Demo memory created:', result.title);
+                        successCount++;
+                    }
+                }
+                
+                if (successCount > 0) {
+                    // Herlaad memories na het aanmaken
+                    await loadMemories();
+                    return true;
+                } else {
+                    console.log('⚠️ No demo memories could be created in Supabase, falling back to localStorage');
+                    return createLocalDemoMemories();
+                }
+            } catch (error) {
+                console.error('❌ Error creating demo memories in Supabase:', error);
+                console.log('📦 Falling back to localStorage for demo memories');
+                return createLocalDemoMemories();
+            }
+        }
+
+        // Maak demo memories in localStorage aan
+        function createLocalDemoMemories() {
+            console.log('🎭 Creating demo memories in localStorage...');
+            
+            memories = [
+                {
+                    id: 'demo-memory-1',
+                    title: 'Mijn eerste dag op school',
+                    description: 'Ik was een beetje zenuwachtig, maar mijn juf was heel aardig. Ik heb nieuwe vrienden gemaakt tijdens de pauze.',
+                    year: 2023,
+                    month: 9,
+                    day: 4,
+                    casel: 'sociaal-bewustzijn',
+                    createdAt: new Date('2023-09-04').toISOString()
+                },
+                {
+                    id: 'demo-memory-2',
+                    title: 'Toen ik een moeilijke som kon oplossen',
+                    description: 'Ik bleef proberen ook al was het heel moeilijk. Uiteindelijk lukte het en voelde ik me heel trots!',
+                    year: 2024,
+                    month: 3,
+                    day: 15,
+                    casel: 'zelfmanagement',
+                    createdAt: new Date('2024-03-15').toISOString()
+                },
+                {
+                    id: 'demo-memory-3',
+                    title: 'Mijn verjaardag',
+                    description: 'Ik werd 10 jaar! We hadden een feestje met de hele klas en ik mocht trakteren.',
+                    year: 2024,
+                    month: 6,
+                    day: 15,
+                    casel: null,
+                    createdAt: new Date('2024-06-15').toISOString()
+                }
+            ];
+            
+            saveMemories();
+            renderMemories();
+            console.log('✅ Demo memories created in localStorage');
+            return true;
+        }
+
+        // Herinneringen opslaan naar Supabase en localStorage
+        async function saveMemories() {
+            const studentId = currentStudent?.user_metadata?.student_id;
+            if (!studentId) return;
+            
+            console.log('💾 Saving memories for student:', studentId);
+            
+            // Probeer eerst naar Supabase op te slaan
+            if (window.SupabaseConfig && window.SupabaseConfig.isSupabaseAvailable()) {
+                console.log('📤 Saving to Supabase...');
+                // Voor nu slaan we nog steeds op in localStorage als backup
+                // In de toekomst kunnen we dit vervangen door alleen Supabase
+            }
+            
+            // Sla altijd op in localStorage als backup
+            localStorage.setItem(`student_memories_${studentId}`, JSON.stringify(memories));
+            console.log('📦 Saved to localStorage as backup');
+        }
+
+        // Herinneringen renderen
+        function renderMemories() {
+            const container = document.getElementById('memoriesTimeline');
+            
+            // Bewaar alle memories voor filter initialisatie
+            window.allMemories = memories;
+            
+            // Filter toepassen met nieuwe geavanceerde filters
+            let filteredMemories = memories.filter(memory => passesFilters(memory));
+            
+            console.log('🔍 Filtered memories:', {
+                total: memories.length,
+                filtered: filteredMemories.length,
+                filters: {
+                    casel: currentFilter,
+                    year: currentYearFilter,
+                    month: currentMonthFilter,
+                    files: currentFileFilter
+                }
+            });
+
+            // Update filter status
+            updateFilterStatus(memories.length, filteredMemories.length);
+            
+            // Sorteren op datum (nieuwste eerst, maar met flexibele datums)
+            filteredMemories.sort((a, b) => {
+                // Helper functie om jaar, maand, dag te extraheren
+                const getDateParts = (memory) => {
+                    if (memory.memory_date) {
+                        const date = new Date(memory.memory_date);
+                        return {
+                            year: date.getFullYear(),
+                            month: date.getMonth() + 1,
+                            day: date.getDate()
+                        };
+                    }
+                    return {
+                        year: memory.year || 0,
+                        month: memory.month || 0,
+                        day: memory.day || 0
+                    };
+                };
+                
+                const aDate = getDateParts(a);
+                const bDate = getDateParts(b);
+                
+                // Eerst sorteren op jaar, dan maand, dan dag
+                if (aDate.year !== bDate.year) {
+                    return bDate.year - aDate.year;
+                }
+                if (aDate.month !== bDate.month) {
+                    return bDate.month - aDate.month;
+                }
+                if (aDate.day !== bDate.day) {
+                    return bDate.day - aDate.day;
+                }
+                // Als datums gelijk zijn, sorteer op creation date
+                return new Date(b.createdAt || b.created_at) - new Date(a.createdAt || a.created_at);
+            });
+            
+            if (filteredMemories.length === 0) {
+                const hasAnyFilters = currentFilter !== 'all' || currentYearFilter !== 'all' || 
+                                    currentMonthFilter !== 'all' || currentFileFilter !== 'all' || currentSearchFilter !== '';
+                
+                container.innerHTML = `
+                    <div class="empty-memories">
+                        <p>🌱 ${hasAnyFilters ? 'Geen herinneringen gevonden met deze filters' : 'Je hebt nog geen herinneringen toegevoegd'}</p>
+                        <p style="font-size: 0.9rem; opacity: 0.7;">
+                            ${hasAnyFilters ? 'Probeer de filters aan te passen of voeg een nieuwe herinnering toe.' : 'Klik op "Herinnering Toevoegen" om je eerste mooie moment vast te leggen!'}
+                        </p>
+                        ${hasAnyFilters ? '<button class="clear-filters-btn" onclick="clearAllFilters()" style="margin-top: 1rem;">🧹 Wis alle filters</button>' : ''}
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = filteredMemories.map(memory => {
+                const caselClass = memory.casel || 'no-casel';
+                const caselInfo = memory.casel ? caselSkills[memory.casel] : null;
+                
+                // Datum formatteren - werkt voor zowel Supabase als localStorage memories
+                let dateString = '';
+                
+                // Voor memories uit Supabase: check eerst memory_date, dan year/month/day
+                if (memory.memory_date) {
+                    const memoryDate = new Date(memory.memory_date);
+                    const year = memoryDate.getFullYear();
+                    const month = memoryDate.getMonth() + 1;
+                    const day = memoryDate.getDate();
+                    
+                    const monthNames = ['', 'jan', 'feb', 'mrt', 'apr', 'mei', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
+                    
+                    if (day && month && year) {
+                        dateString = `${day} ${monthNames[month]} ${year}`;
+                    } else if (month && year) {
+                        dateString = `${monthNames[month]} ${year}`;
+                    } else if (year) {
+                        dateString = year.toString();
+                    }
+                }
+                // Voor localStorage memories: gebruik year/month/day properties
+                else if (memory.year) {
+                    dateString = memory.year.toString();
+                    if (memory.month) {
+                        const monthNames = ['', 'jan', 'feb', 'mrt', 'apr', 'mei', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
+                        dateString = `${monthNames[memory.month]} ${memory.year}`;
+                        if (memory.day) {
+                            dateString = `${memory.day} ${monthNames[memory.month]} ${memory.year}`;
+                        }
+                    }
+                }
+                
+                // Fallback als geen datum beschikbaar is
+                if (!dateString) {
+                    dateString = 'Onbekende datum';
+                }
+                
+                return `
+                    <div class="memory-item ${caselClass}">
+                        <div class="memory-header">
+                            <h3 class="memory-title">${memory.title}</h3>
+                            <div class="memory-date">${dateString}</div>
+                        </div>
+                        
+                        ${memory.description ? `
+                            <p class="memory-description">${memory.description}</p>
+                        ` : ''}
+                        
+                        ${caselInfo ? `
+                            <div class="memory-casel ${memory.casel}">
+                                ${caselInfo.icon} ${caselInfo.name}
+                            </div>
+                        ` : ''}
+                        
+                        <div class="memory-actions">
+                            <button class="memory-action-btn edit-btn" onclick="openEditMemoryModal('${memory.id}')">
+                                ✏️ Bewerken
+                            </button>
+                            <button class="memory-action-btn delete-btn" onclick="deleteMemory('${memory.id}')">
+                                🗑️ Verwijderen
+                            </button>
+                        </div>
+
+                        ${memory.fileUrl || memory.fileData ? `
+                            <div class="memory-file">
+                                <a href="${memory.fileUrl || memory.fileData}" target="_blank" class="file-link">
+                                    📎 ${memory.fileName || 'Bestand bekijken'}
+                                </a>
+                                ${memory.fileType && memory.fileType.startsWith('image/') ? `
+                                    <div class="file-preview" style="margin-top: 0.5rem;">
+                                        <img src="${memory.fileUrl || memory.fileData}" alt="Preview" style="max-width: 100px; max-height: 100px; border-radius: 4px; object-fit: cover;">
+                                    </div>
+                                ` : ''}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Modal sluiten bij klik buiten modal
+        document.addEventListener('click', function(event) {
+            const addModal = document.getElementById('addMemoryModal');
+            const editModal = document.getElementById('editMemoryModal');
+            
+            if (event.target === addModal) {
+                closeAddMemoryModal();
+            }
+            if (event.target === editModal) {
+                closeEditMemoryModal();
+            }
+        });
+
+        // ESC key om modal te sluiten
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeAddMemoryModal();
+                closeEditMemoryModal();
+            }
+        });
+
+        // Initialize dashboard when page loads
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🚀 Initializing student dashboard...');
+            
+            // Initialiseer eerst de student dashboard
+            initializeStudentDashboard();
+            
+            // Wacht even voor Supabase initialisatie
+            setTimeout(async () => {
+                console.log('⏰ Checking Supabase configuration...');
+                
+                // Debug: Check Supabase availability
+                if (window.SupabaseConfig) {
+                    console.log('✅ SupabaseConfig loaded');
+                    if (window.SupabaseConfig.isSupabaseAvailable()) {
+                        console.log('✅ Supabase client is available');
+                        
+                        // Check database en storage setup
+                        console.log('🔧 Checking database and storage setup...');
+                        const dbReady = await window.SupabaseConfig.SupabaseAPI.checkAndSetupDatabase();
+                        const storageReady = await window.SupabaseConfig.SupabaseAPI.checkAndSetupStorage();
+                        
+                        if (!dbReady) {
+                            console.log('⚠️ Database setup incomplete - using localStorage fallback');
+                            console.log('💡 Run the SQL script from SUPABASE_QUICK_SETUP.md');
+                            console.log('💡 Or copy the complete setup from database/setup.sql');
+                        } else if (!storageReady) {
+                            console.log('⚠️ Storage setup incomplete - files will be stored as base64 in localStorage');
+                            console.log('💡 Create "student-files" bucket in Supabase Storage (see SUPABASE_QUICK_SETUP.md)');
+                        } else {
+                            console.log('🎉 Supabase fully configured - memories and files will be stored in Supabase!');
+                            console.log('🎯 Ready to create and store memories with file attachments!');
+                        }
+                    } else {
+                        console.log('⚠️ Supabase client is not available, using localStorage fallback');
+                        console.log('💡 Check your Supabase URL and API key in supabase-config.js');
+                    }
+                } else {
+                    console.log('❌ SupabaseConfig not loaded - check if supabase-config.js is loaded correctly');
+                }
+                
+                console.log('📚 Loading memories...');
+                await loadMemories();
+            }, 1000); // Verhoog timeout voor betere Supabase initialisatie
+        });
+    </script>
+    
+    <!-- Supabase Integration -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/assets/js/modules/supabase-config.js"></script>
+</body>
+</html>

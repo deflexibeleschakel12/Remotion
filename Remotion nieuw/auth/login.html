@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="nl" data-theme="default">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inloggen - Schoolbeheersysteem</title>
+    
+    <!-- Modulaire CSS Imports -->
+    <link rel="stylesheet" href="/assets/css/shared.css">
+    <link rel="stylesheet" href="/assets/css/components.css">
+    <link rel="stylesheet" href="/assets/css/animations-modular.css">
+    <link rel="stylesheet" href="/assets/css/themes.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%234F46E5' width='100' height='100' rx='20'/><text x='50' y='65' font-size='60' text-anchor='middle' fill='white'>🎓</text></svg>">
+    
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4F46E5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 0.875rem 1.5rem;
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .forgot-password a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password a:hover {
+            color: white;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: white;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .role-indicator {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .btn-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            .back-link {
+                position: relative;
+                top: auto;
+                left: auto;
+                margin-bottom: 1rem;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="/index.html" class="back-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H19V7z"/>
+        </svg>
+        Terug naar Portal
+    </a>
+
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Inloggen</h1>
+            <p>Welkom terug bij het Schoolbeheersysteem</p>
+        </div>
+
+        <div id="roleIndicator" class="role-indicator" style="display: none;">
+            Inloggen als: <span id="roleText"></span>
+        </div>
+
+        <div class="demo-credentials" style="background: rgba(79, 70, 229, 0.2); border: 1px solid rgba(79, 70, 229, 0.4); border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; font-size: 0.9rem;">
+            <div style="font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span>🧪</span> Demo Inloggegevens:
+            </div>
+            
+            <div style="margin-bottom: 0.75rem;">
+                <div style="font-weight: 500; color: #F59E0B; margin-bottom: 0.25rem;">👑 Systeembeheerder:</div>
+                <div style="margin-left: 1rem; margin-bottom: 0.25rem;"><strong>Email:</strong> admin@school.nl</div>
+                <div style="margin-left: 1rem;"><strong>Wachtwoord:</strong> password123</div>
+            </div>
+            
+            <div style="margin-bottom: 0.75rem;">
+                <div style="font-weight: 500; color: #3B82F6; margin-bottom: 0.25rem;">🏫 Schoolbeheerder:</div>
+                <div style="margin-left: 1rem; font-size: 0.85rem; opacity: 0.8;">Log in via admin → klik 'Inloggen' bij een school</div>
+            </div>
+            
+            <div style="margin-bottom: 0.75rem;">
+                <div style="font-weight: 500; color: #10B981; margin-bottom: 0.25rem;">👨‍🏫 Leerkracht:</div>
+                <div style="margin-left: 1rem; font-size: 0.85rem; opacity: 0.8;">Log in via school dashboard → voeg leerkracht toe → klik 'Inloggen als Leerkracht'</div>
+            </div>
+            
+            <div style="margin-bottom: 0.75rem;">
+                <div style="font-weight: 500; color: #8B5CF6; margin-bottom: 0.25rem;">👨‍🎓 Leerling:</div>
+                <div style="margin-left: 1rem; font-size: 0.85rem; opacity: 0.8;">Log in via school dashboard → voeg leerling toe → klik 'Inloggen als Leerling'</div>
+            </div>
+            
+            <button type="button" onclick="quickDemo()" style="
+                background: rgba(79, 70, 229, 0.8);
+                color: white;
+                border: none;
+                padding: 0.5rem 1rem;
+                border-radius: 6px;
+                font-size: 0.85rem;
+                cursor: pointer;
+                margin-top: 0.5rem;
+                transition: all 0.2s;
+            " onmouseover="this.style.background='rgba(79, 70, 229, 1)'" onmouseout="this.style.background='rgba(79, 70, 229, 0.8)'">
+                🚀 Demo Inloggen (Admin)
+            </button>
+            <div style="font-size: 0.8rem; opacity: 0.8; margin-top: 0.5rem;">
+                (Of elk geldig email + wachtwoord van 6+ tekens)
+            </div>
+        </div>
+
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">E-mailadres</label>
+                <input type="email" id="email" name="email" class="form-input" placeholder="naam@school.nl" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Wachtwoord</label>
+                <input type="password" id="password" name="password" class="form-input" placeholder="Voer je wachtwoord in" required>
+            </div>
+
+            <button type="submit" id="loginBtn" class="login-btn">
+                Inloggen
+            </button>
+
+            <button type="button" id="demoLoginBtn" class="login-btn" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%); margin-bottom: 0;">
+                🧪 Demo Inloggen (Auto-vullen)
+            </button>
+        </form>
+
+        <div class="forgot-password">
+            <a href="forgot-password.html">Wachtwoord vergeten?</a>
+        </div>
+    </div>
+
+    <script type="module">
+        import AuthManager from '/assets/js/modules/auth-manager.js';
+        import { AuthGuard } from '/assets/js/utils/auth-utils.js';
+        
+        // Initialize Auth Manager
+        const authManager = new AuthManager({
+            // Use demo credentials for testing
+            supabaseUrl: 'https://demo.supabase.co',
+            supabaseKey: 'demo-key'
+        });
+
+        // URL Parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const requestedRole = urlParams.get('role');
+        const redirectUrl = urlParams.get('redirect');
+
+        // Show role indicator if specified
+        if (requestedRole) {
+            const roleIndicator = document.getElementById('roleIndicator');
+            const roleText = document.getElementById('roleText');
+            const roleNames = {
+                'admin': 'Systeembeheerder',
+                'school': 'Schoolbeheerder',
+                'teacher': 'Leerkracht',
+                'student': 'Leerling'
+            };
+            
+            roleText.textContent = roleNames[requestedRole] || requestedRole;
+            roleIndicator.style.display = 'block';
+        }
+
+        // Login form handler
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await handleLogin();
+        });
+
+        // Demo login button handler
+        document.getElementById('demoLoginBtn').addEventListener('click', () => {
+            // Auto-fill demo credentials
+            document.getElementById('email').value = 'admin@school.nl';
+            document.getElementById('password').value = 'password123';
+            
+            // Show success message
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.style.background = 'rgba(16, 185, 129, 0.2)';
+            errorMessage.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+            errorMessage.textContent = '✅ Demo gegevens ingevuld! Klik nu op "Inloggen" of druk Enter.';
+            errorMessage.style.display = 'block';
+            
+            // Focus on login button
+            document.getElementById('loginBtn').focus();
+        });
+
+        // Quick demo login function - uses the current requested role
+        function quickDemo() {
+            document.getElementById('email').value = 'admin@school.nl';
+            document.getElementById('password').value = 'password123';
+            
+            // Show loading immediately for quick demo
+            const loginBtn = document.getElementById('loginBtn');
+            loginBtn.innerHTML = '<span class="btn-spinner"></span>';
+            loginBtn.disabled = true;
+            
+            // Quick login without delay for better UX
+            handleLogin();
+        }
+
+        async function handleLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Reset error state
+            errorMessage.style.display = 'none';
+            errorMessage.style.background = 'rgba(239, 68, 68, 0.2)';
+            errorMessage.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+            
+            // Show loading state
+            loginBtn.innerHTML = '<span class="btn-spinner"></span>';
+            loginBtn.disabled = true;
+            
+            try {
+                // Demo login - in real app, this would use Supabase
+                await simulateLogin(email, password, requestedRole);
+                
+                // Redirect on success
+                const targetUrl = redirectUrl || getDefaultRedirect(requestedRole || 'admin');
+                console.log('🔄 Redirecting to:', targetUrl);
+                console.log('� Requested role:', requestedRole);
+                console.log('🎯 Using role for redirect:', requestedRole || 'admin');
+                console.log('�🌐 Current origin:', window.location.origin);
+                console.log('📍 Current URL:', window.location.href);
+                
+                // Use safe redirect function
+                safeRedirect(targetUrl);
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                
+                // Show error message
+                errorMessage.textContent = error.message || 'Er is een fout opgetreden bij het inloggen.';
+                errorMessage.style.display = 'block';
+                
+                // Reset button
+                loginBtn.innerHTML = 'Inloggen';
+                loginBtn.disabled = false;
+            }
+        }
+
+        // Demo login function
+        async function simulateLogin(email, password, role) {
+            // Simulate API delay (shorter for quick demo)
+            const delay = window.quickDemoMode ? 100 : 1000;
+            await new Promise(resolve => setTimeout(resolve, delay));
+            
+            // Demo validation
+            if (!email || !password) {
+                throw new Error('Vul alle velden in.');
+            }
+            
+            if (password.length < 6) {
+                throw new Error('Wachtwoord moet minimaal 6 karakters bevatten.');
+            }
+            
+            // For demo purposes, accept any valid email/password
+            if (!email.includes('@')) {
+                throw new Error('Voer een geldig e-mailadres in.');
+            }
+            
+            // Determine role based on requested role or default to admin
+            let userRole = role || 'admin';
+            
+            // If no specific role requested, determine from email for demo
+            if (!role && email === 'admin@school.nl') {
+                userRole = 'admin';
+            }
+            
+            console.log('🎯 Creating demo user with role:', userRole);
+            
+            // Create base user metadata
+            const baseMetadata = {
+                role: userRole,
+                full_name: 'Demo Gebruiker'
+            };
+            
+            // Add role-specific metadata
+            if (userRole === 'teacher') {
+                baseMetadata.teacher_id = 'demo-teacher-123'; // Demo teacher ID
+                baseMetadata.school_id = 'demo-school-123';   // Demo school ID
+                baseMetadata.full_name = 'Demo Leerkracht';
+                baseMetadata.school_name = 'Demo Basisschool';
+                baseMetadata.subjects = 'Nederlands, Rekenen';
+            } else if (userRole === 'school') {
+                baseMetadata.school_id = 'demo-school-123';
+                baseMetadata.school_name = 'Demo Basisschool';
+                baseMetadata.full_name = 'Demo Schoolbeheerder';
+            } else if (userRole === 'student') {
+                baseMetadata.student_id = 'demo-student-123';
+                baseMetadata.school_id = 'demo-school-123';
+                baseMetadata.class_id = 'demo-class-123';
+                baseMetadata.full_name = 'Demo Student';
+                baseMetadata.school_name = 'Demo Basisschool';
+                baseMetadata.class_name = 'Groep 5A';
+            }
+            
+            // Store demo user session with correct role and metadata
+            const demoUser = {
+                id: `demo-${userRole}-123`,
+                email: email,
+                user_metadata: baseMetadata
+            };
+            
+            sessionStorage.setItem('demo_user', JSON.stringify(demoUser));
+            console.log('✅ Demo login successful with role:', userRole);
+        }
+
+        function getDefaultRedirect(role) {
+            console.log('🎯 getDefaultRedirect called with role:', role);
+            
+            // Use simple paths - Netlify handles these better
+            const redirects = {
+                'admin': '/admin/index.html',
+                'school': '/school/index.html', 
+                'teacher': '/teacher/index.html',
+                'student': '/student/index.html'
+            };
+            
+            const path = redirects[role] || '/index.html';
+            console.log('🔗 Generated path:', path);
+            
+            return path;
+        }
+
+        // Netlify-optimized redirect function
+        function safeRedirect(url) {
+            console.log('🚀 Safe redirect to:', url);
+            console.log('🔍 Current location:', window.location.href);
+            
+            const loginBtn = document.getElementById('loginBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Show user feedback
+            if (loginBtn) {
+                loginBtn.innerHTML = '🔄 Doorsturen...';
+                loginBtn.disabled = true;
+            }
+            
+            // Extract just the path - this works better on Netlify
+            let targetPath;
+            
+            if (url.includes('/admin/')) {
+                targetPath = '/admin/index.html';
+            } else if (url.includes('/school/')) {
+                targetPath = '/school/index.html';
+            } else if (url.includes('/teacher/')) {
+                targetPath = '/teacher/index.html';
+            } else if (url.includes('/student/')) {
+                targetPath = '/student/index.html';
+            } else {
+                targetPath = '/index.html';
+            }
+            
+            console.log('🎯 Using simple path redirect:', targetPath);
+            
+            // Immediate redirect - no delays
+            try {
+                console.log('🔄 Executing immediate redirect...');
+                window.location.href = targetPath;
+            } catch (error) {
+                console.error('❌ Redirect failed:', error);
+                showManualNavigation(targetPath);
+            }
+        }
+        
+        // Show manual navigation option
+        function showManualNavigation(targetPath) {
+            const loginBtn = document.getElementById('loginBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            if (loginBtn) {
+                loginBtn.innerHTML = 'Ga naar Dashboard';
+                loginBtn.disabled = false;
+                loginBtn.onclick = () => {
+                    console.log('🔄 Manual navigation to:', targetPath);
+                    window.open(targetPath, '_self');
+                };
+            }
+            
+            if (errorMessage) {
+                errorMessage.style.background = 'rgba(34, 197, 94, 0.2)';
+                errorMessage.style.borderColor = 'rgba(34, 197, 94, 0.4)';
+                errorMessage.innerHTML = `
+                    ✅ Inloggen succesvol!<br>
+                    <a href="${targetPath}" style="color: white; text-decoration: underline; font-weight: bold; display: inline-block; margin-top: 0.5rem;">
+                        Klik hier om naar het dashboard te gaan →
+                    </a>
+                `;
+                errorMessage.style.display = 'block';
+            }
+        }
+
+        // Check if already logged in - maar respecteer de gewenste rol
+        const demoUser = sessionStorage.getItem('demo_user');
+        if (demoUser && !urlParams.get('force')) {
+            const user = JSON.parse(demoUser);
+            const userRole = user.user_metadata?.role;
+            
+            console.log('🔍 Already logged in as:', userRole);
+            console.log('🎯 Requested role:', requestedRole);
+            
+            // Only auto-redirect if the user's role matches the requested role, or no specific role requested
+            if (!requestedRole || userRole === requestedRole) {
+                const targetUrl = redirectUrl || getDefaultRedirect(userRole);
+                console.log('🔄 Auto-redirecting logged in user to:', targetUrl);
+                safeRedirect(targetUrl);
+            } else {
+                console.log('⚠️ User role mismatch - showing login form');
+                // Clear session if role doesn't match
+                sessionStorage.removeItem('demo_user');
+            }
+        }
+    </script>
+</body>
+</html>

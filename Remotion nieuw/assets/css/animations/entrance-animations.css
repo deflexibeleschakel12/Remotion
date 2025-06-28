@@ -1,0 +1,336 @@
+/* =================================
+   ENTRANCE-ANIMATIONS.CSS - Enter Animations
+   Schoolbeheersysteem v1.0.0
+   
+   Animaties voor element entree
+   ================================= */
+
+/* =================================
+   FADE ANIMATIONS
+   ================================= */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(var(--distance-lg));
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(calc(-1 * var(--distance-lg)));
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(calc(-1 * var(--distance-lg)));
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(var(--distance-lg));
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* =================================
+   SLIDE ANIMATIONS
+   ================================= */
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =================================
+   SCALE ANIMATIONS
+   ================================= */
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes scaleInBig {
+    from {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale3d(0.3, 0.3, 0.3);
+    }
+    50% {
+        opacity: 1;
+    }
+    to {
+        transform: scale3d(1, 1, 1);
+    }
+}
+
+/* =================================
+   BOUNCE ANIMATIONS
+   ================================= */
+
+@keyframes bounceIn {
+    0%, 20%, 40%, 60%, 80% {
+        animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+    0% {
+        opacity: 0;
+        transform: scale3d(0.3, 0.3, 0.3);
+    }
+    20% {
+        transform: scale3d(1.1, 1.1, 1.1);
+    }
+    40% {
+        transform: scale3d(0.9, 0.9, 0.9);
+    }
+    60% {
+        opacity: 1;
+        transform: scale3d(1.03, 1.03, 1.03);
+    }
+    80% {
+        transform: scale3d(0.97, 0.97, 0.97);
+    }
+    to {
+        opacity: 1;
+        transform: scale3d(1, 1, 1);
+    }
+}
+
+@keyframes bounceInUp {
+    0%, 60%, 75%, 90%, to {
+        animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+    0% {
+        opacity: 0;
+        transform: translate3d(0, 3000px, 0);
+    }
+    60% {
+        opacity: 1;
+        transform: translate3d(0, -20px, 0);
+    }
+    75% {
+        transform: translate3d(0, 10px, 0);
+    }
+    90% {
+        transform: translate3d(0, -5px, 0);
+    }
+    to {
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+/* =================================
+   FLIP ANIMATIONS
+   ================================= */
+
+@keyframes flipInX {
+    0% {
+        transform: perspective(400px) rotateX(90deg);
+        animation-timing-function: ease-in;
+        opacity: 0;
+    }
+    40% {
+        transform: perspective(400px) rotateX(-20deg);
+        animation-timing-function: ease-in;
+    }
+    60% {
+        transform: perspective(400px) rotateX(10deg);
+        opacity: 1;
+    }
+    80% {
+        transform: perspective(400px) rotateX(-5deg);
+    }
+    to {
+        transform: perspective(400px);
+    }
+}
+
+@keyframes flipInY {
+    0% {
+        transform: perspective(400px) rotateY(90deg);
+        animation-timing-function: ease-in;
+        opacity: 0;
+    }
+    40% {
+        transform: perspective(400px) rotateY(-20deg);
+        animation-timing-function: ease-in;
+    }
+    60% {
+        transform: perspective(400px) rotateY(10deg);
+        opacity: 1;
+    }
+    80% {
+        transform: perspective(400px) rotateY(-5deg);
+    }
+    to {
+        transform: perspective(400px);
+    }
+}
+
+/* =================================
+   DATA ATTRIBUTE SUPPORT
+   ================================= */
+
+[data-animate="fadeIn"] {
+    animation: fadeIn var(--duration-normal) var(--ease-smooth);
+}
+
+[data-animate="fadeInUp"] {
+    animation: fadeInUp var(--duration-normal) var(--ease-smooth);
+}
+
+[data-animate="fadeInDown"] {
+    animation: fadeInDown var(--duration-normal) var(--ease-smooth);
+}
+
+[data-animate="fadeInLeft"] {
+    animation: fadeInLeft var(--duration-normal) var(--ease-smooth);
+}
+
+[data-animate="fadeInRight"] {
+    animation: fadeInRight var(--duration-normal) var(--ease-smooth);
+}
+
+[data-animate="slideInLeft"] {
+    animation: slideInLeft var(--duration-normal) var(--ease-smooth);
+}
+
+[data-animate="slideInRight"] {
+    animation: slideInRight var(--duration-normal) var(--ease-smooth);
+}
+
+[data-animate="slideInUp"] {
+    animation: slideInUp var(--duration-normal) var(--ease-smooth);
+}
+
+[data-animate="slideInDown"] {
+    animation: slideInDown var(--duration-normal) var(--ease-smooth);
+}
+
+[data-animate="scaleIn"] {
+    animation: scaleIn var(--duration-normal) var(--ease-smooth);
+}
+
+[data-animate="scaleInBig"] {
+    animation: scaleInBig var(--duration-normal) var(--ease-smooth);
+}
+
+[data-animate="zoomIn"] {
+    animation: zoomIn var(--duration-normal) var(--ease-smooth);
+}
+
+[data-animate="bounceIn"] {
+    animation: bounceIn var(--duration-slow) var(--ease-bounce);
+}
+
+[data-animate="bounceInUp"] {
+    animation: bounceInUp var(--duration-slow) var(--ease-bounce);
+}
+
+[data-animate="flipInX"] {
+    animation: flipInX var(--duration-slow) var(--ease-smooth);
+}
+
+[data-animate="flipInY"] {
+    animation: flipInY var(--duration-slow) var(--ease-smooth);
+}
+
+/* =================================
+   UTILITY CLASSES
+   ================================= */
+
+.entrance-animation {
+    animation-fill-mode: both;
+}
+
+.entrance-fast {
+    animation-duration: var(--duration-fast);
+}
+
+.entrance-slow {
+    animation-duration: var(--duration-slow);
+}

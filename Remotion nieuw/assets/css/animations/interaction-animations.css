@@ -1,0 +1,421 @@
+/* =================================
+   INTERACTION-ANIMATIONS.CSS - Hover & Click Animations
+   Schoolbeheersysteem v1.0.0
+   
+   Animaties voor user interactions
+   ================================= */
+
+/* =================================
+   HOVER ANIMATIONS
+   ================================= */
+
+@keyframes hoverGrow {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes hoverShrink {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(0.95);
+    }
+}
+
+@keyframes hoverFloat {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-8px);
+    }
+}
+
+@keyframes hoverShake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-2px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(2px);
+    }
+}
+
+@keyframes hoverPulse {
+    0% {
+        box-shadow: 0 0 0 0 var(--color-primary-alpha);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    }
+}
+
+/* =================================
+   CLICK ANIMATIONS
+   ================================= */
+
+@keyframes clickBounce {
+    0%, 20%, 60%, 100% {
+        transform: translateY(0) scale(1);
+    }
+    40% {
+        transform: translateY(-20px) scale(1.1);
+    }
+    80% {
+        transform: translateY(-5px) scale(1.05);
+    }
+}
+
+@keyframes clickPress {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.95);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes clickWave {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* =================================
+   RIPPLE EFFECT
+   ================================= */
+
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+        opacity: 0.6;
+    }
+    100% {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* =================================
+   FOCUS ANIMATIONS
+   ================================= */
+
+@keyframes focusGlow {
+    0% {
+        box-shadow: 0 0 0 0 var(--color-primary-alpha);
+    }
+    100% {
+        box-shadow: 0 0 0 4px var(--color-primary-alpha);
+    }
+}
+
+@keyframes focusPulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+/* =================================
+   INTERACTION CLASSES
+   ================================= */
+
+/* Hover Effects */
+.hover-grow {
+    transition: transform var(--transition-fast);
+}
+
+.hover-grow:hover {
+    transform: scale(1.05);
+}
+
+.hover-shrink {
+    transition: transform var(--transition-fast);
+}
+
+.hover-shrink:hover {
+    transform: scale(0.95);
+}
+
+.hover-float {
+    transition: transform var(--transition-normal);
+}
+
+.hover-float:hover {
+    transform: translateY(-8px);
+}
+
+.hover-tilt {
+    transition: transform var(--transition-normal);
+}
+
+.hover-tilt:hover {
+    transform: perspective(1000px) rotateX(10deg);
+}
+
+.hover-rotate {
+    transition: transform var(--transition-normal);
+}
+
+.hover-rotate:hover {
+    transform: rotate(5deg);
+}
+
+.hover-brightness {
+    transition: filter var(--transition-fast);
+}
+
+.hover-brightness:hover {
+    filter: brightness(1.1);
+}
+
+.hover-shadow {
+    transition: box-shadow var(--transition-normal);
+}
+
+.hover-shadow:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.hover-glow {
+    transition: box-shadow var(--transition-normal);
+}
+
+.hover-glow:hover {
+    box-shadow: 0 0 20px var(--color-primary-alpha);
+}
+
+/* Click Effects */
+.click-bounce {
+    transition: transform var(--transition-fast);
+}
+
+.click-bounce:active {
+    animation: clickBounce 0.3s ease-in-out;
+}
+
+.click-press {
+    transition: transform var(--transition-fastest);
+}
+
+.click-press:active {
+    transform: scale(0.95);
+}
+
+.click-wave {
+    position: relative;
+    overflow: hidden;
+}
+
+.click-wave::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.click-wave:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Focus Effects */
+.focus-glow:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--color-primary-alpha);
+}
+
+.focus-pulse:focus {
+    animation: focusPulse 1s infinite;
+}
+
+/* =================================
+   BUTTON INTERACTIONS
+   ================================= */
+
+.btn-interactive {
+    position: relative;
+    overflow: hidden;
+    transition: all var(--transition-normal);
+}
+
+.btn-interactive:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.btn-interactive:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Ripple Button */
+.btn-ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-ripple::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn-ripple:active::after {
+    width: 300px;
+    height: 300px;
+}
+
+/* =================================
+   CARD INTERACTIONS
+   ================================= */
+
+.card-interactive {
+    transition: all var(--transition-normal);
+    cursor: pointer;
+}
+
+.card-interactive:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+}
+
+.card-interactive:active {
+    transform: translateY(-2px) scale(1.01);
+}
+
+.card-tilt {
+    transition: transform var(--transition-normal);
+}
+
+.card-tilt:hover {
+    transform: perspective(1000px) rotateX(5deg) rotateY(5deg);
+}
+
+/* =================================
+   FORM INTERACTIONS
+   ================================= */
+
+.input-focus {
+    transition: all var(--transition-normal);
+}
+
+.input-focus:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-alpha);
+    transform: scale(1.02);
+}
+
+.input-glow:focus {
+    box-shadow: 0 0 15px var(--color-primary-alpha);
+}
+
+/* =================================
+   LINK INTERACTIONS
+   ================================= */
+
+.link-underline {
+    position: relative;
+    text-decoration: none;
+}
+
+.link-underline::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: currentColor;
+    transition: width var(--transition-normal);
+}
+
+.link-underline:hover::after {
+    width: 100%;
+}
+
+.link-bounce {
+    transition: transform var(--transition-fast);
+}
+
+.link-bounce:hover {
+    animation: clickBounce 0.6s ease-in-out;
+}
+
+/* =================================
+   UTILITY INTERACTIONS
+   ================================= */
+
+.interactive-disabled {
+    pointer-events: none;
+    opacity: 0.6;
+    filter: grayscale(50%);
+}
+
+.interactive-loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+/* Smooth scrolling for interactions */
+.smooth-scroll {
+    scroll-behavior: smooth;
+}
+
+/* =================================
+   MOBILE TOUCH INTERACTIONS
+   ================================= */
+
+@media (hover: none) and (pointer: coarse) {
+    .hover-grow:hover,
+    .hover-shrink:hover,
+    .hover-float:hover,
+    .hover-tilt:hover,
+    .hover-rotate:hover {
+        transform: none;
+    }
+    
+    .hover-shadow:hover,
+    .hover-glow:hover {
+        box-shadow: none;
+    }
+    
+    /* Touch-specific feedback */
+    .touch-feedback:active {
+        background-color: rgba(0, 0, 0, 0.1);
+        transform: scale(0.98);
+    }
+}

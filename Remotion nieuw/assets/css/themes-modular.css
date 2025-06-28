@@ -1,0 +1,73 @@
+/* =================================
+   THEMES.CSS - Modulair thema systeem
+   Schoolbeheersysteem v1.0.0
+   
+   Import van alle thema modules
+   ================================= */
+
+/* =================================
+   BASIS KLEUREN EN CSS VARIABELEN
+   ================================= */
+
+:root {
+    /* Basis kleuren */
+    --color-primary: #667eea;
+    --color-secondary: #764ba2;
+    --color-accent: #f093fb;
+    
+    /* Role-based kleuren */
+    --color-admin: #F59E0B;
+    --color-admin-dark: #D97706;
+    --color-school: #3B82F6;
+    --color-school-dark: #1D4ED8;
+    --color-teacher: #10B981;
+    --color-teacher-dark: #059669;
+    --color-student: #8B5CF6;
+    --color-student-dark: #7C3AED;
+    
+    /* Grayscale */
+    --color-white: #ffffff;
+    --color-gray-50: #f9fafb;
+    --color-gray-100: #f3f4f6;
+    --color-gray-200: #e5e7eb;
+    --color-gray-300: #d1d5db;
+    --color-gray-400: #9ca3af;
+    --color-gray-500: #6b7280;
+    --color-gray-600: #4b5563;
+    --color-gray-700: #374151;
+    --color-gray-800: #1f2937;
+    --color-gray-900: #111827;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    --gradient-admin: linear-gradient(135deg, #FED7AA 0%, var(--color-admin) 50%, var(--color-admin-dark) 100%);
+    --gradient-school: linear-gradient(135deg, #BFDBFE 0%, var(--color-school) 50%, var(--color-school-dark) 100%);
+    --gradient-teacher: linear-gradient(135deg, #A7F3D0 0%, var(--color-teacher) 50%, var(--color-teacher-dark) 100%);
+    --gradient-student: linear-gradient(135deg, #DDD6FE 0%, var(--color-student) 50%, var(--color-student-dark) 100%);
+    --gradient-background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    
+    /* Glassmorphism */
+    --glass-base: rgba(255, 255, 255, 0.1);
+    --glass-hover: rgba(255, 255, 255, 0.2);
+    --glass-strong: rgba(255, 255, 255, 0.15);
+    
+    /* Borders */
+    --color-border: rgba(255, 255, 255, 0.2);
+    --color-border-focus: rgba(255, 255, 255, 0.4);
+    
+    /* Shadows */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.25);
+    --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.3);
+}
+
+/* =================================
+   IMPORT THEMA MODULES
+   ================================= */
+
+@import url('./themes/base-themes.css');
+@import url('./themes/dark-mode.css');
+@import url('./themes/accessibility.css');
+@import url('./themes/theme-components.css');
+@import url('./themes/debug-panel.css');
